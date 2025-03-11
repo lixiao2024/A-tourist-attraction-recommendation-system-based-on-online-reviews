@@ -1,0 +1,81 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/assistant/assistant",
+    "pages/mine/mine",
+    "pages/post/post",
+    "pages/mine/profile",
+    "pages/mine/wallet",
+    "pages/mine/settings",
+    "pages/mine/feedback",
+    "pages/footprint/footprint"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "旅游景点推荐",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#007AFF",
+    "borderStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/tabs/home.png",
+        "selectedIconPath": "static/tabs/home-active.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/footprint/footprint",
+        "iconPath": "static/tabs/footprint.png",
+        "selectedIconPath": "static/tabs/footprint-active.png",
+        "text": "足迹"
+      },
+      {
+        "pagePath": "pages/post/post",
+        "text": "发布",
+        "iconPath": "static/tabs/add.png",
+        "selectedIconPath": "static/tabs/add-active.png"
+      },
+      {
+        "pagePath": "pages/assistant/assistant",
+        "text": "助手",
+        "iconPath": "static/tabs/assistant.png",
+        "selectedIconPath": "static/tabs/assistant-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "static/tabs/mine.png",
+        "selectedIconPath": "static/tabs/mine-active.png"
+      }
+    ]
+  },
+  "requiredBackgroundModes": [
+    "audio"
+  ],
+  "permission": {
+    "scope.userInfo": {
+      "desc": "用于展示用户头像和昵称"
+    },
+    "scope.userFuzzyLocation": {
+      "desc": "您的大致位置将用于记录旅行足迹"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getFuzzyLocation"
+  ],
+  "packNpmManually": true,
+  "packNpmRelationList": [
+    {
+      "packageJsonPath": "./package.json",
+      "miniprogramNpmDistDir": "./dist/dev/mp-weixin"
+    }
+  ],
+  "usingComponents": {}
+}

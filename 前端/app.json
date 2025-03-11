@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/footprint/footprint",
+    "pages/assistant/assistant",
+    "pages/mine/mine"
+  ],
+  "permission": {
+    "scope.userFuzzyLocation": {
+      "desc": "需要获取您的大致位置用于记录旅行足迹"
+    },
+    "scope.userLocation": {
+      "desc": "需要获取您的精确位置用于记录旅行足迹"
+    }
+  },
+  "requiredPrivateInfos": ["getFuzzyLocation", "getLocation"],
+  "lazyCodeLoading": "requiredComponents" 
+}

@@ -1,0 +1,236 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f8fafc;
+}
+.detail-container .main-comment {
+  flex: 1;
+  padding: 24rpx;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+.detail-container .main-comment:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+}
+.detail-container .main-comment .comment-card {
+  display: flex;
+  padding: 36rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.04);
+  margin-bottom: 24rpx;
+  transition: all 0.3s ease;
+}
+.detail-container .main-comment .comment-card .avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 48rpx;
+  margin-right: 28rpx;
+  border: 4rpx solid #fff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+.detail-container .main-comment .comment-card .content-box {
+  flex: 1;
+}
+.detail-container .main-comment .comment-card .content-box .nickname {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 8rpx;
+  letter-spacing: 0.5rpx;
+}
+.detail-container .main-comment .comment-card .content-box .publish-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 16rpx;
+}
+.detail-container .main-comment .comment-card .content-box .content-text {
+  font-size: 32rpx;
+  color: #2d3748;
+  line-height: 1.7;
+  margin: 20rpx 0;
+  letter-spacing: 0.5rpx;
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar {
+  display: flex;
+  align-items: center;
+  gap: 28rpx;
+  margin-top: 24rpx;
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background: rgba(247, 250, 252, 0.8);
+  border: none;
+  padding: 14rpx 24rpx;
+  border-radius: 36rpx;
+  transition: all 0.25s ease;
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.like-btn.active {
+  background: rgba(255, 86, 86, 0.1);
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.like-btn.active .iconfont, .detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.like-btn.active .count {
+  color: #ff5656;
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.collect-btn.active {
+  background: rgba(255, 193, 7, 0.1);
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.collect-btn.active .iconfont, .detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.collect-btn.active .count {
+  color: #ffc107;
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.follow-btn.active {
+  background: rgba(0, 122, 255, 0.1);
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn.follow-btn.active .iconfont {
+  color: #007AFF;
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn .iconfont {
+  font-size: 34rpx;
+  color: #4a5568;
+}
+.detail-container .main-comment .comment-card .content-box .interaction-bar .action-btn .count {
+  font-size: 26rpx;
+  color: #4a5568;
+  font-weight: 500;
+}
+.detail-container .reply-list {
+  flex: 2;
+  padding: 28rpx;
+  position: relative;
+  background: #f1f5f9;
+}
+.detail-container .reply-list:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 80rpx;
+  height: 6rpx;
+  background: #e2e8f0;
+  border-radius: 3rpx;
+  margin-top: 10rpx;
+}
+.detail-container .reply-list .reply-item {
+  display: flex;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.03);
+  transition: -webkit-transform 0.25s ease;
+  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+}
+.detail-container .reply-list .reply-item:active {
+  -webkit-transform: translateX(4rpx);
+          transform: translateX(4rpx);
+}
+.detail-container .reply-list .reply-item .reply-avatar {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 34rpx;
+  margin-right: 20rpx;
+  border: 2rpx solid #fff;
+}
+.detail-container .reply-list .reply-item .reply-content {
+  flex: 1;
+}
+.detail-container .reply-list .reply-item .reply-content .reply-nickname {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 8rpx;
+  letter-spacing: 0.3rpx;
+}
+.detail-container .reply-list .reply-item .reply-content .reply-text {
+  font-size: 28rpx;
+  color: #4a5568;
+  margin-bottom: 10rpx;
+  line-height: 1.5;
+}
+.detail-container .reply-list .reply-item .reply-content .reply-time {
+  font-size: 22rpx;
+  color: #95a5a6;
+  font-style: italic;
+}
+.detail-container .comment-input-area {
+  display: flex;
+  padding: 28rpx 36rpx;
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.04);
+}
+.detail-container .comment-input-area .comment-input {
+  flex: 1;
+  height: 80rpx;
+  background: #f1f5f9;
+  border-radius: 40rpx;
+  padding: 0 32rpx;
+  font-size: 30rpx;
+  color: #2d3748;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 1rpx 3rpx rgba(0, 0, 0, 0.08);
+  margin-right: 20rpx;
+}
+.detail-container .comment-input-area .comment-input:focus {
+  background: #fff;
+  box-shadow: inset 0 1rpx 5rpx rgba(0, 0, 0, 0.15);
+}
+.detail-container .comment-input-area .send-btn {
+  width: 160rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #3182ce, #0056b3);
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.detail-container .comment-input-area .send-btn:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+  background: linear-gradient(135deg, #0056b3, #007AFF);
+}
+

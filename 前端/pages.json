@@ -1,0 +1,140 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "评论列表"
+			}
+		},
+		{
+			"path": "pages/detail/detail",
+			"style": {
+				"navigationBarTitleText": "评论详情"
+			}
+		},
+		{
+			"path": "pages/assistant/assistant",
+			"style": {
+				"navigationBarTitleText": "助手"
+			}
+		},
+		{
+			"path": "pages/mine/mine",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/post/post",
+			"style": {
+				"navigationBarTitleText": "写评论"
+			}
+		},
+		{
+			"path": "pages/mine/profile",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		},
+		{
+			"path": "pages/mine/wallet",
+			"style": {
+				"navigationBarTitleText": "我的钱包"
+			}
+		},
+		{
+			"path": "pages/mine/settings",
+			"style": {
+				"navigationBarTitleText": "系统设置"
+			}
+		},
+		{
+			"path": "pages/mine/feedback",
+			"style": {
+				"navigationBarTitleText": "用户反馈"
+			}
+		},
+		{
+			"path": "pages/footprint/footprint",
+			"style": {
+				"navigationBarTitleText": "我的足迹",
+				"navigationBarBackgroundColor": "#007AFF",
+				"navigationBarTextStyle": "white"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "旅游景点推荐",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#007AFF",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/tabs/home.png",
+				"selectedIconPath": "static/tabs/home-active.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/footprint/footprint",
+				"iconPath": "static/tabs/footprint.png",
+				"selectedIconPath": "static/tabs/footprint-active.png",
+				"text": "足迹"
+			},
+			{
+				"pagePath": "pages/post/post",
+				"text": "发布",
+				"iconPath": "static/tabs/add.png",
+				"selectedIconPath": "static/tabs/add-active.png"
+			},
+			{
+				"pagePath": "pages/assistant/assistant",
+				"text": "助手",
+				"iconPath": "static/tabs/assistant.png",
+				"selectedIconPath": "static/tabs/assistant-active.png"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"text": "我的",
+				"iconPath": "static/tabs/mine.png",
+				"selectedIconPath": "static/tabs/mine-active.png"
+			}
+		]
+	},
+	"uniIdRouter": {
+		"path": "pages/detail/detail",
+		"style": {
+			"navigationBarTitleText": "评论详情",
+			"app-plus": {
+				"titleNView": {
+					"buttons": [{
+						"text": "分享"
+					}]
+				}
+			}
+		}
+	},
+	"permission": {
+		"scope.userInfo": {
+			"desc": "需要获取您的头像和昵称用于个性化展示"
+		},
+		"scope.userFuzzyLocation": {
+			"desc": "需要获取您的大致位置用于记录旅行足迹"
+		}
+	},
+	"easycom": {
+    "autoscan": true,
+    "custom": {
+    "^uni-forms-item$": "@/uni_modules/uni-forms/components/uni-forms-item/uni-forms-item.vue",
+    "^uni-list-(.*)": "@/uni_modules/uni-list/components/uni-list-$1/uni-list-$1.vue",
+    "^uni-(.*)": "@/uni_modules/uni-$1/components/uni-$1/uni-$1.vue",
+    "^uni-(.*)/(.*)": "@/uni_modules/uni-$1/components/$2/$2.vue"
+  }
+}
+}

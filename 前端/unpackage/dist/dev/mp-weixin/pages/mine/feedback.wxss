@@ -1,0 +1,23 @@
+
+.feedback-container {
+  padding: 30rpx;
+}
+.section {
+  margin-bottom: 40rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.05);
+}
+.section-title {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: block;
+}
+.submit-btn {
+  margin-top: 60rpx;
+  width: 90%;
+  border-radius: 50rpx;
+}
+
