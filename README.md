@@ -1,7 +1,5 @@
----
-# 基于网络评论的旅游景点推荐小程序
-**前端** ： uniapp + vue2
-**后端**： Fastapi
+# Tourist attraction recommendation mini-program based on online reviews
+**Frontend**: uniapp + vue2
+Backend: Fastapi
 
-## 目前小程序后端正在写，还在完善...
----
+## At present, the backend of the applet is being written and is still being improved...
