@@ -119,7 +119,11 @@
 }
 .card-image {
   width: 100%;
+  height: 320rpx;
+  /* 固定高度 */
   border-radius: 16rpx 16rpx 0 0;
+  object-fit: cover;
+  /* 确保图片完全填充容器并保持比例 */
 }
 .card-content {
   padding: 20rpx;
@@ -135,9 +139,9 @@
   text-overflow: ellipsis;
 }
 .card-title:not(.expanded) {
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  max-height: 4.5em;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  max-height: 6em;
 }
 .expand-control {
   margin-top: 10rpx;

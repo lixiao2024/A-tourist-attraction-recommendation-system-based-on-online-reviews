@@ -18982,14 +18982,43 @@ function createPost(postData) {
  * 获取博文列表
  * @param {Number} skip - 跳过的记录数
  * @param {Number} limit - 返回的最大记录数
+ * @param {String} tag - 按标签筛选（可选）
+ * @param {Number} userId - 按用户ID筛选（可选）
  * @returns {Promise} - 返回博文列表
  */
 function getPosts() {
   var skip = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+  var tag = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var userId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  // 构建查询参数
+  var url = "/api/posts?skip=".concat(skip, "&limit=").concat(limit);
+
+  // 添加可选筛选参数
+  if (tag) {
+    url += "&tag=".concat(encodeURIComponent(tag));
+  }
+  if (userId) {
+    url += "&user_id=".concat(userId);
+  }
+  console.log('【DEBUG】getPosts - 请求URL:', baseURL + url);
   return (0, _request.default)({
-    url: "/api/posts?skip=".concat(skip, "&limit=").concat(limit),
+    url: url,
     method: 'GET'
+  }).then(function (res) {
+    console.log('【DEBUG】getPosts - 请求成功:', res);
+    // 确保返回的是数组
+    if (!res) {
+      return [];
+    }
+    if (!Array.isArray(res)) {
+      console.warn('【DEBUG】getPosts - 返回非数组结果:', res);
+      return [];
+    }
+    return res;
+  }).catch(function (err) {
+    console.error('【DEBUG】getPosts - 请求失败:', err);
+    throw err;
   });
 }
 
@@ -18999,9 +19028,20 @@ function getPosts() {
  * @returns {Promise} - 返回博文详情
  */
 function getPostDetail(postId) {
+  if (!postId) {
+    console.error('【DEBUG】getPostDetail - 缺少postId参数');
+    return Promise.reject(new Error('缺少postId参数'));
+  }
+  console.log('【DEBUG】getPostDetail - 请求URL:', baseURL + "/api/posts/".concat(postId));
   return (0, _request.default)({
     url: "/api/posts/".concat(postId),
     method: 'GET'
+  }).then(function (res) {
+    console.log('【DEBUG】getPostDetail - 请求成功:', res);
+    return res;
+  }).catch(function (err) {
+    console.error('【DEBUG】getPostDetail - 请求失败:', err);
+    throw err;
   });
 }
 
@@ -19057,7 +19097,7 @@ function publishComment(commentData) {
             case 17:
               // 构建发布数据
               postData = {
-                title: commentData.content.substring(0, 50) || '旅行分享',
+                title: commentData.title || commentData.content.substring(0, 50) || '旅行分享',
                 content: commentData.content,
                 images: uploadedImages,
                 tags: commentData.topics || [],
@@ -19072,25 +19112,81 @@ function publishComment(commentData) {
             case 21:
               result = _context.sent;
               console.log('【DEBUG】publishComment - 博文提交成功:', result);
+
+              // 将博文同时保存为笔记
+              saveAsNote({
+                id: result.id,
+                title: postData.title,
+                content: postData.content,
+                createTime: new Date().toISOString().split('T')[0],
+                // 格式化为YYYY-MM-DD
+                location: postData.location,
+                likeCount: 0,
+                commentCount: 0,
+                images: uploadedImages,
+                tags: postData.tags,
+                cover_image: coverImageUrl || (uploadedImages.length > 0 ? uploadedImages[0] : '')
+              });
               resolve(result);
-              _context.next = 30;
+              _context.next = 31;
               break;
-            case 26:
-              _context.prev = 26;
+            case 27:
+              _context.prev = 27;
               _context.t0 = _context["catch"](0);
               console.error('【DEBUG】publishComment - 出错:', _context.t0);
               reject(_context.t0);
-            case 30:
+            case 31:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 26]]);
+      }, _callee, null, [[0, 27]]);
     }));
     return function (_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }());
+}
+
+/**
+ * 将发布的内容保存为笔记
+ * @param {Object} noteData - 笔记数据
+ */
+function saveAsNote(noteData) {
+  try {
+    // 从本地存储获取现有笔记
+    var userNotes = uni.getStorageSync('userNotes') || [];
+
+    // 确保userNotes是数组
+    if (!Array.isArray(userNotes)) {
+      userNotes = [];
+    }
+
+    // 处理图片URL，确保使用完整路径
+    if (noteData.images && noteData.images.length > 0) {
+      noteData.images = noteData.images.map(function (img) {
+        // 检查URL是否完整，如果不是则添加基础URL
+        if (img && !img.startsWith('http')) {
+          return baseURL + img;
+        }
+        return img;
+      });
+    }
+
+    // 处理封面图URL
+    if (noteData.cover_image && !noteData.cover_image.startsWith('http')) {
+      noteData.cover_image = baseURL + noteData.cover_image;
+    }
+
+    // 添加新笔记到数组开头（最新的笔记显示在最前面）
+    userNotes.unshift(noteData);
+
+    // 保存回本地存储
+    uni.setStorageSync('userNotes', userNotes);
+    console.log('【DEBUG】saveAsNote - 笔记保存成功:', noteData);
+  } catch (e) {
+    console.error('【DEBUG】saveAsNote - 保存笔记失败:', e);
+  }
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
@@ -19120,6 +19216,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 // 基础URL - 使用局域网IP替代localhost
 var BASE_URL = 'http://192.168.1.10:8000';
+
+// 超时时间（毫秒）
+var TIMEOUT = 15000;
 
 // 请求拦截器
 var requestInterceptor = function requestInterceptor(config) {
@@ -19164,13 +19263,25 @@ var responseInterceptor = function responseInterceptor(response) {
   }
 
   // 其他错误
+  var errMsg = '请求失败';
+  if (response.data) {
+    if (typeof response.data === 'string') {
+      errMsg = response.data;
+    } else if (response.data.detail) {
+      errMsg = response.data.detail;
+    } else if (response.data.message) {
+      errMsg = response.data.message;
+    }
+  }
   uni.showToast({
-    title: response.data.detail || '请求失败',
+    title: errMsg,
     icon: 'none'
   });
-  return Promise.reject(_objectSpread({
-    statusCode: response.statusCode
-  }, response.data));
+  return Promise.reject({
+    statusCode: response.statusCode,
+    message: errMsg,
+    data: response.data
+  });
 };
 
 /**
@@ -19187,7 +19298,7 @@ function request(options) {
     header: options.header || {
       'Content-Type': 'application/json'
     },
-    timeout: options.timeout || 30000
+    timeout: options.timeout || TIMEOUT
   };
   console.log('【DEBUG】request - 开始请求:', config.url);
   console.log('【DEBUG】request - 请求方法:', config.method);
@@ -19196,31 +19307,68 @@ function request(options) {
 
   // 处理请求拦截
   var finalConfig = requestInterceptor(config);
-  console.log('【DEBUG】request - 拦截器处理后:', finalConfig);
 
-  // 发起请求
+  // 网络检查
   return new Promise(function (resolve, reject) {
-    uni.request(_objectSpread(_objectSpread({}, finalConfig), {}, {
-      success: function success(res) {
-        console.log('【DEBUG】request - 请求成功, 状态码:', res.statusCode);
-        console.log('【DEBUG】request - 响应数据:', res.data);
-        try {
-          var result = responseInterceptor(res);
-          resolve(result);
-        } catch (error) {
-          console.error('【DEBUG】request - 响应拦截器错误:', error);
-          reject(error);
+    // 检查网络状态
+    uni.getNetworkType({
+      success: function success(networkRes) {
+        if (networkRes.networkType === 'none') {
+          uni.showToast({
+            title: '网络连接不可用，请检查网络设置',
+            icon: 'none'
+          });
+          reject(new Error('网络连接不可用'));
+          return;
         }
+
+        // 发起请求
+        uni.request(_objectSpread(_objectSpread({}, finalConfig), {}, {
+          success: function success(res) {
+            console.log('【DEBUG】request - 请求成功, 状态码:', res.statusCode);
+            console.log('【DEBUG】request - 响应数据:', res.data);
+            try {
+              var result = responseInterceptor(res);
+              resolve(result);
+            } catch (error) {
+              console.error('【DEBUG】request - 响应拦截器错误:', error);
+              reject(error);
+            }
+          },
+          fail: function fail(error) {
+            console.error('【DEBUG】request - 请求失败:', error);
+            var errorMsg = '网络请求失败';
+            // 处理常见错误
+            if (error.errMsg) {
+              if (error.errMsg.includes('timeout')) {
+                errorMsg = '请求超时，请稍后再试';
+              } else if (error.errMsg.includes('abort')) {
+                errorMsg = '请求已取消';
+              } else if (error.errMsg.includes('fail')) {
+                // 检查是否是因为服务器不可达
+                if (error.errMsg.includes('fail:')) {
+                  errorMsg = '无法连接到服务器，请检查网络';
+                }
+              }
+            }
+            uni.showToast({
+              title: errorMsg,
+              icon: 'none'
+            });
+            reject(_objectSpread(_objectSpread({}, error), {}, {
+              message: errorMsg
+            }));
+          }
+        }));
       },
-      fail: function fail(error) {
-        console.error('【DEBUG】request - 请求失败:', error);
+      fail: function fail() {
         uni.showToast({
-          title: '网络请求失败',
+          title: '无法获取网络状态',
           icon: 'none'
         });
-        reject(error);
+        reject(new Error('无法获取网络状态'));
       }
-    }));
+    });
   });
 }
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))

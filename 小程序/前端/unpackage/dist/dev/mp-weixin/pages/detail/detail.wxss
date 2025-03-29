@@ -77,6 +77,22 @@
   line-height: 1.7;
   letter-spacing: 1rpx;
 }
+.comment-card .content-wrapper .images-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20rpx;
+}
+.comment-card .content-wrapper .images-container .content-image {
+  width: 33.33%;
+  height: auto;
+  margin-bottom: 10rpx;
+  border-radius: 4rpx;
+  overflow: hidden;
+  margin-right: 10rpx;
+}
+.comment-card .content-wrapper .images-container .content-image:nth-child(3n) {
+  margin-right: 0;
+}
 .interaction-bar {
   display: flex;
   align-items: center;

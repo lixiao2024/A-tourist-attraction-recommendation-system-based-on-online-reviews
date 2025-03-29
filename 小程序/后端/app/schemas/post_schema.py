@@ -44,6 +44,8 @@ class PostBrief(BaseModel):
     created_at: datetime
     likes_count: int = 0
     comments_count: int = 0
+    user: Optional[dict] = None  # 添加用户信息字段
+    content: str  # 添加内容字段
     
     class Config:
         orm_mode = True 

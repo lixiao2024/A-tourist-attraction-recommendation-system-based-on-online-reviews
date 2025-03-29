@@ -6,7 +6,7 @@ import requests
 from datetime import datetime, timedelta
 from jose import jwt
 from typing import Optional, Dict, Any, List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 import os
 import uuid
 import logging
@@ -37,6 +37,11 @@ SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
+# 设置常量
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
+os.makedirs(UPLOADS_DIR, exist_ok=True)
+
 # Initialize FastAPI app
 app = FastAPI(
     title="旅游景点智能推荐系统API",
@@ -54,7 +59,7 @@ app.add_middleware(
 )
 
 # 注册静态文件服务
-app.mount("/uploads", StaticFiles(directory=os.path.join(settings.BASE_DIR, "uploads")), name="uploads")
+app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
 
 # 数据库依赖
 def get_db():
@@ -95,7 +100,7 @@ def allowed_file(filename):
 
 # 创建用户上传目录
 def create_user_upload_dir(user_id):
-    user_dir = os.path.join(settings.UPLOADS_DIR, str(user_id))
+    user_dir = os.path.join(UPLOADS_DIR, str(user_id))
     if not os.path.exists(user_dir):
         os.makedirs(user_dir, exist_ok=True)
     return user_dir
@@ -375,12 +380,16 @@ async def create_post(
         - 创建成功的博文简要信息，包含ID和标题
     """
     try:
-        # 创建新的博文对象，明确指定字段，不包含 updated_at
+        # 确保images和tags是列表类型
+        images = list(post.images) if post.images else []
+        tags = list(post.tags) if post.tags else []
+        
+        # 创建新的博文对象
         new_post = Post(
             title=post.title,
             content=post.content,
-            images=post.images,
-            tags=post.tags,
+            images=images,  # 确保是列表
+            tags=tags,      # 确保是列表
             location=post.location,
             cover_image=post.cover_image,
             user_id=current_user.id,
@@ -408,13 +417,13 @@ async def create_post(
         logger.error(f"创建博文失败: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="服务器错误，博文创建失败"
+            detail=f"服务器错误，博文创建失败: {str(e)}"
         )
     except Exception as e:
         logger.error(f"未预期的错误: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="发生未知错误"
+            detail=f"发生未知错误: {str(e)}"
         )
 
 @app.get("/api/posts", response_model=List[PostBrief])
@@ -439,7 +448,10 @@ async def get_posts(
     """
     try:
         # 构建查询
-        query = db.query(Post)
+        query = db.query(Post).options(
+            # 加载用户关系
+            joinedload(Post.user)
+        )
         
         # 如果提供了用户ID，则只返回该用户的博文
         if user_id:
@@ -453,7 +465,33 @@ async def get_posts(
             
         # 获取结果
         posts = query.order_by(Post.created_at.desc()).offset(skip).limit(limit).all()
-        return posts
+        
+        # 处理结果，手动添加用户信息
+        result = []
+        for post in posts:
+            post_dict = {
+                "id": post.id,
+                "title": post.title,
+                "content": post.content,
+                "cover_image": post.cover_image,
+                "created_at": post.created_at,
+                "likes_count": post.likes_count,
+                "comments_count": post.comments_count,
+                "user": None
+            }
+            
+            # 如果有用户信息，添加到结果中
+            if post.user:
+                post_dict["user"] = {
+                    "id": post.user.id,
+                    "username": post.user.nickname,
+                    "nickname": post.user.nickname,
+                    "avatar": post.user.avatar_url
+                }
+            
+            result.append(post_dict)
+        
+        return result
     except Exception as e:
         logger.error(f"获取博文列表时出错: {str(e)}")
         raise HTTPException(

@@ -5,6 +5,9 @@
 // 基础URL - 使用局域网IP替代localhost
 const BASE_URL = 'http://192.168.1.10:8000';
 
+// 超时时间（毫秒）
+const TIMEOUT = 15000;
+
 // 请求拦截器
 const requestInterceptor = (config) => {
   // 获取token
@@ -52,14 +55,26 @@ const responseInterceptor = (response) => {
   }
   
   // 其他错误
+  let errMsg = '请求失败';
+  if (response.data) {
+    if (typeof response.data === 'string') {
+      errMsg = response.data;
+    } else if (response.data.detail) {
+      errMsg = response.data.detail;
+    } else if (response.data.message) {
+      errMsg = response.data.message;
+    }
+  }
+  
   uni.showToast({
-    title: response.data.detail || '请求失败',
+    title: errMsg,
     icon: 'none'
   });
   
   return Promise.reject({
     statusCode: response.statusCode,
-    ...response.data
+    message: errMsg,
+    data: response.data
   });
 };
 
@@ -77,7 +92,7 @@ export default function request(options) {
     header: options.header || {
       'Content-Type': 'application/json'
     },
-    timeout: options.timeout || 30000
+    timeout: options.timeout || TIMEOUT
   };
   
   console.log('【DEBUG】request - 开始请求:', config.url);
@@ -87,30 +102,71 @@ export default function request(options) {
   
   // 处理请求拦截
   const finalConfig = requestInterceptor(config);
-  console.log('【DEBUG】request - 拦截器处理后:', finalConfig);
   
-  // 发起请求
+  // 网络检查
   return new Promise((resolve, reject) => {
-    uni.request({
-      ...finalConfig,
-      success: (res) => {
-        console.log('【DEBUG】request - 请求成功, 状态码:', res.statusCode);
-        console.log('【DEBUG】request - 响应数据:', res.data);
-        try {
-          const result = responseInterceptor(res);
-          resolve(result);
-        } catch (error) {
-          console.error('【DEBUG】request - 响应拦截器错误:', error);
-          reject(error);
+    // 检查网络状态
+    uni.getNetworkType({
+      success: (networkRes) => {
+        if (networkRes.networkType === 'none') {
+          uni.showToast({
+            title: '网络连接不可用，请检查网络设置',
+            icon: 'none'
+          });
+          reject(new Error('网络连接不可用'));
+          return;
         }
+        
+        // 发起请求
+        uni.request({
+          ...finalConfig,
+          success: (res) => {
+            console.log('【DEBUG】request - 请求成功, 状态码:', res.statusCode);
+            console.log('【DEBUG】request - 响应数据:', res.data);
+            try {
+              const result = responseInterceptor(res);
+              resolve(result);
+            } catch (error) {
+              console.error('【DEBUG】request - 响应拦截器错误:', error);
+              reject(error);
+            }
+          },
+          fail: (error) => {
+            console.error('【DEBUG】request - 请求失败:', error);
+            
+            let errorMsg = '网络请求失败';
+            // 处理常见错误
+            if (error.errMsg) {
+              if (error.errMsg.includes('timeout')) {
+                errorMsg = '请求超时，请稍后再试';
+              } else if (error.errMsg.includes('abort')) {
+                errorMsg = '请求已取消';
+              } else if (error.errMsg.includes('fail')) {
+                // 检查是否是因为服务器不可达
+                if (error.errMsg.includes('fail:')) {
+                  errorMsg = '无法连接到服务器，请检查网络';
+                }
+              }
+            }
+            
+            uni.showToast({
+              title: errorMsg,
+              icon: 'none'
+            });
+            
+            reject({
+              ...error,
+              message: errorMsg
+            });
+          }
+        });
       },
-      fail: (error) => {
-        console.error('【DEBUG】request - 请求失败:', error);
+      fail: () => {
         uni.showToast({
-          title: '网络请求失败',
+          title: '无法获取网络状态',
           icon: 'none'
         });
-        reject(error);
+        reject(new Error('无法获取网络状态'));
       }
     });
   });

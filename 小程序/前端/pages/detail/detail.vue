@@ -13,6 +13,19 @@
           
           <view class="content-wrapper">
             <text class="content-text">{{ detail.content }}</text>
+            
+            <!-- 添加图片展示 -->
+            <view class="images-container" v-if="detail.images && detail.images.length > 0">
+              <image 
+                v-for="(image, index) in detail.images" 
+                :key="index"
+                :src="image" 
+                mode="widthFix" 
+                class="content-image"
+                @tap="previewImage(image, detail.images)"
+                @error="handleImageError(index)"
+              ></image>
+            </view>
           </view>
           
           <!-- 互动功能区 -->
@@ -155,11 +168,14 @@
   </template>
   
   <script>
+  import { getPostDetail } from '@/request/api.js'
+
   export default {
     // 移除不必要的配置，使用pages.json中的配置
     data() {
       return {
         commentId: null,
+        contentType: 'comment',
         // 初始化空对象，避免渲染时获取不到属性
         detail: {
           id: 0,
@@ -196,43 +212,195 @@
     },
     onLoad(options) {
       // 获取传递的评论ID参数
-      this.commentId = options.commentId || null;
+      this.commentId = options.id || null;
+      // 获取传递的类型参数（评论或笔记）
+      this.contentType = options.type || 'comment';
       
-      // 初始化数据
-      this.initData();
+      if (this.contentType === 'note') {
+        // 从本地存储获取笔记数据
+        this.loadNoteData();
+      } else {
+        // 正常加载评论数据
+        this.initData();
+      }
     },
     methods: {
-      // 初始化数据
-      async initData() {
+      // 加载笔记数据
+      loadNoteData() {
         try {
-          // 显示页面加载动画
+          // 显示加载中
           uni.showLoading({
             title: '加载中...',
             mask: true
           });
           
-          if (this.commentId) {
-            await Promise.all([
-              this.loadCommentDetail(),
-              this.loadReplies()
-            ]);
+          // 从本地存储获取当前笔记
+          const noteData = uni.getStorageSync('currentNote');
+          
+          if (noteData) {
+            // 处理图片URL，确保URL正确
+            let images = [];
+            if (noteData.images && noteData.images.length > 0) {
+              images = noteData.images.filter(img => img && typeof img === 'string');
+              console.log('处理后的图片数组:', images);
+            }
             
-            // 检查用户状态
-            this.checkUserInteractionStatus();
+            // 格式化笔记数据为详情页需要的格式
+            this.detail = {
+              id: noteData.id,
+              avatar: noteData.avatar || '/static/default-avatar.png',
+              nickname: uni.getStorageSync('userInfo')?.nickname || '匿名用户',
+              content: noteData.content,
+              publishTime: noteData.createTime,
+              likeCount: noteData.likeCount || 0,
+              commentCount: noteData.commentCount || 0,
+              isLiked: noteData.isLiked || false,
+              isCollected: noteData.isCollected || false,
+              isFollowed: false,
+              images: images
+            };
             
-            // 标记数据已加载完成
+            // 如果有评论数据，加载评论
+            if (noteData.replies && noteData.replies.length > 0) {
+              this.replies = noteData.replies;
+              this.hasMore = false;
+            } else {
+              this.replies = [];
+              this.hasMore = false;
+            }
+            
             this.isDataLoaded = true;
+          } else {
+            uni.showToast({
+              title: '笔记不存在',
+              icon: 'none'
+            });
+            
+            // 延迟返回
+            setTimeout(() => {
+              uni.navigateBack({
+                fail: () => {
+                  // 如果返回失败，则跳转到我的页面
+                  uni.switchTab({
+                    url: '/pages/mine/mine'
+                  });
+                }
+              });
+            }, 1500);
+          }
+        } catch (error) {
+          console.error('加载笔记数据失败:', error);
+          uni.showToast({
+            title: '加载失败',
+            icon: 'none'
+          });
+        } finally {
+          uni.hideLoading();
+        }
+      },
+      
+      // 初始化数据
+      async initData() {
+        if (this.isDataLoaded) return;
+        
+        // 确保有评论ID
+        if (!this.commentId) {
+          uni.showToast({
+            title: '参数错误',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        try {
+          uni.showLoading({
+            title: '加载中...',
+            mask: true
+          });
+          
+          // 加载评论详情
+          if (this.commentId) {
+            try {
+              // 从API获取帖子详情
+              const postDetail = await getPostDetail(this.commentId);
+              console.log('获取到的帖子详情:', postDetail);
+              
+              if (postDetail) {
+                // 转换数据格式以适应前端展示
+                this.detail = {
+                  id: postDetail.id,
+                  avatar: '/static/default-avatar.png', // 或者从用户数据中获取
+                  nickname: postDetail.user?.nickname || '旅行达人',
+                  content: postDetail.content,
+                  publishTime: this.formatPublishTime(postDetail.created_at),
+                  likeCount: postDetail.likes_count || 0,
+                  commentCount: postDetail.comments_count || 0,
+                  collectCount: postDetail.collects_count || 0,
+                  isLiked: false,
+                  isCollected: false,
+                  isFollowed: false,
+                  images: postDetail.images || []
+                };
+                
+                // 加载回复列表
+                await this.loadCommentReplies();
+                
+                // 设置用户交互状态
+                this.checkUserInteractions();
+              } else {
+                // 如果API没有返回数据，则加载模拟数据
+                await this.loadMockData();
+              }
+            } catch (error) {
+              console.error('API请求失败:', error);
+              // API请求失败时，加载模拟数据
+              await this.loadMockData();
+            }
           }
           
-          // 隐藏页面加载动画
-          uni.hideLoading();
+          this.isDataLoaded = true;
         } catch (error) {
           console.error('初始化数据失败:', error);
-          uni.hideLoading();
           uni.showToast({
             title: '加载失败，请重试',
             icon: 'none'
           });
+        } finally {
+          uni.hideLoading();
+        }
+      },
+      
+      // 加载模拟数据（当API请求失败时使用）
+      async loadMockData() {
+        await Promise.all([
+          this.loadCommentDetail(),
+          this.loadCommentReplies()
+        ]);
+      },
+      
+      // 格式化发布时间
+      formatPublishTime(timeStr) {
+        if (!timeStr) return '未知时间';
+        
+        const publishTime = new Date(timeStr);
+        const now = new Date();
+        const diffMs = now - publishTime;
+        const diffSec = Math.floor(diffMs / 1000);
+        const diffMin = Math.floor(diffSec / 60);
+        const diffHour = Math.floor(diffMin / 60);
+        const diffDay = Math.floor(diffHour / 24);
+        
+        if (diffSec < 60) {
+          return '刚刚';
+        } else if (diffMin < 60) {
+          return `${diffMin}分钟前`;
+        } else if (diffHour < 24) {
+          return `${diffHour}小时前`;
+        } else if (diffDay < 30) {
+          return `${diffDay}天前`;
+        } else {
+          // 返回具体日期，如 2023-05-01
+          return publishTime.toISOString().split('T')[0];
         }
       },
       
@@ -351,6 +519,11 @@
         });
       },
       
+      // 加载评论的回复
+      loadCommentReplies() {
+        return this.loadReplies();
+      },
+      
       // 刷新评论
       refreshComments(e) {
         this.isRefreshing = true;
@@ -358,13 +531,26 @@
         this.hasMore = true;
         this.replies = [];
         
-        this.loadReplies().then(() => {
-          this.isRefreshing = false;
-          uni.stopPullDownRefresh();
-          if (e && typeof e.stopPullDownRefresh === 'function') {
-            e.stopPullDownRefresh();
-          }
-        });
+        // 根据内容类型选择加载方法
+        if (this.contentType === 'note') {
+          // 刷新笔记评论
+          this.loadNoteData().then(() => {
+            this.isRefreshing = false;
+            uni.stopPullDownRefresh();
+            if (e && typeof e.stopPullDownRefresh === 'function') {
+              e.stopPullDownRefresh();
+            }
+          });
+        } else {
+          // 刷新评论回复
+          this.loadReplies().then(() => {
+            this.isRefreshing = false;
+            uni.stopPullDownRefresh();
+            if (e && typeof e.stopPullDownRefresh === 'function') {
+              e.stopPullDownRefresh();
+            }
+          });
+        }
       },
       
       // 滚动到底部加载更多
@@ -372,6 +558,11 @@
         if (!this.loading && this.hasMore) {
           this.loadReplies();
         }
+      },
+      
+      // 检查用户交互状态
+      checkUserInteractions() {
+        this.checkUserInteractionStatus();
       },
       
       // 检查用户交互状态
@@ -832,6 +1023,22 @@
         
         // 保存更新后的统计数据
         uni.setStorageSync(`authorStats_${this.detail.nickname}`, authorStatsData);
+      },
+      
+      // 处理图片加载错误
+      handleImageError(index) {
+        if (this.detail.images && this.detail.images.length > index) {
+          console.log('图片加载失败:', this.detail.images[index]);
+          this.detail.images[index] = '/static/default-img.png';
+        }
+      },
+      
+      // 预览图片
+      previewImage(current, urls) {
+        uni.previewImage({
+          current: current,
+          urls: urls
+        });
       }
     }
   };
@@ -896,6 +1103,25 @@
         color: #333;
         line-height: 1.7;
         letter-spacing: 1rpx;
+      }
+      
+      .images-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20rpx;
+        
+        .content-image {
+          width: 33.33%;
+          height: auto;
+          margin-bottom: 10rpx;
+          border-radius: 4rpx;
+          overflow: hidden;
+          margin-right: 10rpx;
+          
+          &:nth-child(3n) {
+            margin-right: 0;
+          }
+        }
       }
     }
   }

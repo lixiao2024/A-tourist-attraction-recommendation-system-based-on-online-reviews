@@ -30,13 +30,27 @@
             @click="viewNoteDetail(note.id)"
           >
             <!-- 图片区域 -->
-            <image 
-              v-if="note.images && note.images.length > 0"
-              class="card-image" 
-              :src="note.images[0]" 
-              mode="widthFix"
-              @error="handleImageError(note)"
-            ></image>
+            <view class="card-image-container">
+              <image 
+                v-if="note.cover_image"
+                class="card-image" 
+                :src="note.cover_image" 
+                mode="aspectFill"
+                @error="handleImageError(note)"
+              >
+              </image>
+              <image 
+                v-else-if="note.images && note.images.length > 0"
+                class="card-image" 
+                :src="note.images[0]" 
+                mode="aspectFill"
+                @error="handleImageError(note)"
+              >
+              </image>
+              <view v-else class="no-image-placeholder">
+                <text class="empty-image-icon">📝</text>
+              </view>
+            </view>
             
             <!-- 内容区域 -->
             <view class="card-content">
@@ -87,13 +101,27 @@
             @click="viewNoteDetail(note.id)"
           >
             <!-- 图片区域 -->
-            <image 
-              v-if="note.images && note.images.length > 0"
-              class="card-image" 
-              :src="note.images[0]" 
-              mode="widthFix"
-              @error="handleImageError(note)"
-            ></image>
+            <view class="card-image-container">
+              <image 
+                v-if="note.cover_image"
+                class="card-image" 
+                :src="note.cover_image" 
+                mode="aspectFill"
+                @error="handleImageError(note)"
+              >
+              </image>
+              <image 
+                v-else-if="note.images && note.images.length > 0"
+                class="card-image" 
+                :src="note.images[0]" 
+                mode="aspectFill"
+                @error="handleImageError(note)"
+              >
+              </image>
+              <view v-else class="no-image-placeholder">
+                <text class="empty-image-icon">📝</text>
+              </view>
+            </view>
             
             <!-- 内容区域 -->
             <view class="card-content">
@@ -201,77 +229,65 @@ export default {
       this.loading = true;
       
       try {
-        // 模拟API请求（实际项目中替换为真实接口调用）
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // 模拟API请求延迟
+        await new Promise(resolve => setTimeout(resolve, 500));
         
-        // 如果是第一页并且没有测试数据，则添加一些模拟数据
-        if (this.page === 1 && this.notes.length === 0) {
-          // 本地存储中检查是否有笔记数据
-          const savedNotes = uni.getStorageSync('userNotes');
+        // 从本地存储中获取笔记数据
+        const savedNotes = uni.getStorageSync('userNotes');
+        
+        if (this.page === 1) {
+          // 第一页：重置笔记列表
           if (savedNotes && savedNotes.length > 0) {
+            // 使用真实的用户笔记数据
             this.notes = savedNotes.map(note => ({
               ...note,
               expanded: false,
               isLiked: false
             }));
-          } else {
-            // 模拟笔记数据
-            this.notes = [
-              {
-                id: 1,
-                title: '西湖一日游',
-                content: '今天去了西湖，风景真的太美了！西湖十景真的名不虚传，特别是断桥残雪和平湖秋月，让人流连忘返。',
-                createTime: '2024-03-15',
-                location: '杭州·西湖',
-                likeCount: 24,
-                commentCount: 5,
-                expanded: false,
-                isLiked: false,
-                images: [
-                  '/static/tabs/home.png'
-                ]
-              },
-              {
-                id: 2,
-                title: '故宫之行',
-                content: '参观了故宫博物院，深深感受到了中国古代建筑的宏伟和历史的厚重。紫禁城真的太壮观了！',
-                createTime: '2024-02-28',
-                location: '北京·故宫',
-                likeCount: 18,
-                commentCount: 3,
-                expanded: false,
-                isLiked: false,
-                images: [
-                  '/static/tabs/mine.png'
-                ]
-              }
-            ];
+            
+            // 如果笔记数量少于每页数量，设置没有更多
+            if (savedNotes.length < this.pageSize) {
+              this.hasMore = false;
+            }
+          } else if (this.notes.length === 0) {
+            // 如果没有笔记数据，保持空数组
+            this.notes = [];
+            this.hasMore = false;
           }
-        } 
-        // 如果不是第一页，模拟加载更多数据
-        else if (this.page > 1) {
-          if (this.page <= 3) {  // 限制只有3页数据
-            const moreNotes = [
-              {
-                id: this.notes.length + 1,
-                title: `第${this.page}页笔记`,
-                content: `这是加载的第${this.page}页笔记内容，描述我的旅行体验...`,
-                createTime: '2024-01-15',
-                location: '某地·景点',
-                likeCount: Math.floor(Math.random() * 20),
-                commentCount: Math.floor(Math.random() * 10),
-                expanded: false,
-                isLiked: false,
-                images: ['/static/tabs/home.png']
+        } else {
+          // 分页加载：如果有足够的笔记，加载下一页
+          const startIndex = (this.page - 1) * this.pageSize;
+          if (savedNotes && startIndex < savedNotes.length) {
+            const endIndex = Math.min(startIndex + this.pageSize, savedNotes.length);
+            const nextPageNotes = savedNotes.slice(startIndex, endIndex);
+            
+            if (nextPageNotes.length > 0) {
+              // 添加到现有笔记列表
+              this.notes = [
+                ...this.notes,
+                ...nextPageNotes.map(note => ({
+                  ...note,
+                  expanded: false,
+                  isLiked: false
+                }))
+              ];
+              
+              // 如果加载的笔记数量少于每页数量，设置没有更多
+              if (nextPageNotes.length < this.pageSize) {
+                this.hasMore = false;
               }
-            ];
-            this.notes = [...this.notes, ...moreNotes];
+            } else {
+              this.hasMore = false;
+            }
           } else {
             this.hasMore = false;
           }
         }
         
-        this.page++;
+        // 更新页码
+        if (this.hasMore) {
+          this.page++;
+        }
       } catch (error) {
         console.error('加载笔记失败:', error);
         uni.showToast({
@@ -285,9 +301,13 @@ export default {
     
     // 处理图片加载错误
     handleImageError(note) {
-      // 使用默认图片
+      // 如果cover_image加载失败，设置默认图片
+      if (note.cover_image) {
+        note.cover_image = '/static/default-image.png';
+      }
+      // 如果首张图片加载失败，设置默认图片
       if (note.images && note.images.length > 0) {
-        note.images[0] = '/static/default-avatar.png';
+        note.images[0] = '/static/default-image.png';
       }
     },
     
@@ -335,8 +355,16 @@ export default {
     
     // 查看笔记详情
     viewNoteDetail(id) {
+      // 从笔记列表中查找对应的笔记
+      const note = this.notes.find(item => item.id === id);
+      if (!note) return;
+      
+      // 将当前笔记详情保存到本地，以便详情页获取
+      uni.setStorageSync('currentNote', note);
+      
+      // 导航到详情页
       uni.navigateTo({
-        url: `/pages/note/detail?id=${id}`
+        url: `/pages/detail/detail?id=${id}&type=note`
       });
     },
     
@@ -462,6 +490,8 @@ export default {
 
 .waterfall-column {
   width: 48%;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-item {
@@ -472,19 +502,34 @@ export default {
   box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
   transition: all 0.3s;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 520rpx; /* 设置固定高度 */
 }
 
 .card-item:active {
   transform: scale(0.98);
 }
 
+.card-image-container {
+  width: 100%;
+  height: 320rpx;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16rpx 16rpx 0 0;
+}
+
 .card-image {
   width: 100%;
-  border-radius: 16rpx 16rpx 0 0;
+  height: 100%;
+  object-fit: cover;
 }
 
 .card-content {
   padding: 20rpx;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-title {
@@ -496,12 +541,12 @@ export default {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 2.8em;
 }
 
 .card-title:not(.expanded) {
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  max-height: 4.5em;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .expand-control {
@@ -535,10 +580,12 @@ export default {
   font-size: 24rpx;
   color: #999;
   margin-bottom: 16rpx;
+  height: 40rpx;
 }
 
 .note-time {
   margin-right: 20rpx;
+  white-space: nowrap;
 }
 
 .note-location {
@@ -565,12 +612,14 @@ export default {
   align-items: center;
   justify-content: flex-end;
   gap: 24rpx;
+  height: 60rpx;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
   gap: 6rpx;
+  height: 100%;
 }
 
 .count {
@@ -643,5 +692,22 @@ export default {
   color: #666;
   margin: 10rpx 0;
   border-bottom: none;
+}
+
+/* 创建一个无图片时的占位区域 */
+.no-image-placeholder {
+  width: 100%;
+  height: 320rpx;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  font-size: 28rpx;
+}
+
+.empty-image-icon {
+  font-size: 80rpx;
+  margin-bottom: 10rpx;
 }
 </style> 

@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from sqlalchemy.exc import SQLAlchemyError
 import logging
 import datetime
+import sqlalchemy
 
 from app.schemas.post_schema import PostCreate, PostResponse, PostBrief
 from app.models.post_model import Post
@@ -34,12 +35,16 @@ async def create_post(
         - 创建成功的博文简要信息，包含ID和标题
     """
     try:
-        # 创建新的博文对象，明确指定字段，不包含 updated_at
+        # 确保images和tags是列表类型
+        images = list(post.images) if post.images else []
+        tags = list(post.tags) if post.tags else []
+        
+        # 创建新的博文对象，明确指定字段
         new_post = Post(
             title=post.title,
             content=post.content,
-            images=post.images,
-            tags=post.tags,
+            images=images,  # 确保是列表
+            tags=tags,      # 确保是列表
             location=post.location,
             cover_image=post.cover_image,
             user_id=current_user.id,
@@ -67,13 +72,13 @@ async def create_post(
         logger.error(f"创建博文失败: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="服务器错误，博文创建失败"
+            detail=f"服务器错误，博文创建失败: {str(e)}"
         )
     except Exception as e:
         logger.error(f"未预期的错误: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="发生未知错误"
+            detail=f"发生未知错误: {str(e)}"
         )
 
 @router.get("/", response_model=List[PostBrief])
@@ -98,7 +103,10 @@ async def get_posts(
     """
     try:
         # 构建查询
-        query = db.query(Post)
+        query = db.query(Post).options(
+            # 加载用户关系
+            sqlalchemy.orm.joinedload(Post.user)
+        )
         
         # 如果提供了用户ID，则只返回该用户的博文
         if user_id:
@@ -112,7 +120,33 @@ async def get_posts(
             
         # 获取结果
         posts = query.order_by(Post.created_at.desc()).offset(skip).limit(limit).all()
-        return posts
+        
+        # 处理结果，手动添加用户信息
+        result = []
+        for post in posts:
+            post_dict = {
+                "id": post.id,
+                "title": post.title,
+                "content": post.content,
+                "cover_image": post.cover_image,
+                "created_at": post.created_at,
+                "likes_count": post.likes_count,
+                "comments_count": post.comments_count,
+                "user": None
+            }
+            
+            # 如果有用户信息，添加到结果中
+            if post.user:
+                post_dict["user"] = {
+                    "id": post.user.id,
+                    "username": post.user.nickname,
+                    "nickname": post.user.nickname,
+                    "avatar": post.user.avatar_url
+                }
+            
+            result.append(post_dict)
+        
+        return result
     except Exception as e:
         logger.error(f"获取博文列表时出错: {str(e)}")
         raise HTTPException(

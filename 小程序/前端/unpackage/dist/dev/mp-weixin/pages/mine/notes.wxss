@@ -61,6 +61,8 @@
 }
 .waterfall-column {
   width: 48%;
+  display: flex;
+  flex-direction: column;
 }
 .card-item {
   margin-bottom: 24rpx;
@@ -70,17 +72,31 @@
   box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
   transition: all 0.3s;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 520rpx; /* 设置固定高度 */
 }
 .card-item:active {
   -webkit-transform: scale(0.98);
           transform: scale(0.98);
 }
+.card-image-container {
+  width: 100%;
+  height: 320rpx;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16rpx 16rpx 0 0;
+}
 .card-image {
   width: 100%;
-  border-radius: 16rpx 16rpx 0 0;
+  height: 100%;
+  object-fit: cover;
 }
 .card-content {
   padding: 20rpx;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 .card-title {
   font-size: 28rpx;
@@ -91,11 +107,11 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 2.8em;
 }
 .card-title:not(.expanded) {
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  max-height: 4.5em;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 .expand-control {
   margin-top: 10rpx;
@@ -126,9 +142,11 @@
   font-size: 24rpx;
   color: #999;
   margin-bottom: 16rpx;
+  height: 40rpx;
 }
 .note-time {
   margin-right: 20rpx;
+  white-space: nowrap;
 }
 .note-location {
   display: flex;
@@ -152,11 +170,13 @@
   align-items: center;
   justify-content: flex-end;
   gap: 24rpx;
+  height: 60rpx;
 }
 .action-btn {
   display: flex;
   align-items: center;
   gap: 6rpx;
+  height: 100%;
 }
 .count {
   font-size: 24rpx;
@@ -217,5 +237,21 @@
   color: #666;
   margin: 10rpx 0;
   border-bottom: none;
+}
+
+/* 创建一个无图片时的占位区域 */
+.no-image-placeholder {
+  width: 100%;
+  height: 320rpx;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  font-size: 28rpx;
+}
+.empty-image-icon {
+  font-size: 80rpx;
+  margin-bottom: 10rpx;
 }
 

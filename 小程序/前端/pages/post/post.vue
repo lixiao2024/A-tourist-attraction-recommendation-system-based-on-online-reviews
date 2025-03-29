@@ -447,9 +447,12 @@ export default {
           duration: 2000
         });
         
-        // 发布成功后返回上一页
+        // 发布成功后跳转到首页或笔记页
         setTimeout(() => {
-          uni.navigateBack();
+          // 使用switchTab代替navigateBack，避免在第一页时的错误
+          uni.switchTab({
+            url: '/pages/mine/mine'
+          });
         }, 2000);
       } catch (error) {
         console.error('发布失败', error);

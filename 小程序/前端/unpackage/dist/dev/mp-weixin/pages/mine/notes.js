@@ -130,7 +130,9 @@ var render = function () {
   var l0 = !(g0 === 0)
     ? _vm.__map(_vm.leftColumn, function (note, __i0__) {
         var $orig = _vm.__get_orig(note)
-        var g1 = note.images && note.images.length > 0
+        var g1 = !note.cover_image
+          ? note.images && note.images.length > 0
+          : null
         var m0 = _vm.showExpandControl(note)
         return {
           $orig: $orig,
@@ -142,7 +144,9 @@ var render = function () {
   var l1 = !(g0 === 0)
     ? _vm.__map(_vm.rightColumn, function (note, __i1__) {
         var $orig = _vm.__get_orig(note)
-        var g2 = note.images && note.images.length > 0
+        var g2 = !note.cover_image
+          ? note.images && note.images.length > 0
+          : null
         var m1 = _vm.showExpandControl(note)
         return {
           $orig: $orig,
@@ -401,6 +405,34 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   data: function data() {
     return {
@@ -436,7 +468,7 @@ var _default = {
     loadNotes: function loadNotes() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var savedNotes, moreNotes;
+        var savedNotes, startIndex, endIndex, nextPageNotes;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -451,96 +483,93 @@ var _default = {
                 _context.prev = 3;
                 _context.next = 6;
                 return new Promise(function (resolve) {
-                  return setTimeout(resolve, 1000);
+                  return setTimeout(resolve, 500);
                 });
               case 6:
-                // 如果是第一页并且没有测试数据，则添加一些模拟数据
-                if (_this.page === 1 && _this.notes.length === 0) {
-                  // 本地存储中检查是否有笔记数据
-                  savedNotes = uni.getStorageSync('userNotes');
+                // 从本地存储中获取笔记数据
+                savedNotes = uni.getStorageSync('userNotes');
+                if (_this.page === 1) {
+                  // 第一页：重置笔记列表
                   if (savedNotes && savedNotes.length > 0) {
+                    // 使用真实的用户笔记数据
                     _this.notes = savedNotes.map(function (note) {
                       return _objectSpread(_objectSpread({}, note), {}, {
                         expanded: false,
                         isLiked: false
                       });
                     });
-                  } else {
-                    // 模拟笔记数据
-                    _this.notes = [{
-                      id: 1,
-                      title: '西湖一日游',
-                      content: '今天去了西湖，风景真的太美了！西湖十景真的名不虚传，特别是断桥残雪和平湖秋月，让人流连忘返。',
-                      createTime: '2024-03-15',
-                      location: '杭州·西湖',
-                      likeCount: 24,
-                      commentCount: 5,
-                      expanded: false,
-                      isLiked: false,
-                      images: ['/static/tabs/home.png']
-                    }, {
-                      id: 2,
-                      title: '故宫之行',
-                      content: '参观了故宫博物院，深深感受到了中国古代建筑的宏伟和历史的厚重。紫禁城真的太壮观了！',
-                      createTime: '2024-02-28',
-                      location: '北京·故宫',
-                      likeCount: 18,
-                      commentCount: 3,
-                      expanded: false,
-                      isLiked: false,
-                      images: ['/static/tabs/mine.png']
-                    }];
+
+                    // 如果笔记数量少于每页数量，设置没有更多
+                    if (savedNotes.length < _this.pageSize) {
+                      _this.hasMore = false;
+                    }
+                  } else if (_this.notes.length === 0) {
+                    // 如果没有笔记数据，保持空数组
+                    _this.notes = [];
+                    _this.hasMore = false;
                   }
-                }
-                // 如果不是第一页，模拟加载更多数据
-                else if (_this.page > 1) {
-                  if (_this.page <= 3) {
-                    // 限制只有3页数据
-                    moreNotes = [{
-                      id: _this.notes.length + 1,
-                      title: "\u7B2C".concat(_this.page, "\u9875\u7B14\u8BB0"),
-                      content: "\u8FD9\u662F\u52A0\u8F7D\u7684\u7B2C".concat(_this.page, "\u9875\u7B14\u8BB0\u5185\u5BB9\uFF0C\u63CF\u8FF0\u6211\u7684\u65C5\u884C\u4F53\u9A8C..."),
-                      createTime: '2024-01-15',
-                      location: '某地·景点',
-                      likeCount: Math.floor(Math.random() * 20),
-                      commentCount: Math.floor(Math.random() * 10),
-                      expanded: false,
-                      isLiked: false,
-                      images: ['/static/tabs/home.png']
-                    }];
-                    _this.notes = [].concat((0, _toConsumableArray2.default)(_this.notes), moreNotes);
+                } else {
+                  // 分页加载：如果有足够的笔记，加载下一页
+                  startIndex = (_this.page - 1) * _this.pageSize;
+                  if (savedNotes && startIndex < savedNotes.length) {
+                    endIndex = Math.min(startIndex + _this.pageSize, savedNotes.length);
+                    nextPageNotes = savedNotes.slice(startIndex, endIndex);
+                    if (nextPageNotes.length > 0) {
+                      // 添加到现有笔记列表
+                      _this.notes = [].concat((0, _toConsumableArray2.default)(_this.notes), (0, _toConsumableArray2.default)(nextPageNotes.map(function (note) {
+                        return _objectSpread(_objectSpread({}, note), {}, {
+                          expanded: false,
+                          isLiked: false
+                        });
+                      })));
+
+                      // 如果加载的笔记数量少于每页数量，设置没有更多
+                      if (nextPageNotes.length < _this.pageSize) {
+                        _this.hasMore = false;
+                      }
+                    } else {
+                      _this.hasMore = false;
+                    }
                   } else {
                     _this.hasMore = false;
                   }
                 }
-                _this.page++;
-                _context.next = 14;
+
+                // 更新页码
+                if (_this.hasMore) {
+                  _this.page++;
+                }
+                _context.next = 15;
                 break;
-              case 10:
-                _context.prev = 10;
+              case 11:
+                _context.prev = 11;
                 _context.t0 = _context["catch"](3);
                 console.error('加载笔记失败:', _context.t0);
                 uni.showToast({
                   title: '加载失败',
                   icon: 'none'
                 });
-              case 14:
-                _context.prev = 14;
+              case 15:
+                _context.prev = 15;
                 _this.loading = false;
-                return _context.finish(14);
-              case 17:
+                return _context.finish(15);
+              case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[3, 10, 14, 17]]);
+        }, _callee, null, [[3, 11, 15, 18]]);
       }))();
     },
     // 处理图片加载错误
     handleImageError: function handleImageError(note) {
-      // 使用默认图片
+      // 如果cover_image加载失败，设置默认图片
+      if (note.cover_image) {
+        note.cover_image = '/static/default-image.png';
+      }
+      // 如果首张图片加载失败，设置默认图片
       if (note.images && note.images.length > 0) {
-        note.images[0] = '/static/default-avatar.png';
+        note.images[0] = '/static/default-image.png';
       }
     },
     // 显示展开控制
@@ -581,8 +610,18 @@ var _default = {
     },
     // 查看笔记详情
     viewNoteDetail: function viewNoteDetail(id) {
+      // 从笔记列表中查找对应的笔记
+      var note = this.notes.find(function (item) {
+        return item.id === id;
+      });
+      if (!note) return;
+
+      // 将当前笔记详情保存到本地，以便详情页获取
+      uni.setStorageSync('currentNote', note);
+
+      // 导航到详情页
       uni.navigateTo({
-        url: "/pages/note/detail?id=".concat(id)
+        url: "/pages/detail/detail?id=".concat(id, "&type=note")
       });
     },
     // 显示操作菜单

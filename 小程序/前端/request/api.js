@@ -161,12 +161,42 @@ export function createPost(postData) {
  * 获取博文列表
  * @param {Number} skip - 跳过的记录数
  * @param {Number} limit - 返回的最大记录数
+ * @param {String} tag - 按标签筛选（可选）
+ * @param {Number} userId - 按用户ID筛选（可选）
  * @returns {Promise} - 返回博文列表
  */
-export function getPosts(skip = 0, limit = 10) {
+export function getPosts(skip = 0, limit = 10, tag = null, userId = null) {
+  // 构建查询参数
+  let url = `/api/posts?skip=${skip}&limit=${limit}`;
+  
+  // 添加可选筛选参数
+  if (tag) {
+    url += `&tag=${encodeURIComponent(tag)}`;
+  }
+  
+  if (userId) {
+    url += `&user_id=${userId}`;
+  }
+  
+  console.log('【DEBUG】getPosts - 请求URL:', baseURL + url);
+  
   return request({
-    url: `/api/posts?skip=${skip}&limit=${limit}`,
+    url: url,
     method: 'GET'
+  }).then(res => {
+    console.log('【DEBUG】getPosts - 请求成功:', res);
+    // 确保返回的是数组
+    if (!res) {
+      return [];
+    }
+    if (!Array.isArray(res)) {
+      console.warn('【DEBUG】getPosts - 返回非数组结果:', res);
+      return [];
+    }
+    return res;
+  }).catch(err => {
+    console.error('【DEBUG】getPosts - 请求失败:', err);
+    throw err;
   });
 }
 
@@ -176,9 +206,22 @@ export function getPosts(skip = 0, limit = 10) {
  * @returns {Promise} - 返回博文详情
  */
 export function getPostDetail(postId) {
+  if (!postId) {
+    console.error('【DEBUG】getPostDetail - 缺少postId参数');
+    return Promise.reject(new Error('缺少postId参数'));
+  }
+  
+  console.log('【DEBUG】getPostDetail - 请求URL:', baseURL + `/api/posts/${postId}`);
+  
   return request({
     url: `/api/posts/${postId}`,
     method: 'GET'
+  }).then(res => {
+    console.log('【DEBUG】getPostDetail - 请求成功:', res);
+    return res;
+  }).catch(err => {
+    console.error('【DEBUG】getPostDetail - 请求失败:', err);
+    throw err;
   });
 }
 
@@ -218,7 +261,7 @@ export function publishComment(commentData, imagePaths = [], coverImagePath = nu
       
       // 构建发布数据
       const postData = {
-        title: commentData.content.substring(0, 50) || '旅行分享',
+        title: commentData.title || commentData.content.substring(0, 50) || '旅行分享',
         content: commentData.content,
         images: uploadedImages,
         tags: commentData.topics || [],
@@ -232,10 +275,67 @@ export function publishComment(commentData, imagePaths = [], coverImagePath = nu
       const result = await createPost(postData);
       
       console.log('【DEBUG】publishComment - 博文提交成功:', result);
+      
+      // 将博文同时保存为笔记
+      saveAsNote({
+        id: result.id,
+        title: postData.title,
+        content: postData.content,
+        createTime: new Date().toISOString().split('T')[0], // 格式化为YYYY-MM-DD
+        location: postData.location,
+        likeCount: 0,
+        commentCount: 0,
+        images: uploadedImages,
+        tags: postData.tags,
+        cover_image: coverImageUrl || (uploadedImages.length > 0 ? uploadedImages[0] : '')
+      });
+      
       resolve(result);
     } catch (error) {
       console.error('【DEBUG】publishComment - 出错:', error);
       reject(error);
     }
   });
+}
+
+/**
+ * 将发布的内容保存为笔记
+ * @param {Object} noteData - 笔记数据
+ */
+function saveAsNote(noteData) {
+  try {
+    // 从本地存储获取现有笔记
+    let userNotes = uni.getStorageSync('userNotes') || [];
+    
+    // 确保userNotes是数组
+    if (!Array.isArray(userNotes)) {
+      userNotes = [];
+    }
+    
+    // 处理图片URL，确保使用完整路径
+    if (noteData.images && noteData.images.length > 0) {
+      noteData.images = noteData.images.map(img => {
+        // 检查URL是否完整，如果不是则添加基础URL
+        if (img && !img.startsWith('http')) {
+          return baseURL + img;
+        }
+        return img;
+      });
+    }
+    
+    // 处理封面图URL
+    if (noteData.cover_image && !noteData.cover_image.startsWith('http')) {
+      noteData.cover_image = baseURL + noteData.cover_image;
+    }
+    
+    // 添加新笔记到数组开头（最新的笔记显示在最前面）
+    userNotes.unshift(noteData);
+    
+    // 保存回本地存储
+    uni.setStorageSync('userNotes', userNotes);
+    
+    console.log('【DEBUG】saveAsNote - 笔记保存成功:', noteData);
+  } catch (e) {
+    console.error('【DEBUG】saveAsNote - 保存笔记失败:', e);
+  }
 } 

@@ -195,7 +195,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
+var _api = __webpack_require__(/*! @/request/api.js */ 234);
 //
 //
 //
@@ -367,56 +370,15 @@ var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/
 var _default = {
   data: function data() {
     return {
-      comments: [{
-        id: 1,
-        avatar: '/static/default-avatar.png',
-        nickname: '旅行达人',
-        content: '这个景点非常值得一去，尤其是日落时分的景色美不胜收！建议下午4点时到达，可以慢慢欣赏天色变化。',
-        expanded: false,
-        likeCount: 128,
-        isLiked: false,
-        commentCount: 42,
-        publishTime: '3小时前',
-        images: ['/static/demo/scenic1.jpg']
-      }, {
-        id: 2,
-        nickname: '摄影师小王',
-        avatar: '/static/default-avatar.png',
-        content: '周末带着相机来到这里，随手一拍就是大片，光线超级棒！分享几张照片给大家参考，喜欢摄影的朋友一定不要错过。',
-        expanded: false,
-        likeCount: 256,
-        isLiked: false,
-        commentCount: 66,
-        publishTime: '昨天',
-        images: ['/static/demo/scenic2.jpg']
-      }, {
-        id: 3,
-        nickname: '美食猎人',
-        avatar: '/static/default-avatar.png',
-        content: '景区周边的小吃街太赞了！推荐必吃：1. 老街口臭豆腐 2. 王婆烧饼 3. 醉醉的螺蛳粉，都是本地特色，不容错过！',
-        expanded: false,
-        likeCount: 98,
-        isLiked: false,
-        commentCount: 32,
-        publishTime: '上周',
-        images: ['/static/demo/food1.jpg']
-      }, {
-        id: 4,
-        nickname: '背包客小李',
-        avatar: '/static/default-avatar.png',
-        content: '门票略贵，但是景色确实值得。小贴士：提前在网上订票有折扣，还可以避开排队。最佳游览时间大概3小时左右。',
-        expanded: false,
-        likeCount: 76,
-        isLiked: true,
-        commentCount: 18,
-        publishTime: '上周',
-        images: ['/static/demo/scenic3.jpg']
-      }],
+      comments: [],
       lastClickTime: 0,
       categories: ['推荐', '攻略', '美食', '酒店', '购物', '文化', '拍照'],
       currentCategory: '推荐',
       isRefreshing: false,
-      isLoading: false
+      isLoading: false,
+      page: 1,
+      pageSize: 10,
+      hasMore: true
     };
   },
   computed: {
@@ -434,41 +396,47 @@ var _default = {
     }
   },
   onLoad: function onLoad() {
-    // 初始加载
+    // 初始加载数据
+    this.loadPostsFromApi();
   },
   methods: {
     // 切换分类
     switchCategory: function switchCategory(category) {
       this.currentCategory = category;
-      // 这里可以根据分类加载不同内容
-      this.refreshComments();
+      this.page = 1;
+      this.comments = [];
+      this.hasMore = true;
+      // 根据分类加载不同内容
+      this.loadPostsFromApi();
     },
     // 处理图片加载错误
     handleImageError: function handleImageError(comment) {
-      // 使用已存在的头像图片作为默认图片
+      // 使用默认图片
       if (comment.images && comment.images.length > 0) {
-        comment.images[0] = '/static/default-avatar.png';
-        // 或者也可以完全移除图片
-        // comment.images = [];
+        comment.images[0] = '/static/default-image.png';
       }
     },
     navigateToDetail: function navigateToDetail(commentId) {
       uni.navigateTo({
-        url: '/pages/detail/detail?commentId=' + commentId
+        url: '/pages/detail/detail?id=' + commentId
       });
     },
     navigateToPublish: function navigateToPublish() {
-      uni.showToast({
-        title: '发布功能开发中',
-        icon: 'none'
+      uni.navigateTo({
+        url: '/pages/post/post'
       });
     },
     toggleExpand: function toggleExpand(comment) {
       comment.expanded = !comment.expanded;
     },
+    // 判断是否显示展开控制按钮
     showExpandControl: function showExpandControl(comment) {
-      // 简单判断文本长度，实际应通过计算文本高度
-      return comment.content.length > 50;
+      // 判断文本长度，如果是title，则超过40字符显示展开按钮
+      // 如果是content，则超过50字符显示展开按钮
+      if (comment.title && comment.title.length > 40) {
+        return true;
+      }
+      return comment && comment.content && comment.content.length > 50;
     },
     toggleLike: function toggleLike(commentId) {
       // 防抖处理：300ms内禁止重复点击
@@ -487,148 +455,200 @@ var _default = {
         comment.isLiked = false;
       }
     },
+    // 从API加载博文数据
+    loadPostsFromApi: function loadPostsFromApi() {
+      var _this = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var skip, tag, result, posts;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                if (!_this.isLoading) {
+                  _context.next = 3;
+                  break;
+                }
+                return _context.abrupt("return");
+              case 3:
+                _this.isLoading = true;
+                uni.showLoading({
+                  title: '加载中...'
+                });
+                skip = (_this.page - 1) * _this.pageSize; // 如果不是"推荐"分类，则作为tag参数传递
+                tag = _this.currentCategory !== '推荐' ? _this.currentCategory : null; // 调用API获取数据
+                _context.prev = 7;
+                _context.next = 10;
+                return (0, _api.getPosts)(skip, _this.pageSize, tag);
+              case 10:
+                result = _context.sent;
+                console.log('获取到的博文数据:', result);
+                _context.next = 18;
+                break;
+              case 14:
+                _context.prev = 14;
+                _context.t0 = _context["catch"](7);
+                console.error('API请求失败:', _context.t0);
+                throw _context.t0;
+              case 18:
+                if (result && Array.isArray(result)) {
+                  // 转换数据格式以适应前端展示
+                  posts = result.map(function (post) {
+                    console.log('处理博文数据:', post);
+                    // 确保每个字段都有默认值
+                    return {
+                      id: post.id || Date.now() + Math.floor(Math.random() * 1000),
+                      avatar: post.user && post.user.avatar ? post.user.avatar : '/static/default-avatar.png',
+                      nickname: post.user && post.user.nickname ? post.user.nickname : post.user && post.user.username ? post.user.username : '旅行达人',
+                      content: post.content || '',
+                      title: post.title || '',
+                      expanded: false,
+                      likeCount: post.likes_count || 0,
+                      isLiked: false,
+                      commentCount: post.comments_count || 0,
+                      publishTime: _this.formatPublishTime(post.created_at) || '刚刚',
+                      // 优先使用cover_image作为封面，如果没有则使用第一张图片，都没有则为空数组
+                      images: post.cover_image ? [post.cover_image] : Array.isArray(post.images) && post.images.length > 0 ? [post.images[0]] : []
+                    };
+                  }); // 如果是第一页，替换数据；否则追加数据
+                  if (_this.page === 1) {
+                    _this.comments = posts;
+                  } else {
+                    _this.comments = [].concat((0, _toConsumableArray2.default)(_this.comments), (0, _toConsumableArray2.default)(posts));
+                  }
+
+                  // 判断是否还有更多数据
+                  _this.hasMore = posts.length >= _this.pageSize;
+                } else {
+                  if (_this.page === 1) {
+                    // 如果没有数据，显示默认模拟数据
+                    _this.loadDefaultData();
+                  }
+                  _this.hasMore = false;
+                }
+                _context.next = 26;
+                break;
+              case 21:
+                _context.prev = 21;
+                _context.t1 = _context["catch"](0);
+                console.error('加载博文数据失败:', _context.t1);
+                // 出错时加载默认数据
+                if (_this.page === 1 && (!_this.comments || _this.comments.length === 0)) {
+                  _this.loadDefaultData();
+                }
+                uni.showToast({
+                  title: '加载失败，请重试',
+                  icon: 'none'
+                });
+              case 26:
+                _context.prev = 26;
+                _this.isLoading = false;
+                uni.hideLoading();
+                if (_this.isRefreshing) {
+                  _this.isRefreshing = false;
+                  uni.stopPullDownRefresh();
+                }
+                return _context.finish(26);
+              case 31:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 21, 26, 31], [7, 14]]);
+      }))();
+    },
+    // 加载默认模拟数据
+    loadDefaultData: function loadDefaultData() {
+      // 根据分类提供不同的模拟数据
+      if (this.currentCategory === '推荐' || this.comments.length === 0) {
+        this.comments = [{
+          id: 1,
+          avatar: '/static/default-avatar.png',
+          nickname: '旅行达人',
+          content: '这个景点非常值得一去，尤其是日落时分的景色美不胜收！建议下午4点时到达，可以慢慢欣赏天色变化。',
+          expanded: false,
+          likeCount: 128,
+          isLiked: false,
+          commentCount: 42,
+          publishTime: '3小时前',
+          images: ['/static/demo/scenic1.jpg']
+        }, {
+          id: 2,
+          nickname: '摄影师小王',
+          avatar: '/static/default-avatar.png',
+          content: '周末带着相机来到这里，随手一拍就是大片，光线超级棒！分享几张照片给大家参考，喜欢摄影的朋友一定不要错过。',
+          expanded: false,
+          likeCount: 256,
+          isLiked: false,
+          commentCount: 66,
+          publishTime: '昨天',
+          images: ['/static/demo/scenic2.jpg']
+        }];
+      } else if (this.currentCategory === '美食') {
+        this.comments = [{
+          id: 101,
+          avatar: '/static/default-avatar.png',
+          nickname: '吃货小分队',
+          content: '发现一家隐藏在巷子里的网红店，排队1小时才吃到，但真的超级值得！招牌菜是蒜香排骨和爆炒鱿鱼，下次还会再来！',
+          expanded: false,
+          likeCount: 321,
+          isLiked: false,
+          commentCount: 89,
+          publishTime: '刚刚更新',
+          images: ['/static/demo/food1.jpg']
+        }];
+      } else {
+        this.comments = [{
+          id: 201,
+          avatar: '/static/default-avatar.png',
+          nickname: '分类达人',
+          content: "\u8FD9\u662F".concat(this.currentCategory, "\u5206\u7C7B\u7684\u70ED\u95E8\u5185\u5BB9\uFF0C\u5E0C\u671B\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF01\u540E\u7EED\u4F1A\u6301\u7EED\u66F4\u65B0\u66F4\u591A\u76F8\u5173\u5185\u5BB9\u3002"),
+          expanded: false,
+          likeCount: Math.floor(Math.random() * 200),
+          isLiked: false,
+          commentCount: Math.floor(Math.random() * 50),
+          publishTime: '刚刚更新',
+          images: ['/static/demo/scenic' + (Math.floor(Math.random() * 3) + 1) + '.jpg']
+        }];
+      }
+    },
+    // 格式化发布时间
+    formatPublishTime: function formatPublishTime(timeStr) {
+      if (!timeStr) return '未知时间';
+      var publishTime = new Date(timeStr);
+      var now = new Date();
+      var diffMs = now - publishTime;
+      var diffSec = Math.floor(diffMs / 1000);
+      var diffMin = Math.floor(diffSec / 60);
+      var diffHour = Math.floor(diffMin / 60);
+      var diffDay = Math.floor(diffHour / 24);
+      if (diffSec < 60) {
+        return '刚刚';
+      } else if (diffMin < 60) {
+        return "".concat(diffMin, "\u5206\u949F\u524D");
+      } else if (diffHour < 24) {
+        return "".concat(diffHour, "\u5C0F\u65F6\u524D");
+      } else if (diffDay < 30) {
+        return "".concat(diffDay, "\u5929\u524D");
+      } else {
+        // 返回具体日期，如 2023-05-01
+        return publishTime.toISOString().split('T')[0];
+      }
+    },
     // 加载更多评论
     loadMore: function loadMore() {
-      var _this = this;
-      if (this.isLoading) return;
-      this.isLoading = true;
+      if (this.isLoading || !this.hasMore) return;
 
-      // 模拟加载更多数据
-      console.log('加载更多评论');
-      // 实际项目中应调用API获取下一页数据
-      setTimeout(function () {
-        var images = ['/static/demo/scenic4.jpg', '/static/demo/food2.jpg', '/static/demo/scenic5.jpg'];
-        var newComments = [{
-          id: _this.comments.length + 1,
-          avatar: '/static/default-avatar.png',
-          nickname: '探索者' + (_this.comments.length + 1),
-          content: '刚刚发现的宝藏地点，环境优美人又少，非常适合周末放松，分享给大家！',
-          expanded: false,
-          likeCount: Math.floor(Math.random() * 100),
-          isLiked: false,
-          publishTime: '刚刚',
-          commentCount: Math.floor(Math.random() * 30),
-          images: [images[Math.floor(Math.random() * images.length)]]
-        }, {
-          id: _this.comments.length + 2,
-          avatar: '/static/default-avatar.png',
-          nickname: '旅行家' + (_this.comments.length + 2),
-          content: '这个季节来这里最美，花开正盛，空气清新，强烈推荐！',
-          expanded: false,
-          likeCount: Math.floor(Math.random() * 100),
-          isLiked: false,
-          publishTime: '刚刚',
-          commentCount: Math.floor(Math.random() * 30),
-          images: [images[Math.floor(Math.random() * images.length)]]
-        }];
-        _this.comments = [].concat((0, _toConsumableArray2.default)(_this.comments), newComments);
-        _this.isLoading = false;
-      }, 800);
+      // 增加页码并加载更多数据
+      this.page++;
+      this.loadPostsFromApi();
     },
     // 下拉刷新评论
     refreshComments: function refreshComments(e) {
-      var _this2 = this;
       this.isRefreshing = true;
-      console.log('刷新评论列表');
-
-      // 模拟刷新数据
-      setTimeout(function () {
-        // 根据当前分类加载内容
-        if (_this2.currentCategory === '推荐') {
-          // 重置评论数据为推荐内容
-          _this2.comments = [{
-            id: 1,
-            avatar: '/static/default-avatar.png',
-            nickname: '旅行达人',
-            content: '这个景点非常值得一去，尤其是日落时分的景色美不胜收！建议下午4点时到达，可以慢慢欣赏天色变化。',
-            expanded: false,
-            likeCount: 128,
-            isLiked: false,
-            commentCount: 42,
-            publishTime: '刚刚更新',
-            images: ['/static/demo/scenic1.jpg']
-          }, {
-            id: 2,
-            nickname: '摄影师小王',
-            avatar: '/static/default-avatar.png',
-            content: '周末带着相机来到这里，随手一拍就是大片，光线超级棒！分享几张照片给大家参考，喜欢摄影的朋友一定不要错过。',
-            expanded: false,
-            likeCount: 256,
-            isLiked: false,
-            commentCount: 66,
-            publishTime: '刚刚更新',
-            images: ['/static/demo/scenic2.jpg']
-          }, {
-            id: 3,
-            nickname: '美食猎人',
-            avatar: '/static/default-avatar.png',
-            content: '景区周边的小吃街太赞了！推荐必吃：1. 老街口臭豆腐 2. 王婆烧饼 3. 醉醉的螺蛳粉，都是本地特色，不容错过！',
-            expanded: false,
-            likeCount: 98,
-            isLiked: false,
-            commentCount: 32,
-            publishTime: '刚刚更新',
-            images: ['/static/demo/food1.jpg']
-          }, {
-            id: 4,
-            nickname: '背包客小李',
-            avatar: '/static/default-avatar.png',
-            content: '门票略贵，但是景色确实值得。小贴士：提前在网上订票有折扣，还可以避开排队。最佳游览时间大概3小时左右。',
-            expanded: false,
-            likeCount: 76,
-            isLiked: true,
-            commentCount: 18,
-            publishTime: '刚刚更新',
-            images: ['/static/demo/scenic3.jpg']
-          }];
-        } else if (_this2.currentCategory === '美食') {
-          // 加载美食相关内容
-          _this2.comments = [{
-            id: 101,
-            avatar: '/static/default-avatar.png',
-            nickname: '吃货小分队',
-            content: '发现一家隐藏在巷子里的网红店，排队1小时才吃到，但真的超级值得！招牌菜是蒜香排骨和爆炒鱿鱼，下次还会再来！',
-            expanded: false,
-            likeCount: 321,
-            isLiked: false,
-            commentCount: 89,
-            publishTime: '刚刚更新',
-            images: ['/static/demo/food1.jpg']
-          }, {
-            id: 102,
-            avatar: '/static/default-avatar.png',
-            nickname: '美食评论家',
-            content: '这家店的招牌甜品真的不错，芒果班戟口感细腻，层次分明，一点都不腻。价格实惠，环境也很好，推荐给大家！',
-            expanded: false,
-            likeCount: 178,
-            isLiked: false,
-            commentCount: 45,
-            publishTime: '刚刚更新',
-            images: ['/static/demo/food2.jpg']
-          }];
-        } else {
-          // 其他分类加载示例内容
-          _this2.comments = [{
-            id: 201,
-            avatar: '/static/default-avatar.png',
-            nickname: '分类达人',
-            content: "\u8FD9\u662F".concat(_this2.currentCategory, "\u5206\u7C7B\u7684\u70ED\u95E8\u5185\u5BB9\uFF0C\u5E0C\u671B\u5BF9\u4F60\u6709\u5E2E\u52A9\uFF01\u540E\u7EED\u4F1A\u6301\u7EED\u66F4\u65B0\u66F4\u591A\u76F8\u5173\u5185\u5BB9\u3002"),
-            expanded: false,
-            likeCount: Math.floor(Math.random() * 200),
-            isLiked: false,
-            commentCount: Math.floor(Math.random() * 50),
-            publishTime: '刚刚更新',
-            images: ['/static/demo/scenic' + (Math.floor(Math.random() * 3) + 1) + '.jpg']
-          }];
-        }
-
-        // 停止下拉刷新动画
-        _this2.isRefreshing = false;
-        uni.stopPullDownRefresh();
-        if (e && typeof e.stopPullDownRefresh === 'function') {
-          e.stopPullDownRefresh();
-        }
-      }, 1000);
+      this.page = 1;
+      this.hasMore = true;
+      this.loadPostsFromApi();
     },
     // 显示评论输入框
     showCommentInput: function showCommentInput(commentId) {
