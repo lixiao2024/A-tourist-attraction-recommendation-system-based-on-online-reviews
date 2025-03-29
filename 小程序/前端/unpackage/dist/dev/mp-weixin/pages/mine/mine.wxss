@@ -1,0 +1,197 @@
+
+.my-page {
+	background: #f8f9fa;
+	min-height: 100vh;
+	padding-bottom: 40rpx;
+}
+.tops {
+	position: relative;
+	height: 360rpx;
+	background: linear-gradient(120deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+	box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.15);
+	overflow: hidden;
+	border-bottom-left-radius: 40rpx;
+	border-bottom-right-radius: 40rpx;
+}
+.bg-pattern {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	opacity: 0.1;
+	background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%),
+					  radial-gradient(circle at 80% 20%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%);
+}
+.auth-section {
+	position: absolute;
+	bottom: 40rpx;
+	left: 40rpx;
+	right: 40rpx;
+	background: rgba(255,255,255,0.95);
+	border-radius: 24rpx;
+	padding: 30rpx;
+	display: flex;
+	align-items: center;
+	box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.08);
+	-webkit-backdrop-filter: blur(10px);
+	        backdrop-filter: blur(10px);
+	transition: all 0.3s ease;
+}
+.auth-section:active {
+	-webkit-transform: scale(0.98);
+	        transform: scale(0.98);
+	box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+}
+.avatar-container {
+	position: relative;
+}
+.avatar-status {
+	position: absolute;
+	bottom: 4rpx;
+	right: 4rpx;
+	width: 20rpx;
+	height: 20rpx;
+	border-radius: 50%;
+	background: #4CAF50;
+	border: 3rpx solid #fff;
+	box-shadow: 0 2rpx 4rpx rgba(0,0,0,0.1);
+}
+.auth-avatar {
+	width: 120rpx;
+	height: 120rpx;
+	border-radius: 50%;
+	margin-right: 30rpx;
+	border: 4rpx solid rgba(255,255,255,0.9);
+	box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.15);
+	transition: all 0.3s ease;
+}
+.user-info {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+.auth-title {
+	font-size: 36rpx;
+	color: #333;
+	font-weight: 600;
+	margin-bottom: 8rpx;
+}
+.auth-subtitle {
+	font-size: 24rpx;
+	color: #888;
+}
+.auth-arrow {
+	width: 40rpx;
+	height: 40rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.dashboard {
+	display: flex;
+	justify-content: space-around;
+	background: #fff;
+	border-radius: 24rpx;
+	padding: 40rpx 20rpx;
+	margin: 30rpx 20rpx;
+	box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06);
+}
+.stat-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	padding: 10rpx 30rpx;
+	border-radius: 16rpx;
+	transition: all 0.2s ease;
+}
+.stat-item-hover {
+	background-color: rgba(0,122,255,0.05);
+}
+.stat-item:not(:last-child):after {
+	content: '';
+	position: absolute;
+	right: -20rpx;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	        transform: translateY(-50%);
+	width: 1px;
+	height: 60%;
+	background: rgba(0,0,0,0.06);
+}
+.stat-icon {
+	width: 80rpx;
+	height: 80rpx;
+	background: rgba(0,122,255,0.1);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 16rpx;
+}
+.stat-value {
+	font-size: 36rpx;
+	font-weight: bold;
+	color: #333;
+	margin: 6rpx 0;
+}
+.stat-label {
+	font-size: 24rpx;
+	color: #666;
+}
+.function-grid {
+	background: #fff;
+	border-radius: 24rpx;
+	margin: 20rpx;
+	box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06);
+	overflow: hidden;
+}
+.grid-group {
+	display: flex;
+	flex-wrap: wrap;
+}
+.grid-group:not(:last-child) {
+	border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.grid-item {
+	width: 33.33%;
+	padding: 40rpx 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	transition: all 0.2s ease;
+}
+.grid-item-hover {
+	background-color: rgba(0,0,0,0.02);
+}
+.item-icon-container {
+	width: 100rpx;
+	height: 100rpx;
+	background: rgba(0,122,255,0.08);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 16rpx;
+	transition: all 0.3s ease;
+}
+.grid-item-hover .item-icon-container {
+	-webkit-transform: scale(1.1);
+	        transform: scale(1.1);
+	background: rgba(0,122,255,0.12);
+}
+.item-label {
+	font-size: 28rpx;
+	color: #333;
+	margin-top: 15rpx;
+}
+.app-version {
+	text-align: center;
+	padding: 40rpx 0 20rpx;
+}
+.version-text {
+	font-size: 24rpx;
+	color: #999;
+}
+

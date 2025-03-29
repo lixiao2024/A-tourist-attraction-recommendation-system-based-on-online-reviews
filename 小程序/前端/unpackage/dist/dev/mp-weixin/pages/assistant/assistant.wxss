@@ -1,0 +1,302 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f8f9fa;
+  position: relative;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #3182ce, #005bb5);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 20rpx;
+  border-bottom-right-radius: 20rpx;
+}
+.chat-header .avatar-container {
+  position: relative;
+  margin-right: 24rpx;
+}
+.chat-header .avatar-container .assistant-avatar {
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  border: 3rpx solid rgba(255, 255, 255, 0.7);
+}
+.chat-header .avatar-container .status-indicator {
+  position: absolute;
+  bottom: 2rpx;
+  right: 2rpx;
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background-color: #10b981;
+  border: 3rpx solid #ffffff;
+}
+.chat-header .header-info {
+  display: flex;
+  flex-direction: column;
+}
+.chat-header .header-info .assistant-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4rpx;
+}
+.chat-header .header-info .assistant-status {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+.chat-date {
+  text-align: center;
+  margin: 20rpx 0;
+}
+.chat-date text {
+  display: inline-block;
+  padding: 8rpx 20rpx;
+  background-color: rgba(0, 0, 0, 0.06);
+  color: #666;
+  font-size: 24rpx;
+  border-radius: 30rpx;
+}
+.message-list {
+  flex: 1;
+  padding: 20rpx 30rpx;
+}
+.message-item {
+  display: flex;
+  margin-bottom: 40rpx;
+  -webkit-animation: fadeIn 0.3s ease;
+          animation: fadeIn 0.3s ease;
+}
+.message-item.message-user {
+  flex-direction: row-reverse;
+}
+.message-item.message-user .message-container {
+  align-items: flex-end;
+}
+.message-item.message-user .message-bubble {
+  background: linear-gradient(135deg, #3182ce, #0056b3);
+  color: #ffffff;
+  border-radius: 20rpx 4rpx 20rpx 20rpx;
+}
+.message-item.message-user .message-time {
+  margin-right: 24rpx;
+}
+.message-item.message-bot .message-bubble {
+  background-color: #ffffff;
+  color: #333;
+  border-radius: 4rpx 20rpx 20rpx 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+.message-item.message-bot .message-time {
+  margin-left: 24rpx;
+}
+@-webkit-keyframes fadeIn {
+from {
+    opacity: 0;
+    -webkit-transform: translateY(10rpx);
+            transform: translateY(10rpx);
+}
+to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+}
+}
+@keyframes fadeIn {
+from {
+    opacity: 0;
+    -webkit-transform: translateY(10rpx);
+            transform: translateY(10rpx);
+}
+to {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+}
+}
+.avatar {
+  width: 84rpx;
+  height: 84rpx;
+  flex-shrink: 0;
+}
+.avatar image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+.message-container {
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100% - 200rpx);
+  margin: 0 20rpx;
+}
+.message-bubble {
+  padding: 20rpx 24rpx;
+  border-radius: 20rpx;
+  word-break: break-word;
+  position: relative;
+  line-height: 1.6;
+}
+.message-text {
+  font-size: 32rpx;
+  line-height: 1.5;
+}
+.code-message {
+  font-size: 30rpx;
+  line-height: 1.5;
+}
+.code-message .code-block {
+  background-color: #f1f1f1;
+  padding: 16rpx;
+  border-radius: 8rpx;
+  font-family: monospace;
+  margin: 10rpx 0;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.message-time {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+.typing-indicator {
+  display: flex;
+  margin-bottom: 40rpx;
+}
+.typing-bubble {
+  min-width: 70rpx;
+  min-height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.typing-dots {
+  display: flex;
+  align-items: center;
+}
+.typing-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background-color: #aaa;
+  margin: 0 6rpx;
+  -webkit-animation: typingBounce 1.4s infinite ease-in-out;
+          animation: typingBounce 1.4s infinite ease-in-out;
+}
+.typing-dot:nth-child(1) {
+  -webkit-animation-delay: 0s;
+          animation-delay: 0s;
+}
+.typing-dot:nth-child(2) {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+  -webkit-animation-delay: 0.4s;
+          animation-delay: 0.4s;
+}
+@-webkit-keyframes typingBounce {
+0%, 60%, 100% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+}
+30% {
+    -webkit-transform: translateY(-6rpx);
+            transform: translateY(-6rpx);
+}
+}
+@keyframes typingBounce {
+0%, 60%, 100% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+}
+30% {
+    -webkit-transform: translateY(-6rpx);
+            transform: translateY(-6rpx);
+}
+}
+.input-area {
+  padding: 20rpx;
+  background-color: #ffffff;
+  border-top: 1rpx solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+.quick-questions {
+  width: 100%;
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+}
+.quick-questions .question-tag {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  margin-right: 20rpx;
+  background-color: #f0f4f8;
+  color: #3182ce;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  transition: all 0.3s;
+}
+.quick-questions .question-tag-hover {
+  background-color: #e1e8f0;
+  -webkit-transform: scale(0.98);
+          transform: scale(0.98);
+}
+.input-container {
+  display: flex;
+  align-items: center;
+}
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #f0f4f8;
+  border-radius: 40rpx;
+  flex: 1;
+  padding: 0 20rpx;
+}
+.input-icon {
+  padding: 0 15rpx;
+}
+.message-input {
+  flex: 1;
+  height: 80rpx;
+  font-size: 30rpx;
+  padding: 0 10rpx;
+}
+.send-icon {
+  transition: all 0.3s;
+}
+.send-icon:active {
+  -webkit-transform: scale(0.9);
+          transform: scale(0.9);
+}
