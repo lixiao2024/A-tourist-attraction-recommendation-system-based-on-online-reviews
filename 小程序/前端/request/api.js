@@ -338,4 +338,29 @@ function saveAsNote(noteData) {
   } catch (e) {
     console.error('【DEBUG】saveAsNote - 保存笔记失败:', e);
   }
+}
+
+/**
+ * 删除博文
+ * @param {Number} postId - 博文ID
+ * @returns {Promise} - 返回删除结果
+ */
+export function deletePost(postId) {
+  if (!postId) {
+    console.error('【DEBUG】deletePost - 缺少postId参数');
+    return Promise.reject(new Error('缺少postId参数'));
+  }
+  
+  console.log('【DEBUG】deletePost - 请求URL:', baseURL + `/api/posts/${postId}`);
+  
+  return request({
+    url: `/api/posts/${postId}`,
+    method: 'DELETE'
+  }).then(() => {
+    console.log('【DEBUG】deletePost - 删除成功');
+    return true;
+  }).catch(err => {
+    console.error('【DEBUG】deletePost - 删除失败:', err);
+    throw err;
+  });
 } 

@@ -1,6 +1,6 @@
 (global["webpackJsonp"] = global["webpackJsonp"] || []).push([["pages/detail/detail"],{
 
-/***/ 54:
+/***/ 56:
 /*!******************************************************************************!*\
   !*** I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/main.js?{"page":"pages%2Fdetail%2Fdetail"} ***!
   \******************************************************************************/
@@ -14,7 +14,7 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 __webpack_require__(/*! uni-pages */ 26);
 __webpack_require__(/*! @dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js */ 27);
 var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 25));
-var _detail = _interopRequireDefault(__webpack_require__(/*! ./pages/detail/detail.vue */ 55));
+var _detail = _interopRequireDefault(__webpack_require__(/*! ./pages/detail/detail.vue */ 57));
 // @ts-ignore
 wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_detail.default);
@@ -22,7 +22,7 @@ createPage(_detail.default);
 
 /***/ }),
 
-/***/ 55:
+/***/ 57:
 /*!***********************************************************!*\
   !*** I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/pages/detail/detail.vue ***!
   \***********************************************************/
@@ -31,10 +31,10 @@ createPage(_detail.default);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _detail_vue_vue_type_template_id_3e159eb4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./detail.vue?vue&type=template&id=3e159eb4& */ 56);
-/* harmony import */ var _detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./detail.vue?vue&type=script&lang=js& */ 58);
+/* harmony import */ var _detail_vue_vue_type_template_id_3e159eb4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./detail.vue?vue&type=template&id=3e159eb4& */ 58);
+/* harmony import */ var _detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./detail.vue?vue&type=script&lang=js& */ 60);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./detail.vue?vue&type=style&index=0&lang=scss& */ 60);
+/* harmony import */ var _detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./detail.vue?vue&type=style&index=0&lang=scss& */ 62);
 /* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js */ 44);
 
 var renderjs
@@ -63,7 +63,7 @@ component.options.__file = "pages/detail/detail.vue"
 
 /***/ }),
 
-/***/ 56:
+/***/ 58:
 /*!******************************************************************************************!*\
   !*** I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/pages/detail/detail.vue?vue&type=template&id=3e159eb4& ***!
   \******************************************************************************************/
@@ -72,7 +72,7 @@ component.options.__file = "pages/detail/detail.vue"
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_17_0_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_template_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_uni_app_loader_page_meta_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_template_id_3e159eb4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--17-0!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/template.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-uni-app-loader/page-meta.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!./detail.vue?vue&type=template&id=3e159eb4& */ 57);
+/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_17_0_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_template_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_uni_app_loader_page_meta_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_template_id_3e159eb4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--17-0!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/template.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-uni-app-loader/page-meta.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!./detail.vue?vue&type=template&id=3e159eb4& */ 59);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_17_0_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_template_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_uni_app_loader_page_meta_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_template_id_3e159eb4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_17_0_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_template_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_uni_app_loader_page_meta_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_template_id_3e159eb4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
@@ -85,7 +85,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 57:
+/***/ 59:
 /*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--17-0!./node_modules/@dcloudio/webpack-uni-mp-loader/lib/template.js!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-uni-app-loader/page-meta.js!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!./node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/pages/detail/detail.vue?vue&type=template&id=3e159eb4& ***!
   \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
@@ -102,7 +102,7 @@ var components
 try {
   components = {
     uniIcons: function () {
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 131))
+      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 141))
     },
   }
 } catch (e) {
@@ -177,7 +177,7 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ 58:
+/***/ 60:
 /*!************************************************************************************!*\
   !*** I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/pages/detail/detail.vue?vue&type=script&lang=js& ***!
   \************************************************************************************/
@@ -186,14 +186,14 @@ render._withStripped = true
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_13_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/babel-loader/lib!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--13-1!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/script.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!./detail.vue?vue&type=script&lang=js& */ 59);
+/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_13_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/babel-loader/lib!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--13-1!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/script.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!./detail.vue?vue&type=script&lang=js& */ 61);
 /* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_13_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_13_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_13_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_13_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
  /* harmony default export */ __webpack_exports__["default"] = (_HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_13_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
-/***/ 59:
+/***/ 61:
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--13-1!./node_modules/@dcloudio/webpack-uni-mp-loader/lib/script.js!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!./node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/pages/detail/detail.vue?vue&type=script&lang=js& ***!
   \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
@@ -211,7 +211,7 @@ exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
-var _api = __webpack_require__(/*! @/request/api.js */ 234);
+var _api = __webpack_require__(/*! ../../request/api.js */ 52);
 //
 //
 //
@@ -386,7 +386,7 @@ var _default = {
   data: function data() {
     return {
       commentId: null,
-      contentType: 'comment',
+      sourceType: 'post',
       // 初始化空对象，避免渲染时获取不到属性
       detail: {
         id: 0,
@@ -424,147 +424,210 @@ var _default = {
     this.shareComment();
   },
   onLoad: function onLoad(options) {
-    // 获取传递的评论ID参数
-    this.commentId = options.id || null;
-    // 获取传递的类型参数（评论或笔记）
-    this.contentType = options.type || 'comment';
-    if (this.contentType === 'note') {
-      // 从本地存储获取笔记数据
-      this.loadNoteData();
+    this.options = options;
+    // 如果是从分享进入，等待页面渲染完成后再加载数据
+    if (options.scene) {
+      // 处理扫码场景
+      // ...
     } else {
-      // 正常加载评论数据
-      this.initData();
+      // 正常加载场景，获取传入的参数
+      this.commentId = options.id;
+      this.sourceType = options.type || 'post';
+
+      // 根据不同类型处理不同的数据
+      if (this.sourceType === 'note') {
+        // 加载笔记数据
+        this.loadNoteData();
+      } else {
+        // 加载评论数据（博文）
+        this.initData();
+      }
     }
   },
   methods: {
     // 加载笔记数据
     loadNoteData: function loadNoteData() {
-      try {
-        // 显示加载中
-        uni.showLoading({
-          title: '加载中...',
-          mask: true
-        });
-
-        // 从本地存储获取当前笔记
-        var noteData = uni.getStorageSync('currentNote');
-        if (noteData) {
-          var _uni$getStorageSync;
-          // 处理图片URL，确保URL正确
-          var images = [];
-          if (noteData.images && noteData.images.length > 0) {
-            images = noteData.images.filter(function (img) {
-              return img && typeof img === 'string';
-            });
-            console.log('处理后的图片数组:', images);
-          }
-
-          // 格式化笔记数据为详情页需要的格式
-          this.detail = {
-            id: noteData.id,
-            avatar: noteData.avatar || '/static/default-avatar.png',
-            nickname: ((_uni$getStorageSync = uni.getStorageSync('userInfo')) === null || _uni$getStorageSync === void 0 ? void 0 : _uni$getStorageSync.nickname) || '匿名用户',
-            content: noteData.content,
-            publishTime: noteData.createTime,
-            likeCount: noteData.likeCount || 0,
-            commentCount: noteData.commentCount || 0,
-            isLiked: noteData.isLiked || false,
-            isCollected: noteData.isCollected || false,
-            isFollowed: false,
-            images: images
-          };
-
-          // 如果有评论数据，加载评论
-          if (noteData.replies && noteData.replies.length > 0) {
-            this.replies = noteData.replies;
-            this.hasMore = false;
-          } else {
-            this.replies = [];
-            this.hasMore = false;
-          }
-          this.isDataLoaded = true;
-        } else {
-          uni.showToast({
-            title: '笔记不存在',
-            icon: 'none'
-          });
-
-          // 延迟返回
-          setTimeout(function () {
-            uni.navigateBack({
-              fail: function fail() {
-                // 如果返回失败，则跳转到我的页面
-                uni.switchTab({
-                  url: '/pages/mine/mine'
-                });
-              }
-            });
-          }, 1500);
-        }
-      } catch (error) {
-        console.error('加载笔记数据失败:', error);
-        uni.showToast({
-          title: '加载失败',
-          icon: 'none'
-        });
-      } finally {
-        uni.hideLoading();
-      }
-    },
-    // 初始化数据
-    initData: function initData() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var postDetail, _postDetail$user;
+        var noteData, _uni$getStorageSync, images;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!_this.isDataLoaded) {
-                  _context.next = 2;
+                _context.prev = 0;
+                // 显示加载中
+                uni.showLoading({
+                  title: '加载中...',
+                  mask: true
+                });
+
+                // 从本地存储获取当前笔记
+                noteData = uni.getStorageSync('currentNote');
+                if (!noteData) {
+                  _context.next = 23;
                   break;
                 }
+                if (!(noteData.id && Number.isInteger(Number(noteData.id)))) {
+                  _context.next = 16;
+                  break;
+                }
+                _context.prev = 5;
+                _context.next = 8;
+                return (0, _api.getPostDetail)(noteData.id);
+              case 8:
+                _context.next = 16;
+                break;
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](5);
+                if (!(_context.t0.statusCode === 404)) {
+                  _context.next = 16;
+                  break;
+                }
+                uni.hideLoading();
+                uni.showModal({
+                  title: '提示',
+                  content: '笔记不存在或已被删除',
+                  showCancel: false,
+                  success: function success() {
+                    // 从本地存储中也删除这条笔记
+                    var userNotes = uni.getStorageSync('userNotes') || [];
+                    var updatedNotes = userNotes.filter(function (note) {
+                      return note.id !== noteData.id;
+                    });
+
+                    // 如果有变化，更新本地存储
+                    if (updatedNotes.length !== userNotes.length) {
+                      uni.setStorageSync('userNotes', updatedNotes);
+                    }
+
+                    // 返回上一页
+                    uni.navigateBack();
+                  }
+                });
                 return _context.abrupt("return");
+              case 16:
+                // 处理图片URL，确保URL正确
+                images = [];
+                if (noteData.images && noteData.images.length > 0) {
+                  images = noteData.images.filter(function (img) {
+                    return img && typeof img === 'string';
+                  });
+                  console.log('处理后的图片数组:', images);
+                }
+
+                // 格式化笔记数据为详情页需要的格式
+                _this.detail = {
+                  id: noteData.id,
+                  avatar: noteData.avatar || '/static/default-avatar.png',
+                  nickname: ((_uni$getStorageSync = uni.getStorageSync('userInfo')) === null || _uni$getStorageSync === void 0 ? void 0 : _uni$getStorageSync.nickname) || '匿名用户',
+                  content: noteData.content,
+                  publishTime: noteData.createTime,
+                  likeCount: noteData.likeCount || 0,
+                  commentCount: noteData.commentCount || 0,
+                  isLiked: noteData.isLiked || false,
+                  isCollected: noteData.isCollected || false,
+                  isFollowed: false,
+                  images: images
+                };
+
+                // 如果有评论数据，加载评论
+                if (noteData.replies && noteData.replies.length > 0) {
+                  _this.replies = noteData.replies;
+                  _this.hasMore = false;
+                } else {
+                  _this.replies = [];
+                  _this.hasMore = false;
+                }
+                _this.isDataLoaded = true;
+                _context.next = 25;
+                break;
+              case 23:
+                // 没有找到笔记数据
+                uni.showToast({
+                  title: '笔记不存在',
+                  icon: 'none'
+                });
+                setTimeout(function () {
+                  uni.navigateBack();
+                }, 1500);
+              case 25:
+                _context.next = 31;
+                break;
+              case 27:
+                _context.prev = 27;
+                _context.t1 = _context["catch"](0);
+                console.error('加载笔记数据失败:', _context.t1);
+                uni.showToast({
+                  title: '加载失败',
+                  icon: 'none'
+                });
+              case 31:
+                _context.prev = 31;
+                uni.hideLoading();
+                return _context.finish(31);
+              case 34:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 27, 31, 34], [5, 10]]);
+      }))();
+    },
+    // 初始化数据
+    initData: function initData() {
+      var _this2 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        var postDetail, _postDetail$user;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!_this2.isDataLoaded) {
+                  _context2.next = 2;
+                  break;
+                }
+                return _context2.abrupt("return");
               case 2:
-                if (_this.commentId) {
-                  _context.next = 5;
+                if (_this2.commentId) {
+                  _context2.next = 5;
                   break;
                 }
                 uni.showToast({
                   title: '参数错误',
                   icon: 'none'
                 });
-                return _context.abrupt("return");
+                return _context2.abrupt("return");
               case 5:
-                _context.prev = 5;
+                _context2.prev = 5;
                 uni.showLoading({
                   title: '加载中...',
                   mask: true
                 });
 
                 // 加载评论详情
-                if (!_this.commentId) {
-                  _context.next = 29;
+                if (!_this2.commentId) {
+                  _context2.next = 29;
                   break;
                 }
-                _context.prev = 8;
-                _context.next = 11;
-                return (0, _api.getPostDetail)(_this.commentId);
+                _context2.prev = 8;
+                _context2.next = 11;
+                return (0, _api.getPostDetail)(_this2.commentId);
               case 11:
-                postDetail = _context.sent;
+                postDetail = _context2.sent;
                 console.log('获取到的帖子详情:', postDetail);
                 if (!postDetail) {
-                  _context.next = 20;
+                  _context2.next = 20;
                   break;
                 }
                 // 转换数据格式以适应前端展示
-                _this.detail = {
+                _this2.detail = {
                   id: postDetail.id,
                   avatar: '/static/default-avatar.png',
                   // 或者从用户数据中获取
                   nickname: ((_postDetail$user = postDetail.user) === null || _postDetail$user === void 0 ? void 0 : _postDetail$user.nickname) || '旅行达人',
                   content: postDetail.content,
-                  publishTime: _this.formatPublishTime(postDetail.created_at),
+                  publishTime: _this2.formatPublishTime(postDetail.created_at),
                   likeCount: postDetail.likes_count || 0,
                   commentCount: postDetail.comments_count || 0,
                   collectCount: postDetail.collects_count || 0,
@@ -575,66 +638,66 @@ var _default = {
                 };
 
                 // 加载回复列表
-                _context.next = 17;
-                return _this.loadCommentReplies();
+                _context2.next = 17;
+                return _this2.loadCommentReplies();
               case 17:
                 // 设置用户交互状态
-                _this.checkUserInteractions();
-                _context.next = 22;
+                _this2.checkUserInteractions();
+                _context2.next = 22;
                 break;
               case 20:
-                _context.next = 22;
-                return _this.loadMockData();
+                _context2.next = 22;
+                return _this2.loadMockData();
               case 22:
-                _context.next = 29;
+                _context2.next = 29;
                 break;
               case 24:
-                _context.prev = 24;
-                _context.t0 = _context["catch"](8);
-                console.error('API请求失败:', _context.t0);
+                _context2.prev = 24;
+                _context2.t0 = _context2["catch"](8);
+                console.error('API请求失败:', _context2.t0);
                 // API请求失败时，加载模拟数据
-                _context.next = 29;
-                return _this.loadMockData();
+                _context2.next = 29;
+                return _this2.loadMockData();
               case 29:
-                _this.isDataLoaded = true;
-                _context.next = 36;
+                _this2.isDataLoaded = true;
+                _context2.next = 36;
                 break;
               case 32:
-                _context.prev = 32;
-                _context.t1 = _context["catch"](5);
-                console.error('初始化数据失败:', _context.t1);
+                _context2.prev = 32;
+                _context2.t1 = _context2["catch"](5);
+                console.error('初始化数据失败:', _context2.t1);
                 uni.showToast({
                   title: '加载失败，请重试',
                   icon: 'none'
                 });
               case 36:
-                _context.prev = 36;
+                _context2.prev = 36;
                 uni.hideLoading();
-                return _context.finish(36);
+                return _context2.finish(36);
               case 39:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[5, 32, 36, 39], [8, 24]]);
-      }))();
-    },
-    // 加载模拟数据（当API请求失败时使用）
-    loadMockData: function loadMockData() {
-      var _this2 = this;
-      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-        return _regenerator.default.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return Promise.all([_this2.loadCommentDetail(), _this2.loadCommentReplies()]);
-              case 2:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, null, [[5, 32, 36, 39], [8, 24]]);
+      }))();
+    },
+    // 加载模拟数据（当API请求失败时使用）
+    loadMockData: function loadMockData() {
+      var _this3 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+        return _regenerator.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return Promise.all([_this3.loadCommentDetail(), _this3.loadCommentReplies()]);
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
       }))();
     },
     // 格式化发布时间
@@ -662,14 +725,14 @@ var _default = {
     },
     // 加载评论详情
     loadCommentDetail: function loadCommentDetail() {
-      var _this3 = this;
+      var _this4 = this;
       return new Promise(function (resolve) {
         // 模拟API请求，实际项目中应替换为真实接口调用
-        console.log('加载评论ID:', _this3.commentId);
+        console.log('加载评论ID:', _this4.commentId);
         setTimeout(function () {
           // 这里模拟根据ID获取不同的评论详情
-          if (_this3.commentId == 2) {
-            _this3.detail = {
+          if (_this4.commentId == 2) {
+            _this4.detail = {
               id: 2,
               avatar: '/static/default-avatar.png',
               nickname: '游客007',
@@ -684,7 +747,7 @@ var _default = {
             };
           } else {
             // 其他ID使用默认数据
-            _this3.detail = {
+            _this4.detail = {
               id: 1,
               avatar: '/static/default-avatar.png',
               nickname: '旅行达人',
@@ -706,17 +769,17 @@ var _default = {
     },
     // 加载回复列表
     loadReplies: function loadReplies() {
-      var _this4 = this;
+      var _this5 = this;
       if (this.loading || !this.hasMore) return Promise.resolve();
       this.loading = true;
       return new Promise(function (resolve) {
         // 模拟API请求延迟
         setTimeout(function () {
           // 模拟分页数据
-          if (_this4.commentId == 2) {
+          if (_this5.commentId == 2) {
             // 为ID为2的评论添加特定回复
-            if (_this4.page === 1) {
-              _this4.replies = [{
+            if (_this5.page === 1) {
+              _this5.replies = [{
                 id: 2,
                 avatar: '/static/default-avatar.png',
                 nickname: '本地用户',
@@ -727,11 +790,11 @@ var _default = {
               }];
             } else {
               // 第二页没有更多数据
-              _this4.hasMore = false;
+              _this5.hasMore = false;
             }
-          } else if (_this4.page === 1) {
+          } else if (_this5.page === 1) {
             // 第一页数据
-            _this4.replies = [{
+            _this5.replies = [{
               id: 1,
               avatar: '/static/default-avatar.png',
               nickname: '用户A',
@@ -740,26 +803,26 @@ var _default = {
               likeCount: 5,
               isLiked: false
             }];
-          } else if (_this4.page > 1) {
+          } else if (_this5.page > 1) {
             // 为其他评论ID模拟加载更多数据
             var moreReplies = [{
-              id: _this4.replies.length + 1,
+              id: _this5.replies.length + 1,
               avatar: '/static/default-avatar.png',
-              nickname: '用户' + (_this4.page + 1),
-              content: '这是加载的第' + _this4.page + '页回复',
+              nickname: '用户' + (_this5.page + 1),
+              content: '这是加载的第' + _this5.page + '页回复',
               publishTime: Math.floor(Math.random() * 24) + '小时前',
               likeCount: Math.floor(Math.random() * 10),
               isLiked: false
             }];
-            _this4.replies = [].concat((0, _toConsumableArray2.default)(_this4.replies), moreReplies);
+            _this5.replies = [].concat((0, _toConsumableArray2.default)(_this5.replies), moreReplies);
 
             // 模拟数据到第3页结束
-            if (_this4.page >= 3) {
-              _this4.hasMore = false;
+            if (_this5.page >= 3) {
+              _this5.hasMore = false;
             }
           }
-          _this4.page++;
-          _this4.loading = false;
+          _this5.page++;
+          _this5.loading = false;
           resolve();
         }, 500);
       });
@@ -770,17 +833,17 @@ var _default = {
     },
     // 刷新评论
     refreshComments: function refreshComments(e) {
-      var _this5 = this;
+      var _this6 = this;
       this.isRefreshing = true;
       this.page = 1;
       this.hasMore = true;
       this.replies = [];
 
       // 根据内容类型选择加载方法
-      if (this.contentType === 'note') {
+      if (this.sourceType === 'note') {
         // 刷新笔记评论
         this.loadNoteData().then(function () {
-          _this5.isRefreshing = false;
+          _this6.isRefreshing = false;
           uni.stopPullDownRefresh();
           if (e && typeof e.stopPullDownRefresh === 'function') {
             e.stopPullDownRefresh();
@@ -789,7 +852,7 @@ var _default = {
       } else {
         // 刷新评论回复
         this.loadReplies().then(function () {
-          _this5.isRefreshing = false;
+          _this6.isRefreshing = false;
           uni.stopPullDownRefresh();
           if (e && typeof e.stopPullDownRefresh === 'function') {
             e.stopPullDownRefresh();
@@ -841,7 +904,7 @@ var _default = {
     },
     // 处理登录事件
     handleLogin: function handleLogin() {
-      var _this6 = this;
+      var _this7 = this;
       // 隐藏登录弹窗
       this.showLoginPopup = false;
 
@@ -855,10 +918,10 @@ var _default = {
         desc: '用于完善会员信息',
         lang: 'zh_CN',
         success: function () {
-          var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(res) {
-            return _regenerator.default.wrap(function _callee4$(_context4) {
+          var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5(res) {
+            return _regenerator.default.wrap(function _callee5$(_context5) {
               while (1) {
-                switch (_context4.prev = _context4.next) {
+                switch (_context5.prev = _context5.next) {
                   case 0:
                     console.log('获取到用户个人信息:', {
                       nickName: res.userInfo.nickName,
@@ -869,18 +932,18 @@ var _default = {
                     uni.login({
                       provider: 'weixin',
                       success: function () {
-                        var _success2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(loginRes) {
+                        var _success2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(loginRes) {
                           var result, data, userInfo, statsData, action, _result$data;
-                          return _regenerator.default.wrap(function _callee3$(_context3) {
+                          return _regenerator.default.wrap(function _callee4$(_context4) {
                             while (1) {
-                              switch (_context3.prev = _context3.next) {
+                              switch (_context4.prev = _context4.next) {
                                 case 0:
-                                  _context3.prev = 0;
+                                  _context4.prev = 0;
                                   console.log('获取到微信登录code:', loginRes.code);
 
                                   // 调用后端API进行登录验证
                                   console.log('准备向后端发送登录请求...');
-                                  _context3.next = 5;
+                                  _context4.next = 5;
                                   return uni.request({
                                     url: 'http://localhost:8000/api/wechat-login',
                                     // 替换为实际的后端API地址
@@ -902,7 +965,7 @@ var _default = {
                                     }
                                   });
                                 case 5:
-                                  result = _context3.sent;
+                                  result = _context4.sent;
                                   console.log('收到后端响应:', result);
 
                                   // 检查请求是否成功
@@ -958,9 +1021,9 @@ var _default = {
                                     });
 
                                     // 如果有登录后要执行的动作，执行它
-                                    if (_this6.actionAfterLogin) {
-                                      action = _this6.actionAfterLogin;
-                                      _this6.actionAfterLogin = null; // 清除动作
+                                    if (_this7.actionAfterLogin) {
+                                      action = _this7.actionAfterLogin;
+                                      _this7.actionAfterLogin = null; // 清除动作
                                       setTimeout(function () {
                                         action(); // 执行之前保存的动作
                                       }, 500); // 延迟一下执行，避免连续操作
@@ -972,12 +1035,12 @@ var _default = {
                                       icon: 'none'
                                     });
                                   }
-                                  _context3.next = 14;
+                                  _context4.next = 14;
                                   break;
                                 case 10:
-                                  _context3.prev = 10;
-                                  _context3.t0 = _context3["catch"](0);
-                                  console.error('登录请求异常:', _context3.t0);
+                                  _context4.prev = 10;
+                                  _context4.t0 = _context4["catch"](0);
+                                  console.error('登录请求异常:', _context4.t0);
                                   uni.showToast({
                                     title: '登录请求失败',
                                     icon: 'none'
@@ -986,10 +1049,10 @@ var _default = {
                                   uni.hideLoading();
                                 case 15:
                                 case "end":
-                                  return _context3.stop();
+                                  return _context4.stop();
                               }
                             }
-                          }, _callee3, null, [[0, 10]]);
+                          }, _callee4, null, [[0, 10]]);
                         }));
                         function success(_x2) {
                           return _success2.apply(this, arguments);
@@ -1007,10 +1070,10 @@ var _default = {
                     });
                   case 2:
                   case "end":
-                    return _context4.stop();
+                    return _context5.stop();
                 }
               }
-            }, _callee4);
+            }, _callee5);
           }));
           function success(_x) {
             return _success.apply(this, arguments);
@@ -1029,26 +1092,26 @@ var _default = {
     },
     // 点赞主评论
     toggleLike: function toggleLike() {
-      var _this7 = this;
+      var _this8 = this;
       var execute = function execute() {
         // 更新点赞状态
-        _this7.detail.isLiked = !_this7.detail.isLiked;
+        _this8.detail.isLiked = !_this8.detail.isLiked;
 
         // 更新点赞数量
-        if (_this7.detail.isLiked) {
-          _this7.detail.likeCount++;
-          _this7.updateUserStats('获赞', 1);
+        if (_this8.detail.isLiked) {
+          _this8.detail.likeCount++;
+          _this8.updateUserStats('获赞', 1);
         } else {
-          _this7.detail.likeCount--;
-          _this7.updateUserStats('获赞', -1);
+          _this8.detail.likeCount--;
+          _this8.updateUserStats('获赞', -1);
         }
 
         // 保存点赞状态到本地
-        _this7.saveInteractionStatus('likedPosts', _this7.detail.id, _this7.detail.isLiked);
+        _this8.saveInteractionStatus('likedPosts', _this8.detail.id, _this8.detail.isLiked);
 
         // 提示用户
         uni.showToast({
-          title: _this7.detail.isLiked ? '已点赞' : '已取消点赞',
+          title: _this8.detail.isLiked ? '已点赞' : '已取消点赞',
           icon: 'none'
         });
       };
@@ -1063,9 +1126,9 @@ var _default = {
     },
     // 点赞回复
     toggleReplyLike: function toggleReplyLike(index) {
-      var _this8 = this;
+      var _this9 = this;
       var execute = function execute() {
-        var reply = _this8.replies[index];
+        var reply = _this9.replies[index];
         if (!reply) return;
 
         // 更新点赞状态
@@ -1081,7 +1144,7 @@ var _default = {
         }
 
         // 保存点赞状态到本地
-        _this8.saveInteractionStatus('likedReplies', reply.id, reply.isLiked);
+        _this9.saveInteractionStatus('likedReplies', reply.id, reply.isLiked);
       };
 
       // 检查登录状态
@@ -1094,26 +1157,26 @@ var _default = {
     },
     // 收藏功能
     toggleCollect: function toggleCollect() {
-      var _this9 = this;
+      var _this10 = this;
       var execute = function execute() {
         // 更新收藏状态
-        _this9.detail.isCollected = !_this9.detail.isCollected;
+        _this10.detail.isCollected = !_this10.detail.isCollected;
 
         // 更新收藏数量
-        if (_this9.detail.isCollected) {
-          _this9.detail.collectCount++;
-          _this9.updateUserStats('收藏', 1);
+        if (_this10.detail.isCollected) {
+          _this10.detail.collectCount++;
+          _this10.updateUserStats('收藏', 1);
         } else {
-          _this9.detail.collectCount--;
-          _this9.updateUserStats('收藏', -1);
+          _this10.detail.collectCount--;
+          _this10.updateUserStats('收藏', -1);
         }
 
         // 保存收藏状态到本地
-        _this9.saveInteractionStatus('collectedPosts', _this9.detail.id, _this9.detail.isCollected);
+        _this10.saveInteractionStatus('collectedPosts', _this10.detail.id, _this10.detail.isCollected);
 
         // 提示用户
         uni.showToast({
-          title: _this9.detail.isCollected ? '已收藏' : '已取消收藏',
+          title: _this10.detail.isCollected ? '已收藏' : '已取消收藏',
           icon: 'none'
         });
       };
@@ -1128,26 +1191,26 @@ var _default = {
     },
     // 关注功能
     toggleFollow: function toggleFollow() {
-      var _this10 = this;
+      var _this11 = this;
       var execute = function execute() {
         // 更新关注状态
-        _this10.detail.isFollowed = !_this10.detail.isFollowed;
+        _this11.detail.isFollowed = !_this11.detail.isFollowed;
 
         // 更新用户统计数据
-        if (_this10.detail.isFollowed) {
-          _this10.updateUserStats('关注', 1);
-          _this10.updateAuthorStats('粉丝', 1);
+        if (_this11.detail.isFollowed) {
+          _this11.updateUserStats('关注', 1);
+          _this11.updateAuthorStats('粉丝', 1);
         } else {
-          _this10.updateUserStats('关注', -1);
-          _this10.updateAuthorStats('粉丝', -1);
+          _this11.updateUserStats('关注', -1);
+          _this11.updateAuthorStats('粉丝', -1);
         }
 
         // 保存关注状态到本地
-        _this10.saveInteractionStatus('followedUsers', _this10.detail.nickname, _this10.detail.isFollowed);
+        _this11.saveInteractionStatus('followedUsers', _this11.detail.nickname, _this11.detail.isFollowed);
 
         // 提示用户
         uni.showToast({
-          title: _this10.detail.isFollowed ? '已关注' : '已取消关注',
+          title: _this11.detail.isFollowed ? '已关注' : '已取消关注',
           icon: 'none'
         });
       };
@@ -1162,14 +1225,14 @@ var _default = {
     },
     // 显示评论输入框
     showCommentInput: function showCommentInput() {
-      var _this11 = this;
+      var _this12 = this;
       // 检查登录状态
       if (!this.checkLoginStatus()) {
         // 保存要执行的操作，登录成功后执行
         this.actionAfterLogin = function () {
-          _this11.replyToUser = null;
-          _this11.replyPlaceholder = '写下你的评论...';
-          _this11.showCommentBox = true;
+          _this12.replyToUser = null;
+          _this12.replyPlaceholder = '写下你的评论...';
+          _this12.showCommentBox = true;
         };
         return;
       }
@@ -1179,14 +1242,14 @@ var _default = {
     },
     // 回复特定评论
     replyToComment: function replyToComment(reply) {
-      var _this12 = this;
+      var _this13 = this;
       // 检查登录状态
       if (!this.checkLoginStatus()) {
         // 保存要执行的操作，登录成功后执行
         this.actionAfterLogin = function () {
-          _this12.replyToUser = reply;
-          _this12.replyPlaceholder = "\u56DE\u590D ".concat(reply.nickname, "\uFF1A");
-          _this12.showCommentBox = true;
+          _this13.replyToUser = reply;
+          _this13.replyPlaceholder = "\u56DE\u590D ".concat(reply.nickname, "\uFF1A");
+          _this13.showCommentBox = true;
         };
         return;
       }
@@ -1339,7 +1402,7 @@ exports.default = _default;
 
 /***/ }),
 
-/***/ 60:
+/***/ 62:
 /*!*********************************************************************************************!*\
   !*** I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/pages/detail/detail.vue?vue&type=style&index=0&lang=scss& ***!
   \*********************************************************************************************/
@@ -1348,14 +1411,14 @@ exports.default = _default;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_HBuilderX_plugins_uniapp_cli_node_modules_css_loader_dist_cjs_js_ref_8_oneOf_1_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_stylePostLoader_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_2_HBuilderX_plugins_uniapp_cli_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_3_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_sass_loader_dist_cjs_js_ref_8_oneOf_1_4_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_5_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/mini-css-extract-plugin/dist/loader.js??ref--8-oneOf-1-0!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/css-loader/dist/cjs.js??ref--8-oneOf-1-1!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/loaders/stylePostLoader.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--8-oneOf-1-2!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/postcss-loader/src??ref--8-oneOf-1-3!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/sass-loader/dist/cjs.js??ref--8-oneOf-1-4!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--8-oneOf-1-5!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!./detail.vue?vue&type=style&index=0&lang=scss& */ 61);
+/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_HBuilderX_plugins_uniapp_cli_node_modules_css_loader_dist_cjs_js_ref_8_oneOf_1_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_stylePostLoader_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_2_HBuilderX_plugins_uniapp_cli_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_3_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_sass_loader_dist_cjs_js_ref_8_oneOf_1_4_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_5_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/mini-css-extract-plugin/dist/loader.js??ref--8-oneOf-1-0!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/css-loader/dist/cjs.js??ref--8-oneOf-1-1!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/loaders/stylePostLoader.js!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--8-oneOf-1-2!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/postcss-loader/src??ref--8-oneOf-1-3!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/sass-loader/dist/cjs.js??ref--8-oneOf-1-4!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--8-oneOf-1-5!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!../../../../../HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!./detail.vue?vue&type=style&index=0&lang=scss& */ 63);
 /* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_HBuilderX_plugins_uniapp_cli_node_modules_css_loader_dist_cjs_js_ref_8_oneOf_1_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_stylePostLoader_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_2_HBuilderX_plugins_uniapp_cli_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_3_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_sass_loader_dist_cjs_js_ref_8_oneOf_1_4_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_5_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_HBuilderX_plugins_uniapp_cli_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_HBuilderX_plugins_uniapp_cli_node_modules_css_loader_dist_cjs_js_ref_8_oneOf_1_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_stylePostLoader_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_2_HBuilderX_plugins_uniapp_cli_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_3_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_sass_loader_dist_cjs_js_ref_8_oneOf_1_4_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_5_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _HBuilderX_plugins_uniapp_cli_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_HBuilderX_plugins_uniapp_cli_node_modules_css_loader_dist_cjs_js_ref_8_oneOf_1_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_stylePostLoader_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_2_HBuilderX_plugins_uniapp_cli_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_3_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_sass_loader_dist_cjs_js_ref_8_oneOf_1_4_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_5_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _HBuilderX_plugins_uniapp_cli_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_HBuilderX_plugins_uniapp_cli_node_modules_css_loader_dist_cjs_js_ref_8_oneOf_1_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_stylePostLoader_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_2_HBuilderX_plugins_uniapp_cli_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_3_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_sass_loader_dist_cjs_js_ref_8_oneOf_1_4_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_5_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
  /* harmony default export */ __webpack_exports__["default"] = (_HBuilderX_plugins_uniapp_cli_node_modules_mini_css_extract_plugin_dist_loader_js_ref_8_oneOf_1_0_HBuilderX_plugins_uniapp_cli_node_modules_css_loader_dist_cjs_js_ref_8_oneOf_1_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_loaders_stylePostLoader_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_2_HBuilderX_plugins_uniapp_cli_node_modules_postcss_loader_src_index_js_ref_8_oneOf_1_3_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_sass_loader_dist_cjs_js_ref_8_oneOf_1_4_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_8_oneOf_1_5_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_index_js_vue_loader_options_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_style_js_detail_vue_vue_type_style_index_0_lang_scss___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 
-/***/ 61:
+/***/ 63:
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/mini-css-extract-plugin/dist/loader.js??ref--8-oneOf-1-0!./node_modules/css-loader/dist/cjs.js??ref--8-oneOf-1-1!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--8-oneOf-1-2!./node_modules/postcss-loader/src??ref--8-oneOf-1-3!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/sass-loader/dist/cjs.js??ref--8-oneOf-1-4!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--8-oneOf-1-5!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib??vue-loader-options!./node_modules/@dcloudio/webpack-uni-mp-loader/lib/style.js!I:/基于在线评论的旅游景点智能推荐系统/小程序/前端/pages/detail/detail.vue?vue&type=style&index=0&lang=scss& ***!
   \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
@@ -1368,5 +1431,5 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ })
 
-},[[54,"common/runtime","common/vendor"]]]);
+},[[56,"common/runtime","common/vendor"]]]);
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/detail/detail.js.map

@@ -3,5 +3,6 @@
   "projectname": "前端",
   "setting": {
     "compileHotReLoad": true
-  }
+  },
+  "libVersion": "3.7.12"
 }

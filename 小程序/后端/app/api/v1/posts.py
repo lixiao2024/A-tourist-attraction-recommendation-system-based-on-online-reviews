@@ -62,10 +62,12 @@ async def create_post(
         return {
             "id": new_post.id,
             "title": new_post.title,
+            "content": new_post.content,
             "cover_image": new_post.cover_image,
             "created_at": new_post.created_at,
             "likes_count": 0,
-            "comments_count": 0
+            "comments_count": 0,
+            "user": None
         }
     except SQLAlchemyError as e:
         db.rollback()
@@ -185,4 +187,50 @@ async def get_post(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="获取博文详情失败"
+        )
+
+@router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_post(
+    post_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    删除指定的博文
+    
+    - 参数:
+        - post_id: 博文ID
+    - 返回:
+        - 204 No Content 表示删除成功
+    """
+    try:
+        # 查询博文是否存在
+        post = db.query(Post).filter(Post.id == post_id).first()
+        
+        if not post:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="博文不存在"
+            )
+        
+        # 只有博文的创建者才能删除自己的博文，或管理员
+        if post.user_id != current_user.id and current_user.role != "admin":
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="您没有权限删除此博文"
+            )
+        
+        # 删除博文
+        db.delete(post)
+        db.commit()
+        
+        return None
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"删除博文时出错: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="删除博文失败"
         ) 
