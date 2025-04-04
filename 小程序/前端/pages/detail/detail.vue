@@ -149,18 +149,47 @@
       </view>
       
       <!-- 登录弹窗 -->
-      <view class="login-popup" v-if="showLoginPopup" @click.self="showLoginPopup = false">
+      <view class="login-modal" v-if="showLoginPopup" @click.self="closeLoginModal">
         <view class="login-container" :class="{show: showLoginPopup}" @click.stop>
           <view class="login-header">
-            <text class="login-title">登录</text>
-            <view class="close-btn" @click="showLoginPopup = false">
+            <text class="login-title">{{ loginStep === 1 ? '微信登录' : '完善资料' }}</text>
+            <view class="close-btn" @click="closeLoginModal">
               <uni-icons type="closeempty" size="24" color="#666"></uni-icons>
             </view>
           </view>
           <view class="login-content">
-            <image class="login-avatar" src="/static/default-avatar.png" mode="aspectFill"></image>
-            <text class="login-desc">登录后才能点赞、评论和收藏哦</text>
-            <button class="login-btn" @click="handleLogin">微信登录</button>
+            <!-- 步骤1: 获取用户基本信息 -->
+            <template v-if="loginStep === 1">
+              <image class="login-avatar" src="/static/wechat-login.png" mode="aspectFit"></image>
+              <text class="login-desc">登录后才能点赞、评论和收藏哦</text>
+              <button class="login-btn" @click="getUserProfile">微信一键登录</button>
+            </template>
+            
+            <!-- 步骤2: 完善用户头像昵称 -->
+            <template v-else-if="loginStep === 2">
+              <text class="form-title">完善头像和昵称</text>
+              
+              <!-- 选择头像按钮 -->
+              <button class="avatar-wrapper" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
+                <image class="avatar-preview" :src="tempAvatarUrl || '/static/default-avatar.png'" mode="aspectFill"></image>
+                <text class="avatar-tip">点击选择头像</text>
+              </button>
+              
+              <!-- 输入昵称 -->
+              <view class="nickname-wrapper">
+                <text class="label">昵称</text>
+                <input 
+                  type="nickname" 
+                  class="nickname-input" 
+                  placeholder="请输入昵称" 
+                  v-model="tempNickName"
+                  @change="onInputNickname" 
+                />
+              </view>
+              
+              <!-- 保存信息按钮 -->
+              <button class="save-button" @click="saveUserInfo">保存</button>
+            </template>
           </view>
         </view>
       </view>
@@ -168,7 +197,7 @@
   </template>
   
   <script>
-  import { getPostDetail } from '@/request/api.js'
+  import { getPostDetail, submitComment, getComments } from '@/request/api.js'
 
   export default {
     // 移除不必要的配置，使用pages.json中的配置
@@ -203,7 +232,13 @@
         replyHoverId: null,
         replyToUser: null,  // 回复某个具体用户
         showLoginPopup: false, // 登录弹窗显示状态
-        actionAfterLogin: null // 登录后要执行的动作
+        actionAfterLogin: null, // 登录后要执行的动作
+        isLoggedIn: false, // 新增的登录状态
+        // 新增登录相关的状态
+        loginStep: 1,
+        canIUseGetUserProfile: false,
+        tempAvatarUrl: '',
+        tempNickName: ''
       };
     },
     // 响应导航栏按钮点击
@@ -216,6 +251,21 @@
       // 获取传递的类型参数（评论或笔记）
       this.contentType = options.type || 'comment';
       
+      // 检查是否支持getUserProfile
+      if (wx.getUserProfile) {
+        this.canIUseGetUserProfile = true;
+      }
+      
+      // 尝试从App全局状态获取登录信息
+      const app = getApp();
+      if (app.globalData && app.globalData.isLoggedIn) {
+        console.log('从App全局状态获取登录信息');
+        this.isLoggedIn = true;
+      }
+      
+      // 添加登录状态变化监听
+      uni.$on('loginStatusChanged', this.handleLoginStatusChanged);
+      
       if (this.contentType === 'note') {
         // 从本地存储获取笔记数据
         this.loadNoteData();
@@ -223,6 +273,10 @@
         // 正常加载评论数据
         this.initData();
       }
+    },
+    // 在页面卸载时移除事件监听
+    onUnload() {
+      uni.$off('loginStatusChanged', this.handleLoginStatusChanged);
     },
     methods: {
       // 加载笔记数据
@@ -325,14 +379,18 @@
               const postDetail = await getPostDetail(this.commentId);
               console.log('获取到的帖子详情:', postDetail);
               
-              if (postDetail) {
+              // 检查用户是否已登录
+              const isLoggedIn = !!uni.getStorageSync('token');
+              this.isLoggedIn = isLoggedIn;
+              
+              if (postDetail && postDetail.id) {
                 // 转换数据格式以适应前端展示
                 this.detail = {
                   id: postDetail.id,
-                  avatar: '/static/default-avatar.png', // 或者从用户数据中获取
+                  avatar: postDetail.user?.avatar || '/static/default-avatar.png',
                   nickname: postDetail.user?.nickname || '旅行达人',
-                  content: postDetail.content,
-                  publishTime: this.formatPublishTime(postDetail.created_at),
+                  content: postDetail.content || '内容获取失败',
+                  publishTime: this.formatPublishTime(postDetail.created_at) || '未知时间',
                   likeCount: postDetail.likes_count || 0,
                   commentCount: postDetail.comments_count || 0,
                   collectCount: postDetail.collects_count || 0,
@@ -342,13 +400,15 @@
                   images: postDetail.images || []
                 };
                 
-                // 加载回复列表
+                // 加载评论回复
                 await this.loadCommentReplies();
                 
                 // 设置用户交互状态
-                this.checkUserInteractions();
+                if (isLoggedIn) {
+                  this.checkUserInteractions();
+                }
               } else {
-                // 如果API没有返回数据，则加载模拟数据
+                // 如果API返回空对象，则加载模拟数据
                 await this.loadMockData();
               }
             } catch (error) {
@@ -449,12 +509,70 @@
         });
       },
       
-      // 加载回复列表
-      loadReplies() {
+      // 加载评论回复
+      loadCommentReplies() {
         if (this.loading || !this.hasMore) return Promise.resolve();
         
         this.loading = true;
         
+        return new Promise(async (resolve) => {
+          try {
+            // 如果是显示本地笔记，使用本地模拟数据
+            if (this.contentType === 'note') {
+              await this.loadReplies();
+              resolve();
+              return;
+            }
+            
+            // 从服务器获取评论
+            const skip = (this.page - 1) * this.pageSize;
+            const comments = await getComments(this.commentId, this.page, this.pageSize);
+            
+            if (Array.isArray(comments) && comments.length > 0) {
+              // 格式化评论数据
+              const formattedComments = comments.map(comment => ({
+                id: comment.id,
+                avatar: comment.user?.avatar || '/static/default-avatar.png',
+                nickname: comment.user?.nickname || '游客',
+                content: comment.content,
+                publishTime: this.formatPublishTime(comment.created_at),
+                likeCount: 0, // 暂不支持评论点赞
+                isLiked: false
+              }));
+              
+              // 如果是第一页，替换评论列表；否则追加
+              if (this.page === 1) {
+                this.replies = formattedComments;
+              } else {
+                this.replies = [...this.replies, ...formattedComments];
+              }
+              
+              // 更新页码和状态
+              this.page++;
+              this.hasMore = comments.length >= this.pageSize;
+            } else {
+              // 没有更多评论了
+              if (this.page > 1) {
+                this.hasMore = false;
+              } else if (this.page === 1) {
+                // 第一页就没有数据
+                this.replies = [];
+                this.hasMore = false;
+              }
+            }
+          } catch (error) {
+            console.error('获取评论列表失败:', error);
+            // 如果API请求失败，回退到模拟数据
+            await this.loadReplies();
+          } finally {
+            this.loading = false;
+            resolve();
+          }
+        });
+      },
+      
+      // 备用方法：加载模拟评论数据
+      loadReplies() {
         return new Promise((resolve) => {
           // 模拟API请求延迟
           setTimeout(() => {
@@ -519,11 +637,6 @@
         });
       },
       
-      // 加载评论的回复
-      loadCommentReplies() {
-        return this.loadReplies();
-      },
-      
       // 刷新评论
       refreshComments(e) {
         this.isRefreshing = true;
@@ -543,7 +656,7 @@
           });
         } else {
           // 刷新评论回复
-          this.loadReplies().then(() => {
+          this.loadCommentReplies().then(() => {
             this.isRefreshing = false;
             uni.stopPullDownRefresh();
             if (e && typeof e.stopPullDownRefresh === 'function') {
@@ -556,7 +669,7 @@
       // 滚动到底部加载更多
       onScrollToLower() {
         if (!this.loading && this.hasMore) {
-          this.loadReplies();
+          this.loadCommentReplies();
         }
       },
       
@@ -590,8 +703,8 @@
       
       // 检查登录状态
       checkLoginStatus() {
-        const userInfo = uni.getStorageSync('userInfo');
-        if (!userInfo) {
+        // 使用组件的isLoggedIn属性
+        if (!this.isLoggedIn) {
           // 显示登录弹窗，而不是提示
           this.showLoginPopup = true;
           return false;
@@ -601,136 +714,194 @@
       
       // 处理登录事件
       handleLogin() {
-        // 隐藏登录弹窗
-        this.showLoginPopup = false;
+        // 检查是否支持getUserProfile
+        if (!this.canIUseGetUserProfile) {
+          this.canIUseGetUserProfile = wx.getUserProfile ? true : false;
+        }
         
-        // 显示加载提示
+        if (this.canIUseGetUserProfile) {
+          this.getUserProfile();
+        } else {
+          // 旧版微信，需要使用open-type="getUserInfo"的按钮
+          uni.showToast({
+            title: '当前微信版本过低，请升级微信版本',
+            icon: 'none'
+          });
+        }
+      },
+      
+      // 获取用户个人信息
+      getUserProfile() {
+        console.log('调用getUserProfile获取用户信息');
         uni.showLoading({ title: '登录中...' });
         
-        // 获取用户信息
-        uni.getUserProfile({
-          desc: '用于完善会员信息',
-          lang: 'zh_CN',
-          success: async (res) => {
-            console.log('获取到用户个人信息:', {
-              nickName: res.userInfo.nickName,
-              avatarUrl: res.userInfo.avatarUrl
-            });
+        // 调用wx.getUserProfile获取用户信息
+        wx.getUserProfile({
+          desc: '用于完善会员资料', // 声明获取用户个人信息后的用途，会展示在弹窗中
+          success: (res) => {
+            console.log('获取到用户个人信息:', res.userInfo);
             
-            // 获取微信code
-            uni.login({
-              provider: 'weixin',
-              success: async (loginRes) => {
-                try {
-                  console.log('获取到微信登录code:', loginRes.code);
-                  
-                  // 调用后端API进行登录验证
-                  console.log('准备向后端发送登录请求...');
-                  const result = await uni.request({
-                    url: 'http://localhost:8000/api/wechat-login', // 替换为实际的后端API地址
-                    method: 'POST',
-                    data: {
-                      code: loginRes.code,
-                      user_info: {
-                        nickname: res.userInfo.nickName,
-                        avatar_url: res.userInfo.avatarUrl,
-                        gender: res.userInfo.gender,
-                        country: res.userInfo.country,
-                        province: res.userInfo.province,
-                        city: res.userInfo.city,
-                        language: res.userInfo.language
-                      }
-                    },
-                    header: {
-                      'content-type': 'application/json'
-                    }
-                  });
-                  
-                  console.log('收到后端响应:', result);
-                  
-                  // 检查请求是否成功
-                  if (result.statusCode === 200) {
-                    const data = result.data;
-                    console.log('登录成功, 获取到token和openid:', {
-                      token: data.access_token,
-                      openid: data.openid,
-                      user_id: data.user_id
-                    });
-                    
-                    // 保存登录状态
-                    uni.setStorageSync('token', data.access_token);
-                    uni.setStorageSync('openid', data.openid);
-                    uni.setStorageSync('user_id', data.user_id);
-                    
-                    // 获取用户信息 - 使用一致的属性名称
-                    const userInfo = {
-                      nickname: res.userInfo.nickName,
-                      avatar: res.userInfo.avatarUrl,
-                      // 同时保存原始字段，保持兼容性
-                      nickName: res.userInfo.nickName,
-                      avatarUrl: res.userInfo.avatarUrl,
-                      gender: res.userInfo.gender,
-                      country: res.userInfo.country,
-                      province: res.userInfo.province,
-                      city: res.userInfo.city,
-                      language: res.userInfo.language
-                    };
-                    console.log('保存用户信息:', userInfo);
-                    uni.setStorageSync('userInfo', userInfo);
-                    
-                    // 初始化用户统计数据(如果不存在)
-                    let statsData = uni.getStorageSync('userStatsData');
-                    if (!statsData) {
-                      statsData = [
-                        { label: '粉丝', value: 0 },
-                        { label: '获赞', value: 0 },
-                        { label: '关注', value: 0 },
-                        { label: '收藏', value: 0 }
-                      ];
-                      uni.setStorageSync('userStatsData', statsData);
-                    }
-                    
-                    uni.showToast({ title: '登录成功' });
-                    
-                    // 如果有登录后要执行的动作，执行它
-                    if (this.actionAfterLogin) {
-                      const action = this.actionAfterLogin;
-                      this.actionAfterLogin = null; // 清除动作
-                      setTimeout(() => {
-                        action(); // 执行之前保存的动作
-                      }, 500); // 延迟一下执行，避免连续操作
-                    }
-                  } else {
-                    console.error('登录失败:', result.data);
-                    uni.showToast({ 
-                      title: result.data?.detail || '登录失败',
-                      icon: 'none'
-                    });
-                  }
-                } catch (e) {
-                  console.error('登录请求异常:', e);
-                  uni.showToast({ 
-                    title: '登录请求失败',
-                    icon: 'none'
-                  });
-                }
-                uni.hideLoading();
-              },
-              fail: (err) => {
-                console.error('获取微信code失败:', err);
-                uni.hideLoading();
-                uni.showToast({ 
-                  title: '微信登录失败',
-                  icon: 'none'
-                });
-              }
-            });
+            // 保存微信原始用户信息，以便后续使用
+            uni.setStorageSync('wx_user_info', res.userInfo);
+            
+            // 预填充临时头像和昵称
+            this.tempAvatarUrl = res.userInfo.avatarUrl;
+            this.tempNickName = res.userInfo.nickName;
+            
+            // 如果获取到的是"微信用户"或默认头像，则进入完善信息步骤
+            if (res.userInfo.nickName === '微信用户' || !res.userInfo.avatarUrl) {
+              console.log('获取到默认昵称或头像，进入完善信息步骤');
+              this.loginStep = 2;
+              uni.hideLoading();
+            } else {
+              // 否则直接使用获取到的信息登录
+              // 获取到用户信息后，继续获取微信code并调用后端API
+              this.loginWithWechat(res.userInfo);
+            }
           },
           fail: (err) => {
             console.error('用户拒绝授权:', err);
             uni.hideLoading();
             uni.showToast({ 
               title: '需要授权才能登录',
+              icon: 'none'
+            });
+          }
+        });
+      },
+      
+      // 使用微信登录
+      loginWithWechat(userInfo) {
+        // 获取微信code
+        uni.login({
+          provider: 'weixin',
+          success: async (loginRes) => {
+            try {
+              console.log('获取到微信登录code:', loginRes.code);
+              
+              // 保存微信登录信息到本地，即使后端不可用也能显示头像和昵称
+              const localUserInfo = {
+                nickname: userInfo.nickName,
+                avatar: userInfo.avatarUrl,
+                gender: userInfo.gender,
+                country: userInfo.country,
+                province: userInfo.province,
+                city: userInfo.city,
+                language: userInfo.language
+              };
+              uni.setStorageSync('userInfo', localUserInfo);
+              
+              // 更新登录状态
+              this.isLoggedIn = true;
+              
+              // 调用后端API进行登录验证
+              console.log('准备向后端发送登录请求...');
+              
+              // 使用实际IP地址替换localhost
+              // const backendUrl = 'http://localhost:8000/api/wechat-login';
+              const backendUrl = 'http://192.168.1.10:8000/api/wechat-login'; // 替换为您的实际IP
+              
+              try {
+                const result = await uni.request({
+                  url: backendUrl,
+                  method: 'POST',
+                  data: {
+                    code: loginRes.code,
+                    user_info: {
+                      nickname: userInfo.nickName,
+                      avatar_url: userInfo.avatarUrl,
+                      gender: userInfo.gender,
+                      country: userInfo.country,
+                      province: userInfo.province,
+                      city: userInfo.city,
+                      language: userInfo.language
+                    }
+                  },
+                  header: {
+                    'content-type': 'application/json'
+                  },
+                  timeout: 10000 // 增加超时时间
+                });
+                
+                console.log('收到后端响应:', result);
+                
+                // 检查请求是否成功
+                if (result.statusCode === 200) {
+                  const data = result.data;
+                  console.log('登录成功, 获取到token和openid:', {
+                    token: data.access_token,
+                    openid: data.openid,
+                    user_id: data.user_id
+                  });
+                  
+                  // 保存登录状态
+                  uni.setStorageSync('token', data.access_token);
+                  uni.setStorageSync('openid', data.openid);
+                  uni.setStorageSync('user_id', data.user_id);
+                  
+                  // 记录日志，确认token是否保存成功
+                  const savedToken = uni.getStorageSync('token');
+                  console.log('保存并验证token成功:', savedToken ? '√ 已保存' : '× 未保存');
+                  console.log('保存的本地userInfo:', localUserInfo);
+                  
+                  // 发布全局登录成功事件，通知其他页面更新状态
+                  uni.$emit('loginSuccess', {
+                    isLoggedIn: true,
+                    userInfo: localUserInfo,
+                    token: data.access_token // 显式包含token
+                  });
+                  
+                  uni.showToast({ title: '登录成功' });
+                  
+                  // 如果有登录后要执行的动作，执行它
+                  if (this.actionAfterLogin) {
+                    const action = this.actionAfterLogin;
+                    this.actionAfterLogin = null; // 清除动作
+                    setTimeout(() => {
+                      action(); // 执行之前保存的动作
+                    }, 500); // 延迟一下执行，避免连续操作
+                  }
+                } else {
+                  console.error('登录失败:', result.data);
+                  uni.showToast({ 
+                    title: result.data?.detail || '登录失败',
+                    icon: 'none'
+                  });
+                }
+              } catch (e) {
+                console.error('登录请求异常:', e);
+                uni.showToast({ 
+                  title: '登录请求失败，但本地已记录',
+                  icon: 'none',
+                  duration: 2000
+                });
+                
+                // 如果有登录后要执行的动作，执行它
+                if (this.actionAfterLogin) {
+                  const action = this.actionAfterLogin;
+                  this.actionAfterLogin = null; // 清除动作
+                  setTimeout(() => {
+                    action(); // 执行之前保存的动作
+                  }, 500); // 延迟一下执行，避免连续操作
+                }
+              }
+            } catch (e) {
+              console.error('登录过程出现异常:', e);
+              uni.showToast({ 
+                title: '登录处理失败',
+                icon: 'none'
+              });
+            } finally {
+              // 关闭登录弹窗
+              this.showLoginPopup = false;
+              uni.hideLoading();
+            }
+          },
+          fail: (err) => {
+            console.error('获取微信code失败:', err);
+            uni.hideLoading();
+            uni.showToast({ 
+              title: '微信登录失败',
               icon: 'none'
             });
           }
@@ -912,7 +1083,7 @@
       },
       
       // 提交评论
-      submitComment() {
+      async submitComment() {
         if (!this.replyContent.trim()) {
           uni.showToast({
             title: '评论内容不能为空',
@@ -921,38 +1092,88 @@
           return;
         }
         
-        // 获取用户信息
-        const userInfo = uni.getStorageSync('userInfo') || {
-          nickname: '游客',
-          avatar: '/static/default-avatar.png'
-        };
-        
-        // 创建新评论
-        const newReply = {
-          id: Date.now(), // 使用时间戳作为临时ID
-          avatar: userInfo.avatar,
-          nickname: userInfo.nickname,
-          content: this.replyContent,
-          publishTime: '刚刚',
-          likeCount: 0,
-          isLiked: false
-        };
-        
-        // 添加到评论列表
-        this.replies.unshift(newReply);
-        
-        // 更新评论数
-        this.detail.commentCount++;
-        
-        // 清空输入框并隐藏
-        this.replyContent = '';
-        this.showCommentBox = false;
-        
-        // 提示用户
-        uni.showToast({
-          title: '评论成功',
-          icon: 'success'
-        });
+        try {
+          // 显示加载提示
+          uni.showLoading({
+            title: '发送中...',
+            mask: true
+          });
+          
+          // 获取用户信息
+          const userInfo = uni.getStorageSync('userInfo') || {
+            nickname: '游客',
+            avatar: '/static/default-avatar.png'
+          };
+          
+          // 构建评论数据
+          const commentData = {
+            content: this.replyContent,
+            parent_id: this.replyToUser ? this.replyToUser.id : null
+          };
+          
+          // 发送评论到后端
+          let result;
+          if (this.contentType === 'note') {
+            // 本地笔记评论，只保存在本地
+            const noteId = this.commentId;
+            result = {
+              success: true,
+              id: Date.now(), // 使用时间戳作为临时ID
+              created_at: new Date().toISOString(),
+              user: {
+                nickname: userInfo.nickname,
+                avatar: userInfo.avatar
+              }
+            };
+          } else {
+            // 发送到服务器
+            result = await submitComment(this.commentId, commentData);
+          }
+          
+          if (result && (result.success || result.id)) {
+            // 评论成功
+            // 创建新评论对象
+            const newReply = {
+              id: result.id,
+              avatar: userInfo.avatar,
+              nickname: userInfo.nickname,
+              content: this.replyContent,
+              publishTime: '刚刚',
+              likeCount: 0,
+              isLiked: false
+            };
+            
+            // 添加到评论列表
+            this.replies.unshift(newReply);
+            
+            // 更新评论数
+            this.detail.commentCount++;
+            
+            // 清空输入框并隐藏
+            this.replyContent = '';
+            this.showCommentBox = false;
+            
+            // 提示用户
+            uni.showToast({
+              title: '评论成功',
+              icon: 'success'
+            });
+          } else {
+            // 评论失败
+            uni.showToast({
+              title: '评论失败，请重试',
+              icon: 'none'
+            });
+          }
+        } catch (error) {
+          console.error('提交评论失败:', error);
+          uni.showToast({
+            title: '评论失败，请重试',
+            icon: 'none'
+          });
+        } finally {
+          uni.hideLoading();
+        }
       },
       
       // 分享评论
@@ -1039,6 +1260,111 @@
           current: current,
           urls: urls
         });
+      },
+      
+      // 关闭登录弹窗
+      closeLoginModal() {
+        this.showLoginPopup = false;
+        // 重置登录步骤
+        this.loginStep = 1;
+        this.tempNickName = '';
+        this.tempAvatarUrl = '';
+      },
+      
+      // 选择头像
+      onChooseAvatar(e) {
+        console.log('选择头像:', e.detail.avatarUrl);
+        this.tempAvatarUrl = e.detail.avatarUrl;
+      },
+      
+      // 输入昵称
+      onInputNickname(e) {
+        console.log('输入昵称:', e.detail.value);
+        this.tempNickName = e.detail.value;
+      },
+      
+      // 保存用户信息
+      saveUserInfo() {
+        if (!this.tempNickName.trim()) {
+          uni.showToast({
+            title: '请输入昵称',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        if (!this.tempAvatarUrl) {
+          uni.showToast({
+            title: '请选择头像',
+            icon: 'none'
+          });
+          return;
+        }
+        
+        console.log('保存用户信息:', this.tempNickName, this.tempAvatarUrl);
+        
+        // 创建用户信息对象
+        const userInfo = {
+          nickname: this.tempNickName,
+          avatar: this.tempAvatarUrl,
+          // 保持兼容性
+          nickName: this.tempNickName,
+          avatarUrl: this.tempAvatarUrl
+        };
+        
+        // 保存到本地存储
+        uni.setStorageSync('userInfo', userInfo);
+        
+        // 更新页面显示的用户信息
+        this.isLoggedIn = true;
+        
+        // 创建一个临时token (如果没有真实的后端token)
+        const tempToken = 'temp_' + new Date().getTime();
+        uni.setStorageSync('token', tempToken);
+        
+        // 记录日志，确认token是否保存成功
+        const savedToken = uni.getStorageSync('token');
+        console.log('手动设置profile后验证token:', savedToken ? '√ 已保存' : '× 未保存');
+        console.log('保存的本地userInfo:', userInfo);
+        
+        // 发布全局登录成功事件，通知其他页面更新状态
+        uni.$emit('loginSuccess', {
+          isLoggedIn: true,
+          userInfo: userInfo,
+          token: tempToken
+        });
+        
+        // 关闭登录弹窗
+        this.showLoginPopup = false;
+        
+        // 如果有登录后要执行的动作，执行它
+        if (this.actionAfterLogin) {
+          const action = this.actionAfterLogin;
+          this.actionAfterLogin = null; // 清除动作
+          setTimeout(() => {
+            action(); // 执行之前保存的动作
+          }, 500); // 延迟一下执行，避免连续操作
+        }
+        
+        // 提示用户
+        uni.showToast({
+          title: '登录成功',
+          icon: 'success'
+        });
+      },
+      
+      // 处理登录状态变化
+      handleLoginStatusChanged(data) {
+        console.log('收到登录状态变化事件', data);
+        
+        if (data && data.isLoggedIn) {
+          this.isLoggedIn = data.isLoggedIn;
+          
+          // 更新用户交互状态
+          if (this.isDataLoaded) {
+            this.checkUserInteractions();
+          }
+        }
       }
     }
   };
@@ -1427,7 +1753,7 @@
   }
   
   /* 登录弹窗样式 */
-  .login-popup {
+  .login-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -1506,6 +1832,97 @@
     box-shadow: 0 6rpx 16rpx rgba(56, 161, 105, 0.3);
     transition: all 0.3s ease;
     margin-bottom: 20rpx;
+    
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 4rpx 8rpx rgba(56, 161, 105, 0.2);
+    }
+  }
+  
+  /* 新增表单样式 */
+  .form-title {
+    font-size: 32rpx;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 30rpx;
+    text-align: center;
+  }
+  
+  .avatar-wrapper {
+    width: 200rpx;
+    height: 200rpx;
+    margin: 0 auto 30rpx;
+    border-radius: 50%;
+    background: #f5f7fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+  }
+  
+  .avatar-wrapper::after {
+    border: none;
+  }
+  
+  .avatar-preview {
+    width: 180rpx;
+    height: 180rpx;
+    border-radius: 50%;
+  }
+  
+  .avatar-tip {
+    font-size: 24rpx;
+    color: #666;
+    position: absolute;
+    bottom: 20rpx;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 6rpx 0;
+  }
+  
+  .nickname-wrapper {
+    width: 100%;
+    margin-bottom: 40rpx;
+  }
+  
+  .label {
+    font-size: 28rpx;
+    color: #666;
+    margin-bottom: 10rpx;
+    display: block;
+  }
+  
+  .nickname-input {
+    width: 100%;
+    height: 90rpx;
+    background: #f5f7fa;
+    border-radius: 8rpx;
+    padding: 0 30rpx;
+    font-size: 28rpx;
+    color: #333;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+  }
+  
+  .save-button {
+    width: 100%;
+    height: 90rpx;
+    line-height: 90rpx;
+    text-align: center;
+    background: linear-gradient(45deg, #3182ce, #38a169);
+    color: #fff;
+    font-size: 32rpx;
+    font-weight: 500;
+    border-radius: 45rpx;
+    box-shadow: 0 6rpx 16rpx rgba(56, 161, 105, 0.3);
+    transition: all 0.3s ease;
     
     &:active {
       transform: scale(0.98);

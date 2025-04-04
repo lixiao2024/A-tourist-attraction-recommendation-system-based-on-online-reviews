@@ -351,7 +351,7 @@
   margin-left: 10rpx;
 }
 /* 登录弹窗样式 */
-.login-popup {
+.login-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -427,6 +427,88 @@
   margin-bottom: 20rpx;
 }
 .login-btn:active {
+  -webkit-transform: scale(0.98);
+          transform: scale(0.98);
+  box-shadow: 0 4rpx 8rpx rgba(56, 161, 105, 0.2);
+}
+/* 新增表单样式 */
+.form-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+.avatar-wrapper {
+  width: 200rpx;
+  height: 200rpx;
+  margin: 0 auto 30rpx;
+  border-radius: 50%;
+  background: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+}
+.avatar-wrapper::after {
+  border: none;
+}
+.avatar-preview {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+}
+.avatar-tip {
+  font-size: 24rpx;
+  color: #666;
+  position: absolute;
+  bottom: 20rpx;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 6rpx 0;
+}
+.nickname-wrapper {
+  width: 100%;
+  margin-bottom: 40rpx;
+}
+.label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+  display: block;
+}
+.nickname-input {
+  width: 100%;
+  height: 90rpx;
+  background: #f5f7fa;
+  border-radius: 8rpx;
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+  border: 1px solid #eee;
+}
+.save-button {
+  width: 100%;
+  height: 90rpx;
+  line-height: 90rpx;
+  text-align: center;
+  background: linear-gradient(45deg, #3182ce, #38a169);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+  border-radius: 45rpx;
+  box-shadow: 0 6rpx 16rpx rgba(56, 161, 105, 0.3);
+  transition: all 0.3s ease;
+}
+.save-button:active {
   -webkit-transform: scale(0.98);
           transform: scale(0.98);
   box-shadow: 0 4rpx 8rpx rgba(56, 161, 105, 0.2);

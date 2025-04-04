@@ -195,7 +195,12 @@ export function getPosts(skip = 0, limit = 10, tag = null, userId = null) {
     }
     return res;
   }).catch(err => {
+    // 当出现未授权错误时，返回空数组而不是抛出错误
     console.error('【DEBUG】getPosts - 请求失败:', err);
+    if (err.message === '未授权' || (err.statusCode && err.statusCode === 401)) {
+      console.log('【DEBUG】getPosts - 用户未登录，返回空数组');
+      return [];
+    }
     throw err;
   });
 }
@@ -221,6 +226,11 @@ export function getPostDetail(postId) {
     return res;
   }).catch(err => {
     console.error('【DEBUG】getPostDetail - 请求失败:', err);
+    // 处理401未授权错误，返回空对象而不是抛出异常
+    if (err.message === '未授权' || (err.statusCode && err.statusCode === 401)) {
+      console.log('【DEBUG】getPostDetail - 用户未登录，返回空对象');
+      return {}; // 返回空对象
+    }
     throw err;
   });
 }
@@ -338,4 +348,80 @@ function saveAsNote(noteData) {
   } catch (e) {
     console.error('【DEBUG】saveAsNote - 保存笔记失败:', e);
   }
-} 
+}
+
+/**
+ * 提交评论
+ * @param {number} postId - 帖子ID
+ * @param {object} commentData - 评论数据
+ * @returns {Promise<object>} 提交结果
+ */
+export const submitComment = async (postId, commentData) => {
+  try {
+    const token = uni.getStorageSync('token');
+    if (!token) {
+      console.error('submitComment: 用户未登录');
+      throw new Error('用户未登录');
+    }
+    
+    const response = await uni.request({
+      url: `${baseURL}/api/posts/${postId}/comments`,
+      method: 'POST',
+      data: commentData,
+      header: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      console.log('评论提交成功:', response.data);
+      return response.data;
+    } else {
+      console.error('评论提交失败:', response);
+      throw new Error(response.data?.detail || '评论提交失败');
+    }
+  } catch (error) {
+    console.error('评论提交异常:', error);
+    throw error;
+  }
+};
+
+/**
+ * 获取帖子评论列表
+ * @param {number} postId - 帖子ID
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页条数
+ * @returns {Promise<Array>} 评论列表
+ */
+export const getComments = async (postId, page = 1, pageSize = 10) => {
+  try {
+    const token = uni.getStorageSync('token');
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    const skip = (page - 1) * pageSize;
+    const response = await uni.request({
+      url: `${baseURL}/api/posts/${postId}/comments`,
+      method: 'GET',
+      data: {
+        skip: skip,
+        limit: pageSize
+      },
+      header: headers
+    });
+    
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      console.log('获取评论成功:', response.data);
+      return response.data;
+    } else {
+      console.error('获取评论失败:', response);
+      return [];
+    }
+  } catch (error) {
+    console.error('获取评论异常:', error);
+    return [];
+  }
+}; 

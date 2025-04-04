@@ -22,6 +22,7 @@ class Post(Base):
     
     # 关联关系
     user = relationship("User", back_populates="posts")
+    comments = relationship("Comment", back_populates="post")
     
     def __repr__(self):
         return f"<Post(id={self.id}, title='{self.title}', user_id={self.user_id})>" 

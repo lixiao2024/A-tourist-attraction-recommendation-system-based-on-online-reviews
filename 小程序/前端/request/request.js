@@ -22,27 +22,38 @@ const requestInterceptor = (config) => {
 };
 
 // 响应拦截器
-const responseInterceptor = (response) => {
+const responseInterceptor = (response, requestConfig) => {
   // 请求成功
   if (response.statusCode >= 200 && response.statusCode < 300) {
     return response.data;
   }
   
-  // 未授权，清除token并跳转登录页
+  // 未授权，处理未登录的情况
   if (response.statusCode === 401) {
-    uni.removeStorageSync('token');
-    uni.showToast({
-      title: '登录已过期，请重新登录',
-      icon: 'none'
-    });
+    // 判断请求的URL是否是/api/posts或其它不需要强制登录的接口
+    const requestUrl = requestConfig?.url || '';
+    const requestMethod = requestConfig?.method || '';
     
-    setTimeout(() => {
-      uni.navigateTo({
-        url: '/pages/login/login'
+    if (requestUrl.includes('/api/posts') && !requestUrl.includes('/api/posts/') && requestMethod === 'GET') {
+      // 获取帖子列表的请求不需要强制登录，返回空数组
+      console.log('【DEBUG】未登录获取帖子列表，返回空数据');
+      return [];
+    } else {
+      // 其他请求需要登录，清除token并跳转登录页
+      uni.removeStorageSync('token');
+      uni.showToast({
+        title: '登录已过期，请重新登录',
+        icon: 'none'
       });
-    }, 1500);
-    
-    return Promise.reject(new Error('未授权'));
+      
+      setTimeout(() => {
+        uni.navigateTo({
+          url: '/pages/login/login'
+        });
+      }, 1500);
+      
+      return Promise.reject(new Error('未授权'));
+    }
   }
   
   // 422验证错误，直接返回详细错误信息以便上层处理
@@ -124,7 +135,7 @@ export default function request(options) {
             console.log('【DEBUG】request - 请求成功, 状态码:', res.statusCode);
             console.log('【DEBUG】request - 响应数据:', res.data);
             try {
-              const result = responseInterceptor(res);
+              const result = responseInterceptor(res, config);
               resolve(result);
             } catch (error) {
               console.error('【DEBUG】request - 响应拦截器错误:', error);

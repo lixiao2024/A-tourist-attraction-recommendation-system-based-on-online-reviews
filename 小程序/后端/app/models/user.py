@@ -28,3 +28,4 @@ class User(Base):
     
     # 关联关系
     posts = relationship("Post", back_populates="user", cascade="all, delete-orphan")
+    comments = relationship("Comment", back_populates="user")

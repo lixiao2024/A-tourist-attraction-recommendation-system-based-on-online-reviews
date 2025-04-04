@@ -9,8 +9,10 @@ import sqlalchemy
 from app.schemas.post_schema import PostCreate, PostResponse, PostBrief
 from app.models.post_model import Post
 from app.models.database import get_db
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import get_current_user, get_optional_current_user
 from app.models.user import User
+from app.models.comment import Comment
+from app.schemas.comment_schema import CommentCreate, CommentResponse
 
 # 设置日志
 logger = logging.getLogger(__name__)
@@ -62,10 +64,17 @@ async def create_post(
         return {
             "id": new_post.id,
             "title": new_post.title,
+            "content": new_post.content,
             "cover_image": new_post.cover_image,
             "created_at": new_post.created_at,
             "likes_count": 0,
-            "comments_count": 0
+            "comments_count": 0,
+            "user": {
+                "id": current_user.id,
+                "username": current_user.nickname,
+                "nickname": current_user.nickname,
+                "avatar": current_user.avatar_url
+            }
         }
     except SQLAlchemyError as e:
         db.rollback()
@@ -185,4 +194,105 @@ async def get_post(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="获取博文详情失败"
-        ) 
+        )
+
+@router.post("/{post_id}/comments", response_model=CommentResponse, status_code=201)
+async def create_comment(
+    post_id: int, 
+    comment: CommentCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    为指定帖子创建评论或回复评论
+    """
+    # 检查帖子是否存在
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="帖子不存在")
+    
+    # 创建新评论
+    new_comment = Comment(
+        post_id=post_id,
+        user_id=current_user.id,
+        parent_id=comment.parent_id,
+        content=comment.content
+    )
+    
+    try:
+        # 将评论添加到数据库
+        db.add(new_comment)
+        db.commit()
+        db.refresh(new_comment)
+        
+        # 更新帖子的评论计数
+        post.comments_count = post.comments_count + 1 if post.comments_count else 1
+        db.commit()
+        
+        # 构建响应数据
+        response_data = {
+            "id": new_comment.id,
+            "post_id": new_comment.post_id,
+            "user_id": new_comment.user_id,
+            "parent_id": new_comment.parent_id,
+            "content": new_comment.content,
+            "created_at": new_comment.created_at,
+            "user": {
+                "id": current_user.id,
+                "username": current_user.username,
+                "nickname": current_user.nickname,
+                "avatar": current_user.avatar
+            }
+        }
+        
+        return response_data
+    
+    except Exception as e:
+        db.rollback()
+        logger.error(f"创建评论时发生错误: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"创建评论失败: {str(e)}")
+
+@router.get("/{post_id}/comments", response_model=List[CommentResponse])
+async def get_post_comments(
+    post_id: int, 
+    skip: int = 0, 
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_current_user)
+):
+    """
+    获取指定帖子的评论列表
+    """
+    # 检查帖子是否存在
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if not post:
+        raise HTTPException(status_code=404, detail="帖子不存在")
+    
+    # 查询评论（一级评论，parent_id 为 NULL）
+    comments = db.query(Comment).filter(
+        Comment.post_id == post_id,
+        Comment.parent_id == None
+    ).order_by(Comment.created_at.desc()).offset(skip).limit(limit).all()
+    
+    result = []
+    for comment in comments:
+        # 获取评论作者
+        user = db.query(User).filter(User.id == comment.user_id).first()
+        
+        comment_data = {
+            "id": comment.id,
+            "post_id": comment.post_id,
+            "user_id": comment.user_id,
+            "parent_id": comment.parent_id,
+            "content": comment.content,
+            "created_at": comment.created_at,
+            "user": {
+                "id": user.id if user else None,
+                "username": user.username if user else "已删除用户",
+                "nickname": user.nickname if user else "已删除用户",
+                "avatar": user.avatar if user else None
+            }
+        }
+        result.append(comment_data)
+    
+    return result 

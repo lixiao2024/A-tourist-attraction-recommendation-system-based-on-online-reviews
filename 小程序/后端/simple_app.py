@@ -18,8 +18,10 @@ from app.config.settings import settings
 from app.models.database import SessionLocal, engine, Base
 from app.models.user import User
 from app.models.post_model import Post
+from app.models.comment import Comment  # 导入评论模型
 from app.schemas.post_schema import PostCreate, PostResponse, PostBrief
-from app.auth.dependencies import get_current_user
+from app.schemas.comment_schema import CommentCreate, CommentResponse  # 导入评论Schema
+from app.auth.dependencies import get_current_user, get_optional_current_user
 
 # 设置日志
 logger = logging.getLogger(__name__)
@@ -407,10 +409,17 @@ async def create_post(
         return {
             "id": new_post.id,
             "title": new_post.title,
+            "content": new_post.content,
             "cover_image": new_post.cover_image,
             "created_at": new_post.created_at,
             "likes_count": 0,
-            "comments_count": 0
+            "comments_count": 0,
+            "user": {
+                "id": current_user.id,
+                "username": current_user.nickname,
+                "nickname": current_user.nickname,
+                "avatar": current_user.avatar_url
+            }
         }
     except SQLAlchemyError as e:
         db.rollback()
@@ -433,7 +442,7 @@ async def get_posts(
     user_id: Optional[int] = None,
     tag: Optional[str] = None, 
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_optional_current_user)
 ):
     """
     获取博文列表
@@ -503,7 +512,7 @@ async def get_posts(
 async def get_post(
     post_id: int, 
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_optional_current_user)
 ):
     """
     获取单个博文详情
@@ -531,6 +540,133 @@ async def get_post(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="获取博文详情失败"
         )
+
+@app.post("/api/posts/{post_id}/comments", response_model=CommentResponse, status_code=201)
+async def create_comment(
+    post_id: int, 
+    comment: CommentCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    为指定博文创建评论
+    
+    - 参数:
+        - post_id: 博文ID
+        - comment: 评论内容
+    - 返回:
+        - 创建的评论信息
+    """
+    try:
+        # 检查博文是否存在
+        post = db.query(Post).filter(Post.id == post_id).first()
+        if not post:
+            raise HTTPException(status_code=404, detail="博文不存在")
+        
+        # 创建新评论
+        new_comment = Comment(
+            post_id=post_id,
+            user_id=current_user.id,
+            parent_id=comment.parent_id,
+            content=comment.content,
+            created_at=datetime.utcnow()
+        )
+        
+        db.add(new_comment)
+        db.commit()
+        db.refresh(new_comment)
+        
+        # 更新博文的评论计数
+        post.comments_count += 1
+        db.commit()
+        
+        # 构造响应数据
+        result = {
+            "id": new_comment.id,
+            "post_id": new_comment.post_id,
+            "user_id": new_comment.user_id,
+            "parent_id": new_comment.parent_id,
+            "content": new_comment.content,
+            "created_at": new_comment.created_at,
+            "user": {
+                "id": current_user.id,
+                "username": current_user.nickname,
+                "nickname": current_user.nickname,
+                "avatar": current_user.avatar_url
+            }
+        }
+        
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        logger.error(f"创建评论失败: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"创建评论失败: {str(e)}")
+
+@app.get("/api/posts/{post_id}/comments", response_model=List[CommentResponse])
+async def get_post_comments(
+    post_id: int, 
+    skip: int = 0, 
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user: Optional[User] = Depends(get_optional_current_user)
+):
+    """
+    获取指定博文的评论列表
+    
+    - 参数:
+        - post_id: 博文ID
+        - skip: 跳过的记录数，默认为0
+        - limit: 返回的最大记录数，默认为10
+    - 返回:
+        - 评论列表
+    """
+    try:
+        # 检查博文是否存在
+        post = db.query(Post).filter(Post.id == post_id).first()
+        if not post:
+            raise HTTPException(status_code=404, detail="博文不存在")
+        
+        # 获取评论列表，按创建时间降序排序
+        comments = db.query(Comment).filter(
+            Comment.post_id == post_id,
+            Comment.parent_id == None  # 仅获取顶级评论
+        ).order_by(Comment.created_at.desc()).offset(skip).limit(limit).all()
+        
+        # 构造响应数据
+        result = []
+        for comment in comments:
+            # 获取评论用户信息
+            user = db.query(User).filter(User.id == comment.user_id).first()
+            
+            comment_dict = {
+                "id": comment.id,
+                "post_id": comment.post_id,
+                "user_id": comment.user_id,
+                "parent_id": comment.parent_id,
+                "content": comment.content,
+                "created_at": comment.created_at,
+                "user": None
+            }
+            
+            # 如果有用户信息，添加到结果中
+            if user:
+                comment_dict["user"] = {
+                    "id": user.id,
+                    "username": user.nickname,
+                    "nickname": user.nickname,
+                    "avatar": user.avatar_url
+                }
+            
+            result.append(comment_dict)
+        
+        return result
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"获取评论列表失败: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"获取评论列表失败: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

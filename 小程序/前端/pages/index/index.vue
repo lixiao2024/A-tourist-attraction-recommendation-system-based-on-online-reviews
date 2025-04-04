@@ -180,7 +180,8 @@ export default {
 			isLoading: false,
 			page: 1,
 			pageSize: 10,
-			hasMore: true
+			hasMore: true,
+			isLoggedIn: false
 		}
 	},
 	computed: {
@@ -194,10 +195,25 @@ export default {
 		}
 	},
 	onLoad() {
+		// 检查用户登录状态
+		this.checkLoginStatus();
 		// 初始加载数据
 		this.loadPostsFromApi();
 	},
 	methods: {
+		// 检查用户登录状态
+		checkLoginStatus() {
+			const token = uni.getStorageSync('token');
+			this.isLoggedIn = !!token;
+		},
+		
+		// 前往登录页
+		goToLogin() {
+			uni.navigateTo({
+				url: '/pages/login/login'
+			});
+		},
+		
 		// 切换分类
 		switchCategory(category) {
 			this.currentCategory = category;
@@ -223,6 +239,18 @@ export default {
 		},
 		
 		navigateToPublish() {
+			// 如果用户未登录，提示登录
+			if (!this.isLoggedIn) {
+				uni.showToast({
+					title: '请先登录后再发布',
+					icon: 'none'
+				});
+				setTimeout(() => {
+					this.goToLogin();
+				}, 1500);
+				return;
+			}
+			
 			uni.navigateTo({
 				url: '/pages/post/post'
 			});
@@ -243,6 +271,18 @@ export default {
 		},
 		
 		toggleLike(commentId) {
+			// 如果用户未登录，提示登录
+			if (!this.isLoggedIn) {
+				uni.showToast({
+					title: '请先登录后再点赞',
+					icon: 'none'
+				});
+				setTimeout(() => {
+					this.goToLogin();
+				}, 1500);
+				return;
+			}
+			
 			// 防抖处理：300ms内禁止重复点击
 			const now = Date.now()
 			if (now - this.lastClickTime < 300) return
@@ -450,6 +490,18 @@ export default {
 		
 		// 显示评论输入框
 		showCommentInput(commentId) {
+			// 如果用户未登录，提示登录
+			if (!this.isLoggedIn) {
+				uni.showToast({
+					title: '请先登录后再评论',
+					icon: 'none'
+				});
+				setTimeout(() => {
+					this.goToLogin();
+				}, 1500);
+				return;
+			}
+			
 			console.log('显示评论输入框，评论ID:', commentId)
 			uni.showToast({
 				title: '评论功能开发中',

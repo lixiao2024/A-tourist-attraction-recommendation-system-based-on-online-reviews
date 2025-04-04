@@ -18,7 +18,7 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.7.11",
+  "libVersion": "3.7.12",
   "appid": "wx605cbaa175f26b8d",
   "projectname": "前端",
   "condition": {},
