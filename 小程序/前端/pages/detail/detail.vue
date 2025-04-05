@@ -204,7 +204,7 @@
     data() {
       return {
         commentId: null,
-        contentType: 'comment',
+        sourceType: 'post',
         // 初始化空对象，避免渲染时获取不到属性
         detail: {
           id: 0,
@@ -270,8 +270,18 @@
         // 从本地存储获取笔记数据
         this.loadNoteData();
       } else {
-        // 正常加载评论数据
-        this.initData();
+        // 正常加载场景，获取传入的参数
+        this.commentId = options.id;
+        this.sourceType = options.type || 'post';
+        
+        // 根据不同类型处理不同的数据
+        if (this.sourceType === 'note') {
+          // 加载笔记数据
+          this.loadNoteData();
+        } else {
+          // 加载评论数据（博文）
+          this.initData();
+        }
       }
     },
     // 在页面卸载时移除事件监听
@@ -280,7 +290,7 @@
     },
     methods: {
       // 加载笔记数据
-      loadNoteData() {
+      async loadNoteData() {
         try {
           // 显示加载中
           uni.showLoading({
@@ -292,6 +302,38 @@
           const noteData = uni.getStorageSync('currentNote');
           
           if (noteData) {
+            // 检查笔记是否在服务器上存在
+            if (noteData.id && Number.isInteger(Number(noteData.id))) {
+              try {
+                // 尝试从服务器获取笔记数据
+                await getPostDetail(noteData.id);
+              } catch (error) {
+                // 如果服务器上找不到该笔记，说明已被管理员删除
+                if (error.statusCode === 404) {
+                  uni.hideLoading();
+                  uni.showModal({
+                    title: '提示',
+                    content: '笔记不存在或已被删除',
+                    showCancel: false,
+                    success: () => {
+                      // 从本地存储中也删除这条笔记
+                      const userNotes = uni.getStorageSync('userNotes') || [];
+                      const updatedNotes = userNotes.filter(note => note.id !== noteData.id);
+                      
+                      // 如果有变化，更新本地存储
+                      if (updatedNotes.length !== userNotes.length) {
+                        uni.setStorageSync('userNotes', updatedNotes);
+                      }
+                      
+                      // 返回上一页
+                      uni.navigateBack();
+                    }
+                  });
+                  return;
+                }
+              }
+            }
+            
             // 处理图片URL，确保URL正确
             let images = [];
             if (noteData.images && noteData.images.length > 0) {
@@ -325,21 +367,13 @@
             
             this.isDataLoaded = true;
           } else {
+            // 没有找到笔记数据
             uni.showToast({
               title: '笔记不存在',
               icon: 'none'
             });
-            
-            // 延迟返回
             setTimeout(() => {
-              uni.navigateBack({
-                fail: () => {
-                  // 如果返回失败，则跳转到我的页面
-                  uni.switchTab({
-                    url: '/pages/mine/mine'
-                  });
-                }
-              });
+              uni.navigateBack();
             }, 1500);
           }
         } catch (error) {
@@ -645,7 +679,7 @@
         this.replies = [];
         
         // 根据内容类型选择加载方法
-        if (this.contentType === 'note') {
+        if (this.sourceType === 'note') {
           // 刷新笔记评论
           this.loadNoteData().then(() => {
             this.isRefreshing = false;

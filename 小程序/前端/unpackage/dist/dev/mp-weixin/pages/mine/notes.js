@@ -35,6 +35,7 @@ var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
+<<<<<<< HEAD
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 //
@@ -233,6 +234,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 //
 //
 //
+=======
+var _api = __webpack_require__(/*! ../../request/api.js */ 52);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
 var _default = {
   data: function data() {
     return {
@@ -243,9 +249,21 @@ var _default = {
       loading: false,
       isRefreshing: false,
       showActionSheet: false,
+<<<<<<< HEAD
       currentNoteIndex: -1
     };
   },
+=======
+      currentNoteIndex: -1,
+      syncedWithServer: false,
+      // 标记是否已经与服务器同步过
+      lastSyncTime: 0,
+      // 记录上次同步时间
+      isSyncing: false // 同步锁，防止重复同步
+    };
+  },
+
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
   computed: {
     // 左侧瀑布流列
     leftColumn: function leftColumn() {
@@ -263,23 +281,87 @@ var _default = {
   onLoad: function onLoad() {
     this.loadNotes();
   },
+<<<<<<< HEAD
   methods: {
     // 加载用户笔记
     loadNotes: function loadNotes() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
         var savedNotes, startIndex, endIndex, nextPageNotes;
+=======
+  onShow: function onShow() {
+    var _this = this;
+    // 如果正在同步或刷新，不重复触发
+    if (this.isSyncing || this.isRefreshing) {
+      console.log('已有同步任务正在执行，跳过');
+      return;
+    }
+
+    // 获取当前页面路由
+    var pages = getCurrentPages();
+    // 如果有前一个页面，尝试检查是否从详情页返回
+    var needSync = false;
+
+    // 检查距离上次同步的时间
+    var now = Date.now();
+    if (now - this.lastSyncTime > 5 * 60 * 1000) {
+      // 5分钟
+      needSync = true;
+    }
+
+    // 尝试检查上一个页面
+    if (pages.length > 1) {
+      var prevPage = pages[pages.length - 2];
+      try {
+        // 不同环境下page对象结构可能不同，用try-catch保护
+        if (prevPage.route && prevPage.route.includes('detail')) {
+          needSync = true;
+        } else if (prevPage.$page && prevPage.$page.route && prevPage.$page.route.includes('detail')) {
+          needSync = true;
+        }
+      } catch (e) {
+        console.error('检查页面路由出错:', e);
+        // 出错时默认执行同步以保证数据一致性
+        needSync = true;
+      }
+    }
+    if (needSync) {
+      this.isSyncing = true;
+      console.log('执行数据同步');
+      this.syncedWithServer = false;
+      // 使用静默刷新，不显示加载提示
+      this.refreshNotes(false).finally(function () {
+        _this.isSyncing = false;
+        _this.lastSyncTime = Date.now();
+      });
+    }
+  },
+  methods: {
+    // 加载用户笔记
+    loadNotes: function loadNotes() {
+      var _this2 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var savedNotes, updatedNotes, startIndex, endIndex, nextPageNotes;
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+<<<<<<< HEAD
                 if (!(_this.loading || !_this.hasMore)) {
+=======
+                if (!(_this2.loading || !_this2.hasMore)) {
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
                   _context.next = 2;
                   break;
                 }
                 return _context.abrupt("return");
               case 2:
+<<<<<<< HEAD
                 _this.loading = true;
+=======
+                _this2.loading = true;
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
                 _context.prev = 3;
                 _context.next = 6;
                 return new Promise(function (resolve) {
@@ -287,12 +369,32 @@ var _default = {
                 });
               case 6:
                 // 从本地存储中获取笔记数据
+<<<<<<< HEAD
                 savedNotes = uni.getStorageSync('userNotes');
                 if (_this.page === 1) {
                   // 第一页：重置笔记列表
                   if (savedNotes && savedNotes.length > 0) {
                     // 使用真实的用户笔记数据
                     _this.notes = savedNotes.map(function (note) {
+=======
+                savedNotes = uni.getStorageSync('userNotes') || []; // 只在首次加载或刷新时与服务器同步
+                if (!(_this2.page === 1 && !_this2.syncedWithServer)) {
+                  _context.next = 11;
+                  break;
+                }
+                _context.next = 10;
+                return _this2.syncWithServer(savedNotes);
+              case 10:
+                _this2.syncedWithServer = true;
+              case 11:
+                // 重新获取同步后的笔记
+                updatedNotes = uni.getStorageSync('userNotes') || [];
+                if (_this2.page === 1) {
+                  // 第一页：重置笔记列表
+                  if (updatedNotes && updatedNotes.length > 0) {
+                    // 使用真实的用户笔记数据
+                    _this2.notes = updatedNotes.map(function (note) {
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
                       return _objectSpread(_objectSpread({}, note), {}, {
                         expanded: false,
                         isLiked: false
@@ -300,6 +402,7 @@ var _default = {
                     });
 
                     // 如果笔记数量少于每页数量，设置没有更多
+<<<<<<< HEAD
                     if (savedNotes.length < _this.pageSize) {
                       _this.hasMore = false;
                     }
@@ -317,6 +420,25 @@ var _default = {
                     if (nextPageNotes.length > 0) {
                       // 添加到现有笔记列表
                       _this.notes = [].concat((0, _toConsumableArray2.default)(_this.notes), (0, _toConsumableArray2.default)(nextPageNotes.map(function (note) {
+=======
+                    if (updatedNotes.length < _this2.pageSize) {
+                      _this2.hasMore = false;
+                    }
+                  } else if (_this2.notes.length === 0) {
+                    // 如果没有笔记数据，保持空数组
+                    _this2.notes = [];
+                    _this2.hasMore = false;
+                  }
+                } else {
+                  // 分页加载：如果有足够的笔记，加载下一页
+                  startIndex = (_this2.page - 1) * _this2.pageSize;
+                  if (updatedNotes && startIndex < updatedNotes.length) {
+                    endIndex = Math.min(startIndex + _this2.pageSize, updatedNotes.length);
+                    nextPageNotes = updatedNotes.slice(startIndex, endIndex);
+                    if (nextPageNotes.length > 0) {
+                      // 添加到现有笔记列表
+                      _this2.notes = [].concat((0, _toConsumableArray2.default)(_this2.notes), (0, _toConsumableArray2.default)(nextPageNotes.map(function (note) {
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
                         return _objectSpread(_objectSpread({}, note), {}, {
                           expanded: false,
                           isLiked: false
@@ -324,6 +446,7 @@ var _default = {
                       })));
 
                       // 如果加载的笔记数量少于每页数量，设置没有更多
+<<<<<<< HEAD
                       if (nextPageNotes.length < _this.pageSize) {
                         _this.hasMore = false;
                       }
@@ -332,10 +455,21 @@ var _default = {
                     }
                   } else {
                     _this.hasMore = false;
+=======
+                      if (nextPageNotes.length < _this2.pageSize) {
+                        _this2.hasMore = false;
+                      }
+                    } else {
+                      _this2.hasMore = false;
+                    }
+                  } else {
+                    _this2.hasMore = false;
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
                   }
                 }
 
                 // 更新页码
+<<<<<<< HEAD
                 if (_this.hasMore) {
                   _this.page++;
                 }
@@ -343,22 +477,149 @@ var _default = {
                 break;
               case 11:
                 _context.prev = 11;
+=======
+                if (_this2.hasMore) {
+                  _this2.page++;
+                }
+                _context.next = 20;
+                break;
+              case 16:
+                _context.prev = 16;
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
                 _context.t0 = _context["catch"](3);
                 console.error('加载笔记失败:', _context.t0);
                 uni.showToast({
                   title: '加载失败',
                   icon: 'none'
                 });
+<<<<<<< HEAD
               case 15:
                 _context.prev = 15;
                 _this.loading = false;
                 return _context.finish(15);
               case 18:
+=======
+              case 20:
+                _context.prev = 20;
+                _this2.loading = false;
+                return _context.finish(20);
+              case 23:
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
               case "end":
                 return _context.stop();
             }
           }
+<<<<<<< HEAD
         }, _callee, null, [[3, 11, 15, 18]]);
+=======
+        }, _callee, null, [[3, 16, 20, 23]]);
+      }))();
+    },
+    // 与服务器同步笔记数据
+    syncWithServer: function syncWithServer(localNotes) {
+      var _this3 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+        var userInfo, serverPosts, serverPostIds, updatedNotes;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                console.log('开始与服务器同步笔记数据');
+
+                // 获取用户信息
+                userInfo = uni.getStorageSync('userInfo');
+                if (!(!userInfo || !userInfo.id)) {
+                  _context2.next = 6;
+                  break;
+                }
+                console.log('未找到用户信息，跳过同步');
+                return _context2.abrupt("return");
+              case 6:
+                _context2.next = 8;
+                return (0, _api.getPosts)(0, 100, null, userInfo.id).catch(function (err) {
+                  console.error('获取服务器博文列表失败:', err);
+                  return null;
+                });
+              case 8:
+                serverPosts = _context2.sent;
+                if (!(!serverPosts || !Array.isArray(serverPosts))) {
+                  _context2.next = 12;
+                  break;
+                }
+                console.log('服务器返回的博文不是有效数组，跳过同步');
+                return _context2.abrupt("return");
+              case 12:
+                console.log('服务器博文数量:', serverPosts.length);
+
+                // 获取服务器博文ID列表
+                serverPostIds = serverPosts.map(function (post) {
+                  return post.id;
+                });
+                console.log('服务器博文ID列表:', serverPostIds);
+
+                // 检查本地笔记是否为空
+                if (!(!localNotes || !Array.isArray(localNotes) || localNotes.length === 0)) {
+                  _context2.next = 18;
+                  break;
+                }
+                console.log('本地没有笔记，跳过同步');
+                return _context2.abrupt("return");
+              case 18:
+                // 筛选出在本地存在但在服务器上已被删除的笔记
+                updatedNotes = localNotes.filter(function (note) {
+                  // 如果笔记没有ID或ID不是数字，保留它（可能是纯本地笔记）
+                  if (!note || !note.id || !Number.isInteger(Number(note.id))) {
+                    return true;
+                  }
+
+                  // 如果笔记ID在服务器列表中存在，保留它
+                  var shouldKeep = serverPostIds.includes(note.id);
+                  if (!shouldKeep) {
+                    console.log("\u7B14\u8BB0ID ".concat(note.id, " \u5728\u670D\u52A1\u5668\u4E0A\u4E0D\u5B58\u5728\uFF0C\u5C06\u4ECE\u672C\u5730\u5220\u9664"));
+                  }
+                  return shouldKeep;
+                });
+                console.log('同步前本地笔记数量:', localNotes.length);
+                console.log('同步后本地笔记数量:', updatedNotes.length);
+
+                // 如果有笔记被过滤掉，更新本地存储
+                if (!(updatedNotes.length !== localNotes.length)) {
+                  _context2.next = 27;
+                  break;
+                }
+                console.log('有笔记在服务器上已被删除，更新本地存储');
+                uni.setStorageSync('userNotes', updatedNotes);
+                // 触发UI更新
+                if (_this3.page === 1) {
+                  _this3.notes = updatedNotes.map(function (note) {
+                    return _objectSpread(_objectSpread({}, note), {}, {
+                      expanded: false,
+                      isLiked: false
+                    });
+                  });
+                }
+                // 显示提示
+                uni.showToast({
+                  title: '笔记已同步更新',
+                  icon: 'success',
+                  duration: 1500
+                });
+                return _context2.abrupt("return", true);
+              case 27:
+                return _context2.abrupt("return", false);
+              case 30:
+                _context2.prev = 30;
+                _context2.t0 = _context2["catch"](0);
+                console.error('与服务器同步笔记失败:', _context2.t0);
+                return _context2.abrupt("return", false);
+              case 34:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 30]]);
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
       }))();
     },
     // 处理图片加载错误
@@ -394,6 +655,7 @@ var _default = {
     },
     // 刷新笔记
     refreshNotes: function refreshNotes() {
+<<<<<<< HEAD
       var _this2 = this;
       this.isRefreshing = true;
       this.notes = [];
@@ -402,6 +664,23 @@ var _default = {
       this.loadNotes().then(function () {
         _this2.isRefreshing = false;
         uni.stopPullDownRefresh();
+=======
+      var _this4 = this;
+      var showLoading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      if (showLoading) {
+        this.isRefreshing = true;
+      }
+      this.notes = [];
+      this.page = 1;
+      this.hasMore = true;
+      this.syncedWithServer = false; // 重置同步标志，确保刷新时重新同步
+
+      return this.loadNotes().then(function () {
+        if (showLoading) {
+          _this4.isRefreshing = false;
+          uni.stopPullDownRefresh();
+        }
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
       });
     },
     // 加载更多笔记
@@ -440,6 +719,7 @@ var _default = {
     },
     // 删除笔记
     deleteNote: function deleteNote(index) {
+<<<<<<< HEAD
       var _this3 = this;
       if (index < 0 || index >= this.notes.length) return;
       uni.showModal({
@@ -458,6 +738,85 @@ var _default = {
             });
           }
         }
+=======
+      var _this5 = this;
+      if (index < 0 || index >= this.notes.length) return;
+      var note = this.notes[index];
+      uni.showModal({
+        title: '确认删除',
+        content: '确定要删除这条笔记吗？删除后将无法恢复',
+        success: function () {
+          var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(res) {
+            return _regenerator.default.wrap(function _callee3$(_context3) {
+              while (1) {
+                switch (_context3.prev = _context3.next) {
+                  case 0:
+                    if (!res.confirm) {
+                      _context3.next = 25;
+                      break;
+                    }
+                    _context3.prev = 1;
+                    uni.showLoading({
+                      title: '删除中...'
+                    });
+
+                    // 如果有ID且是整数类型，则调用API删除数据库中的记录
+                    if (!(note.id && Number.isInteger(Number(note.id)))) {
+                      _context3.next = 14;
+                      break;
+                    }
+                    _context3.prev = 4;
+                    _context3.next = 7;
+                    return (0, _api.deletePost)(note.id);
+                  case 7:
+                    console.log('数据库中的博文已删除');
+                    _context3.next = 14;
+                    break;
+                  case 10:
+                    _context3.prev = 10;
+                    _context3.t0 = _context3["catch"](4);
+                    console.error('删除数据库记录失败:', _context3.t0);
+                    // 即使后端删除失败，也继续删除本地笔记
+                    uni.showToast({
+                      title: '服务器同步失败，但本地笔记已删除',
+                      icon: 'none',
+                      duration: 2000
+                    });
+                  case 14:
+                    // 删除本地笔记
+                    _this5.notes.splice(index, 1);
+
+                    // 更新本地存储
+                    uni.setStorageSync('userNotes', _this5.notes);
+                    uni.hideLoading();
+                    uni.showToast({
+                      title: '删除成功',
+                      icon: 'success'
+                    });
+                    _context3.next = 25;
+                    break;
+                  case 20:
+                    _context3.prev = 20;
+                    _context3.t1 = _context3["catch"](1);
+                    uni.hideLoading();
+                    uni.showToast({
+                      title: '删除失败，请重试',
+                      icon: 'none'
+                    });
+                    console.error('删除笔记失败:', _context3.t1);
+                  case 25:
+                  case "end":
+                    return _context3.stop();
+                }
+              }
+            }, _callee3, null, [[1, 20], [4, 10]]);
+          }));
+          function success(_x) {
+            return _success.apply(this, arguments);
+          }
+          return success;
+        }()
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
       });
       this.showActionSheet = false;
     },
@@ -605,7 +964,11 @@ var components
 try {
   components = {
     uniIcons: function () {
+<<<<<<< HEAD
       return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 136))
+=======
+      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 141))
+>>>>>>> 8586f270516785f262322293fab3e10846b71926
     },
   }
 } catch (e) {

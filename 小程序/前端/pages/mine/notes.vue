@@ -195,6 +195,8 @@
 </template>
 
 <script>
+import { deletePost, getPosts } from '../../request/api.js';
+
 export default {
   data() {
     return {
@@ -205,7 +207,10 @@ export default {
       loading: false,
       isRefreshing: false,
       showActionSheet: false,
-      currentNoteIndex: -1
+      currentNoteIndex: -1,
+      syncedWithServer: false,  // 标记是否已经与服务器同步过
+      lastSyncTime: 0,          // 记录上次同步时间
+      isSyncing: false          // 同步锁，防止重复同步
     }
   },
   computed: {
@@ -221,6 +226,52 @@ export default {
   onLoad() {
     this.loadNotes();
   },
+  onShow() {
+    // 如果正在同步或刷新，不重复触发
+    if (this.isSyncing || this.isRefreshing) {
+      console.log('已有同步任务正在执行，跳过');
+      return;
+    }
+    
+    // 获取当前页面路由
+    const pages = getCurrentPages();
+    // 如果有前一个页面，尝试检查是否从详情页返回
+    let needSync = false;
+    
+    // 检查距离上次同步的时间
+    const now = Date.now();
+    if (now - this.lastSyncTime > 5 * 60 * 1000) { // 5分钟
+      needSync = true;
+    }
+    
+    // 尝试检查上一个页面
+    if (pages.length > 1) {
+      const prevPage = pages[pages.length - 2];
+      try {
+        // 不同环境下page对象结构可能不同，用try-catch保护
+        if (prevPage.route && prevPage.route.includes('detail')) {
+          needSync = true;
+        } else if (prevPage.$page && prevPage.$page.route && prevPage.$page.route.includes('detail')) {
+          needSync = true;
+        }
+      } catch (e) {
+        console.error('检查页面路由出错:', e);
+        // 出错时默认执行同步以保证数据一致性
+        needSync = true;
+      }
+    }
+    
+    if (needSync) {
+      this.isSyncing = true;
+      console.log('执行数据同步');
+      this.syncedWithServer = false;
+      // 使用静默刷新，不显示加载提示
+      this.refreshNotes(false).finally(() => {
+        this.isSyncing = false;
+        this.lastSyncTime = Date.now();
+      });
+    }
+  },
   methods: {
     // 加载用户笔记
     async loadNotes() {
@@ -233,20 +284,29 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 500));
         
         // 从本地存储中获取笔记数据
-        const savedNotes = uni.getStorageSync('userNotes');
+        const savedNotes = uni.getStorageSync('userNotes') || [];
+        
+        // 只在首次加载或刷新时与服务器同步
+        if (this.page === 1 && !this.syncedWithServer) {
+          await this.syncWithServer(savedNotes);
+          this.syncedWithServer = true;
+        }
+        
+        // 重新获取同步后的笔记
+        const updatedNotes = uni.getStorageSync('userNotes') || [];
         
         if (this.page === 1) {
           // 第一页：重置笔记列表
-          if (savedNotes && savedNotes.length > 0) {
+          if (updatedNotes && updatedNotes.length > 0) {
             // 使用真实的用户笔记数据
-            this.notes = savedNotes.map(note => ({
+            this.notes = updatedNotes.map(note => ({
               ...note,
               expanded: false,
               isLiked: false
             }));
             
             // 如果笔记数量少于每页数量，设置没有更多
-            if (savedNotes.length < this.pageSize) {
+            if (updatedNotes.length < this.pageSize) {
               this.hasMore = false;
             }
           } else if (this.notes.length === 0) {
@@ -257,9 +317,9 @@ export default {
         } else {
           // 分页加载：如果有足够的笔记，加载下一页
           const startIndex = (this.page - 1) * this.pageSize;
-          if (savedNotes && startIndex < savedNotes.length) {
-            const endIndex = Math.min(startIndex + this.pageSize, savedNotes.length);
-            const nextPageNotes = savedNotes.slice(startIndex, endIndex);
+          if (updatedNotes && startIndex < updatedNotes.length) {
+            const endIndex = Math.min(startIndex + this.pageSize, updatedNotes.length);
+            const nextPageNotes = updatedNotes.slice(startIndex, endIndex);
             
             if (nextPageNotes.length > 0) {
               // 添加到现有笔记列表
@@ -296,6 +356,87 @@ export default {
         });
       } finally {
         this.loading = false;
+      }
+    },
+    
+    // 与服务器同步笔记数据
+    async syncWithServer(localNotes) {
+      try {
+        console.log('开始与服务器同步笔记数据');
+        
+        // 获取用户信息
+        const userInfo = uni.getStorageSync('userInfo');
+        if (!userInfo || !userInfo.id) {
+          console.log('未找到用户信息，跳过同步');
+          return;
+        }
+        
+        // 从服务器获取用户的博文列表
+        const serverPosts = await getPosts(0, 100, null, userInfo.id).catch(err => {
+          console.error('获取服务器博文列表失败:', err);
+          return null;
+        });
+        
+        if (!serverPosts || !Array.isArray(serverPosts)) {
+          console.log('服务器返回的博文不是有效数组，跳过同步');
+          return;
+        }
+        
+        console.log('服务器博文数量:', serverPosts.length);
+        
+        // 获取服务器博文ID列表
+        const serverPostIds = serverPosts.map(post => post.id);
+        console.log('服务器博文ID列表:', serverPostIds);
+        
+        // 检查本地笔记是否为空
+        if (!localNotes || !Array.isArray(localNotes) || localNotes.length === 0) {
+          console.log('本地没有笔记，跳过同步');
+          return;
+        }
+        
+        // 筛选出在本地存在但在服务器上已被删除的笔记
+        const updatedNotes = localNotes.filter(note => {
+          // 如果笔记没有ID或ID不是数字，保留它（可能是纯本地笔记）
+          if (!note || !note.id || !Number.isInteger(Number(note.id))) {
+            return true;
+          }
+          
+          // 如果笔记ID在服务器列表中存在，保留它
+          const shouldKeep = serverPostIds.includes(note.id);
+          if (!shouldKeep) {
+            console.log(`笔记ID ${note.id} 在服务器上不存在，将从本地删除`);
+          }
+          return shouldKeep;
+        });
+        
+        console.log('同步前本地笔记数量:', localNotes.length);
+        console.log('同步后本地笔记数量:', updatedNotes.length);
+        
+        // 如果有笔记被过滤掉，更新本地存储
+        if (updatedNotes.length !== localNotes.length) {
+          console.log('有笔记在服务器上已被删除，更新本地存储');
+          uni.setStorageSync('userNotes', updatedNotes);
+          // 触发UI更新
+          if (this.page === 1) {
+            this.notes = updatedNotes.map(note => ({
+              ...note,
+              expanded: false,
+              isLiked: false
+            }));
+          }
+          // 显示提示
+          uni.showToast({
+            title: '笔记已同步更新',
+            icon: 'success',
+            duration: 1500
+          });
+          return true; // 返回true表示有更新
+        }
+        
+        return false; // 返回false表示没有更新
+      } catch (error) {
+        console.error('与服务器同步笔记失败:', error);
+        return false;
       }
     },
     
@@ -336,15 +477,21 @@ export default {
     },
     
     // 刷新笔记
-    refreshNotes() {
-      this.isRefreshing = true;
+    refreshNotes(showLoading = true) {
+      if (showLoading) {
+        this.isRefreshing = true;
+      }
+      
       this.notes = [];
       this.page = 1;
       this.hasMore = true;
+      this.syncedWithServer = false; // 重置同步标志，确保刷新时重新同步
       
-      this.loadNotes().then(() => {
-        this.isRefreshing = false;
-        uni.stopPullDownRefresh();
+      return this.loadNotes().then(() => {
+        if (showLoading) {
+          this.isRefreshing = false;
+          uni.stopPullDownRefresh();
+        }
       });
     },
     
@@ -389,21 +536,52 @@ export default {
     deleteNote(index) {
       if (index < 0 || index >= this.notes.length) return;
       
+      const note = this.notes[index];
+      
       uni.showModal({
         title: '确认删除',
-        content: '确定要删除这条笔记吗？',
-        success: (res) => {
+        content: '确定要删除这条笔记吗？删除后将无法恢复',
+        success: async (res) => {
           if (res.confirm) {
-            // 删除笔记
-            this.notes.splice(index, 1);
-            
-            // 更新本地存储
-            uni.setStorageSync('userNotes', this.notes);
-            
-            uni.showToast({
-              title: '删除成功',
-              icon: 'success'
-            });
+            try {
+              uni.showLoading({ title: '删除中...' });
+              
+              // 如果有ID且是整数类型，则调用API删除数据库中的记录
+              if (note.id && Number.isInteger(Number(note.id))) {
+                try {
+                  // 调用API删除后端数据库中的记录
+                  await deletePost(note.id);
+                  console.log('数据库中的博文已删除');
+                } catch (error) {
+                  console.error('删除数据库记录失败:', error);
+                  // 即使后端删除失败，也继续删除本地笔记
+                  uni.showToast({
+                    title: '服务器同步失败，但本地笔记已删除',
+                    icon: 'none',
+                    duration: 2000
+                  });
+                }
+              }
+              
+              // 删除本地笔记
+              this.notes.splice(index, 1);
+              
+              // 更新本地存储
+              uni.setStorageSync('userNotes', this.notes);
+              
+              uni.hideLoading();
+              uni.showToast({
+                title: '删除成功',
+                icon: 'success'
+              });
+            } catch (error) {
+              uni.hideLoading();
+              uni.showToast({
+                title: '删除失败，请重试',
+                icon: 'none'
+              });
+              console.error('删除笔记失败:', error);
+            }
           }
         }
       });
