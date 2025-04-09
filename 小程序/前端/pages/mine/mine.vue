@@ -137,7 +137,6 @@
 					[
 						{ label: '个人信息', type: 'info', icon: 'info' },
 						{ label: '我的笔记', type: 'notes', icon: 'bars' },
-						{ label: '我的足迹', type: 'footprint', icon: 'location' },
 						{ label: '用户反馈', type: 'feedback', icon: 'chat' }
 					]
 				],
@@ -563,7 +562,21 @@
 									// 标记为已登录
 									this.isLogged = true;
 									
-									uni.showToast({ title: '登录成功' });
+									// 获取用户详情并检查是否设置兴趣标签
+									const userInfo = uni.getStorageSync('userInfo') || {};
+									
+									// 检查是否设置了兴趣标签
+									if (!userInfo.interest_tags) {
+										// 如果没有设置兴趣标签，引导用户进入兴趣选择页面
+										uni.showToast({ title: '请选择您感兴趣的内容' });
+										setTimeout(() => {
+											uni.navigateTo({
+												url: '/pages/mine/interests'
+											});
+										}, 1000);
+									} else {
+										uni.showToast({ title: '登录成功' });
+									}
 								} else {
 									console.error('登录失败:', result.data);
 									uni.showToast({ 

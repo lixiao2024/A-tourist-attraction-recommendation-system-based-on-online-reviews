@@ -10,8 +10,14 @@ from app.schemas.user import WechatLoginRequest, Token, User as UserSchema
 from app.config.settings import settings
 from app.auth.service import wechat_login
 from app.auth.dependencies import get_current_active_user
+from pydantic import BaseModel
+from typing import List
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+# 兴趣标签请求体
+class InterestTagsRequest(BaseModel):
+    tags: str
 
 # OAuth2 password bearer scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/wechat-login")
@@ -82,3 +88,26 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
         用户信息
     """
     return current_user
+
+@router.post("/update-interests")
+async def update_interests(
+    interest_data: InterestTagsRequest, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
+):
+    """
+    更新用户兴趣标签
+    
+    Args:
+        interest_data: 包含用户选择的兴趣标签
+        db: 数据库会话
+        current_user: 当前活跃用户
+        
+    Returns:
+        成功信息
+    """
+    current_user.interest_tags = interest_data.tags
+    db.commit()
+    db.refresh(current_user)
+    
+    return {"message": "兴趣标签更新成功"}

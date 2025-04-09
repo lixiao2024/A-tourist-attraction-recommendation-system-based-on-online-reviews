@@ -35,210 +35,9 @@ var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
-<<<<<<< HEAD
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-=======
 var _api = __webpack_require__(/*! ../../request/api.js */ 52);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
->>>>>>> 8586f270516785f262322293fab3e10846b71926
 var _default = {
   data: function data() {
     return {
@@ -249,11 +48,6 @@ var _default = {
       loading: false,
       isRefreshing: false,
       showActionSheet: false,
-<<<<<<< HEAD
-      currentNoteIndex: -1
-    };
-  },
-=======
       currentNoteIndex: -1,
       syncedWithServer: false,
       // 标记是否已经与服务器同步过
@@ -263,7 +57,6 @@ var _default = {
     };
   },
 
->>>>>>> 8586f270516785f262322293fab3e10846b71926
   computed: {
     // 左侧瀑布流列
     leftColumn: function leftColumn() {
@@ -281,14 +74,6 @@ var _default = {
   onLoad: function onLoad() {
     this.loadNotes();
   },
-<<<<<<< HEAD
-  methods: {
-    // 加载用户笔记
-    loadNotes: function loadNotes() {
-      var _this = this;
-      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var savedNotes, startIndex, endIndex, nextPageNotes;
-=======
   onShow: function onShow() {
     var _this = this;
     // 如果正在同步或刷新，不重复触发
@@ -342,26 +127,17 @@ var _default = {
       var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
         var savedNotes, updatedNotes, startIndex, endIndex, nextPageNotes;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-<<<<<<< HEAD
-                if (!(_this.loading || !_this.hasMore)) {
-=======
                 if (!(_this2.loading || !_this2.hasMore)) {
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                   _context.next = 2;
                   break;
                 }
                 return _context.abrupt("return");
               case 2:
-<<<<<<< HEAD
-                _this.loading = true;
-=======
                 _this2.loading = true;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                 _context.prev = 3;
                 _context.next = 6;
                 return new Promise(function (resolve) {
@@ -369,14 +145,6 @@ var _default = {
                 });
               case 6:
                 // 从本地存储中获取笔记数据
-<<<<<<< HEAD
-                savedNotes = uni.getStorageSync('userNotes');
-                if (_this.page === 1) {
-                  // 第一页：重置笔记列表
-                  if (savedNotes && savedNotes.length > 0) {
-                    // 使用真实的用户笔记数据
-                    _this.notes = savedNotes.map(function (note) {
-=======
                 savedNotes = uni.getStorageSync('userNotes') || []; // 只在首次加载或刷新时与服务器同步
                 if (!(_this2.page === 1 && !_this2.syncedWithServer)) {
                   _context.next = 11;
@@ -394,7 +162,6 @@ var _default = {
                   if (updatedNotes && updatedNotes.length > 0) {
                     // 使用真实的用户笔记数据
                     _this2.notes = updatedNotes.map(function (note) {
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                       return _objectSpread(_objectSpread({}, note), {}, {
                         expanded: false,
                         isLiked: false
@@ -402,25 +169,6 @@ var _default = {
                     });
 
                     // 如果笔记数量少于每页数量，设置没有更多
-<<<<<<< HEAD
-                    if (savedNotes.length < _this.pageSize) {
-                      _this.hasMore = false;
-                    }
-                  } else if (_this.notes.length === 0) {
-                    // 如果没有笔记数据，保持空数组
-                    _this.notes = [];
-                    _this.hasMore = false;
-                  }
-                } else {
-                  // 分页加载：如果有足够的笔记，加载下一页
-                  startIndex = (_this.page - 1) * _this.pageSize;
-                  if (savedNotes && startIndex < savedNotes.length) {
-                    endIndex = Math.min(startIndex + _this.pageSize, savedNotes.length);
-                    nextPageNotes = savedNotes.slice(startIndex, endIndex);
-                    if (nextPageNotes.length > 0) {
-                      // 添加到现有笔记列表
-                      _this.notes = [].concat((0, _toConsumableArray2.default)(_this.notes), (0, _toConsumableArray2.default)(nextPageNotes.map(function (note) {
-=======
                     if (updatedNotes.length < _this2.pageSize) {
                       _this2.hasMore = false;
                     }
@@ -438,7 +186,6 @@ var _default = {
                     if (nextPageNotes.length > 0) {
                       // 添加到现有笔记列表
                       _this2.notes = [].concat((0, _toConsumableArray2.default)(_this2.notes), (0, _toConsumableArray2.default)(nextPageNotes.map(function (note) {
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                         return _objectSpread(_objectSpread({}, note), {}, {
                           expanded: false,
                           isLiked: false
@@ -446,16 +193,6 @@ var _default = {
                       })));
 
                       // 如果加载的笔记数量少于每页数量，设置没有更多
-<<<<<<< HEAD
-                      if (nextPageNotes.length < _this.pageSize) {
-                        _this.hasMore = false;
-                      }
-                    } else {
-                      _this.hasMore = false;
-                    }
-                  } else {
-                    _this.hasMore = false;
-=======
                       if (nextPageNotes.length < _this2.pageSize) {
                         _this2.hasMore = false;
                       }
@@ -464,20 +201,10 @@ var _default = {
                     }
                   } else {
                     _this2.hasMore = false;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                   }
                 }
 
                 // 更新页码
-<<<<<<< HEAD
-                if (_this.hasMore) {
-                  _this.page++;
-                }
-                _context.next = 15;
-                break;
-              case 11:
-                _context.prev = 11;
-=======
                 if (_this2.hasMore) {
                   _this2.page++;
                 }
@@ -485,33 +212,21 @@ var _default = {
                 break;
               case 16:
                 _context.prev = 16;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                 _context.t0 = _context["catch"](3);
                 console.error('加载笔记失败:', _context.t0);
                 uni.showToast({
                   title: '加载失败',
                   icon: 'none'
                 });
-<<<<<<< HEAD
-              case 15:
-                _context.prev = 15;
-                _this.loading = false;
-                return _context.finish(15);
-              case 18:
-=======
               case 20:
                 _context.prev = 20;
                 _this2.loading = false;
                 return _context.finish(20);
               case 23:
->>>>>>> 8586f270516785f262322293fab3e10846b71926
               case "end":
                 return _context.stop();
             }
           }
-<<<<<<< HEAD
-        }, _callee, null, [[3, 11, 15, 18]]);
-=======
         }, _callee, null, [[3, 16, 20, 23]]);
       }))();
     },
@@ -619,7 +334,6 @@ var _default = {
             }
           }
         }, _callee2, null, [[0, 30]]);
->>>>>>> 8586f270516785f262322293fab3e10846b71926
       }))();
     },
     // 处理图片加载错误
@@ -655,16 +369,6 @@ var _default = {
     },
     // 刷新笔记
     refreshNotes: function refreshNotes() {
-<<<<<<< HEAD
-      var _this2 = this;
-      this.isRefreshing = true;
-      this.notes = [];
-      this.page = 1;
-      this.hasMore = true;
-      this.loadNotes().then(function () {
-        _this2.isRefreshing = false;
-        uni.stopPullDownRefresh();
-=======
       var _this4 = this;
       var showLoading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
       if (showLoading) {
@@ -680,7 +384,6 @@ var _default = {
           _this4.isRefreshing = false;
           uni.stopPullDownRefresh();
         }
->>>>>>> 8586f270516785f262322293fab3e10846b71926
       });
     },
     // 加载更多笔记
@@ -719,26 +422,6 @@ var _default = {
     },
     // 删除笔记
     deleteNote: function deleteNote(index) {
-<<<<<<< HEAD
-      var _this3 = this;
-      if (index < 0 || index >= this.notes.length) return;
-      uni.showModal({
-        title: '确认删除',
-        content: '确定要删除这条笔记吗？',
-        success: function success(res) {
-          if (res.confirm) {
-            // 删除笔记
-            _this3.notes.splice(index, 1);
-
-            // 更新本地存储
-            uni.setStorageSync('userNotes', _this3.notes);
-            uni.showToast({
-              title: '删除成功',
-              icon: 'success'
-            });
-          }
-        }
-=======
       var _this5 = this;
       if (index < 0 || index >= this.notes.length) return;
       var note = this.notes[index];
@@ -816,7 +499,6 @@ var _default = {
           }
           return success;
         }()
->>>>>>> 8586f270516785f262322293fab3e10846b71926
       });
       this.showActionSheet = false;
     },
@@ -964,11 +646,7 @@ var components
 try {
   components = {
     uniIcons: function () {
-<<<<<<< HEAD
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 136))
-=======
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 141))
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 144))
     },
   }
 } catch (e) {

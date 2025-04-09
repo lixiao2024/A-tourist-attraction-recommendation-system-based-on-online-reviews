@@ -102,11 +102,7 @@ var components
 try {
   components = {
     uniIcons: function () {
-<<<<<<< HEAD
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 136))
-=======
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 141))
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 144))
     },
   }
 } catch (e) {
@@ -206,7 +202,6 @@ exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
-<<<<<<< HEAD
 var _api = __webpack_require__(/*! @/request/api.js */ 52);
 //
 //
@@ -237,9 +232,6 @@ var _api = __webpack_require__(/*! @/request/api.js */ 52);
 //
 //
 //
-=======
-var _api = __webpack_require__(/*! ../../request/api.js */ 52);
->>>>>>> 8586f270516785f262322293fab3e10846b71926
 //
 //
 //
@@ -460,7 +452,6 @@ var _default = {
     this.shareComment();
   },
   onLoad: function onLoad(options) {
-<<<<<<< HEAD
     // 获取传递的评论ID参数
     this.commentId = options.id || null;
     // 获取传递的类型参数（评论或笔记）
@@ -483,13 +474,6 @@ var _default = {
     if (this.contentType === 'note') {
       // 从本地存储获取笔记数据
       this.loadNoteData();
-=======
-    this.options = options;
-    // 如果是从分享进入，等待页面渲染完成后再加载数据
-    if (options.scene) {
-      // 处理扫码场景
-      // ...
->>>>>>> 8586f270516785f262322293fab3e10846b71926
     } else {
       // 正常加载场景，获取传入的参数
       this.commentId = options.id;
@@ -514,11 +498,7 @@ var _default = {
     loadNoteData: function loadNoteData() {
       var _this = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-<<<<<<< HEAD
-        var postDetail, isLoggedIn, _postDetail$user, _postDetail$user2;
-=======
         var noteData, _uni$getStorageSync, images;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -647,7 +627,7 @@ var _default = {
     initData: function initData() {
       var _this2 = this;
       return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-        var postDetail, _postDetail$user;
+        var postDetail, isLoggedIn, _postDetail$user, _postDetail$user2;
         return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -675,13 +655,8 @@ var _default = {
                 });
 
                 // 加载评论详情
-<<<<<<< HEAD
-                if (!_this.commentId) {
-                  _context.next = 31;
-=======
                 if (!_this2.commentId) {
-                  _context2.next = 29;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+                  _context2.next = 31;
                   break;
                 }
                 _context2.prev = 8;
@@ -690,34 +665,21 @@ var _default = {
               case 11:
                 postDetail = _context2.sent;
                 console.log('获取到的帖子详情:', postDetail);
-<<<<<<< HEAD
 
                 // 检查用户是否已登录
                 isLoggedIn = !!uni.getStorageSync('token');
-                _this.isLoggedIn = isLoggedIn;
+                _this2.isLoggedIn = isLoggedIn;
                 if (!(postDetail && postDetail.id)) {
-                  _context.next = 22;
-=======
-                if (!postDetail) {
-                  _context2.next = 20;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+                  _context2.next = 22;
                   break;
                 }
                 // 转换数据格式以适应前端展示
                 _this2.detail = {
                   id: postDetail.id,
-<<<<<<< HEAD
                   avatar: ((_postDetail$user = postDetail.user) === null || _postDetail$user === void 0 ? void 0 : _postDetail$user.avatar) || '/static/default-avatar.png',
                   nickname: ((_postDetail$user2 = postDetail.user) === null || _postDetail$user2 === void 0 ? void 0 : _postDetail$user2.nickname) || '旅行达人',
                   content: postDetail.content || '内容获取失败',
-                  publishTime: _this.formatPublishTime(postDetail.created_at) || '未知时间',
-=======
-                  avatar: '/static/default-avatar.png',
-                  // 或者从用户数据中获取
-                  nickname: ((_postDetail$user = postDetail.user) === null || _postDetail$user === void 0 ? void 0 : _postDetail$user.nickname) || '旅行达人',
-                  content: postDetail.content,
-                  publishTime: _this2.formatPublishTime(postDetail.created_at),
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+                  publishTime: _this2.formatPublishTime(postDetail.created_at) || '未知时间',
                   likeCount: postDetail.likes_count || 0,
                   commentCount: postDetail.comments_count || 0,
                   collectCount: postDetail.collects_count || 0,
@@ -727,110 +689,51 @@ var _default = {
                   images: postDetail.images || []
                 };
 
-<<<<<<< HEAD
                 // 加载评论回复
-                _context.next = 19;
-                return _this.loadCommentReplies();
+                _context2.next = 19;
+                return _this2.loadCommentReplies();
               case 19:
                 // 设置用户交互状态
                 if (isLoggedIn) {
-                  _this.checkUserInteractions();
+                  _this2.checkUserInteractions();
                 }
-                _context.next = 24;
+                _context2.next = 24;
                 break;
               case 22:
-                _context.next = 24;
-                return _this.loadMockData();
+                _context2.next = 24;
+                return _this2.loadMockData();
               case 24:
-                _context.next = 31;
+                _context2.next = 31;
                 break;
               case 26:
-                _context.prev = 26;
-                _context.t0 = _context["catch"](8);
-                console.error('API请求失败:', _context.t0);
-                // API请求失败时，加载模拟数据
-                _context.next = 31;
-                return _this.loadMockData();
-              case 31:
-                _this.isDataLoaded = true;
-                _context.next = 38;
-                break;
-              case 34:
-                _context.prev = 34;
-                _context.t1 = _context["catch"](5);
-                console.error('初始化数据失败:', _context.t1);
-=======
-                // 加载回复列表
-                _context2.next = 17;
-                return _this2.loadCommentReplies();
-              case 17:
-                // 设置用户交互状态
-                _this2.checkUserInteractions();
-                _context2.next = 22;
-                break;
-              case 20:
-                _context2.next = 22;
-                return _this2.loadMockData();
-              case 22:
-                _context2.next = 29;
-                break;
-              case 24:
-                _context2.prev = 24;
+                _context2.prev = 26;
                 _context2.t0 = _context2["catch"](8);
                 console.error('API请求失败:', _context2.t0);
                 // API请求失败时，加载模拟数据
-                _context2.next = 29;
+                _context2.next = 31;
                 return _this2.loadMockData();
-              case 29:
+              case 31:
                 _this2.isDataLoaded = true;
-                _context2.next = 36;
+                _context2.next = 38;
                 break;
-              case 32:
-                _context2.prev = 32;
+              case 34:
+                _context2.prev = 34;
                 _context2.t1 = _context2["catch"](5);
                 console.error('初始化数据失败:', _context2.t1);
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                 uni.showToast({
                   title: '加载失败，请重试',
                   icon: 'none'
                 });
-<<<<<<< HEAD
               case 38:
-                _context.prev = 38;
+                _context2.prev = 38;
                 uni.hideLoading();
-                return _context.finish(38);
+                return _context2.finish(38);
               case 41:
               case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[5, 34, 38, 41], [8, 26]]);
-      }))();
-    },
-    // 加载模拟数据（当API请求失败时使用）
-    loadMockData: function loadMockData() {
-      var _this2 = this;
-      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-        return _regenerator.default.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return Promise.all([_this2.loadCommentDetail(), _this2.loadCommentReplies()]);
-              case 2:
-              case "end":
-=======
-              case 36:
-                _context2.prev = 36;
-                uni.hideLoading();
-                return _context2.finish(36);
-              case 39:
-              case "end":
->>>>>>> 8586f270516785f262322293fab3e10846b71926
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[5, 32, 36, 39], [8, 24]]);
+        }, _callee2, null, [[5, 34, 38, 41], [8, 26]]);
       }))();
     },
     // 加载模拟数据（当API请求失败时使用）
@@ -918,41 +821,35 @@ var _default = {
         }, 300);
       });
     },
-<<<<<<< HEAD
     // 加载评论回复
     loadCommentReplies: function loadCommentReplies() {
-      var _this4 = this;
-=======
-    // 加载回复列表
-    loadReplies: function loadReplies() {
       var _this5 = this;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
       if (this.loading || !this.hasMore) return Promise.resolve();
       this.loading = true;
       return new Promise( /*#__PURE__*/function () {
-        var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(resolve) {
+        var _ref = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(resolve) {
           var skip, comments, formattedComments;
-          return _regenerator.default.wrap(function _callee3$(_context3) {
+          return _regenerator.default.wrap(function _callee4$(_context4) {
             while (1) {
-              switch (_context3.prev = _context3.next) {
+              switch (_context4.prev = _context4.next) {
                 case 0:
-                  _context3.prev = 0;
-                  if (!(_this4.contentType === 'note')) {
-                    _context3.next = 6;
+                  _context4.prev = 0;
+                  if (!(_this5.contentType === 'note')) {
+                    _context4.next = 6;
                     break;
                   }
-                  _context3.next = 4;
-                  return _this4.loadReplies();
+                  _context4.next = 4;
+                  return _this5.loadReplies();
                 case 4:
                   resolve();
-                  return _context3.abrupt("return");
+                  return _context4.abrupt("return");
                 case 6:
                   // 从服务器获取评论
-                  skip = (_this4.page - 1) * _this4.pageSize;
-                  _context3.next = 9;
-                  return (0, _api.getComments)(_this4.commentId, _this4.page, _this4.pageSize);
+                  skip = (_this5.page - 1) * _this5.pageSize;
+                  _context4.next = 9;
+                  return (0, _api.getComments)(_this5.commentId, _this5.page, _this5.pageSize);
                 case 9:
-                  comments = _context3.sent;
+                  comments = _context4.sent;
                   if (Array.isArray(comments) && comments.length > 0) {
                     // 格式化评论数据
                     formattedComments = comments.map(function (comment) {
@@ -962,51 +859,51 @@ var _default = {
                         avatar: ((_comment$user = comment.user) === null || _comment$user === void 0 ? void 0 : _comment$user.avatar) || '/static/default-avatar.png',
                         nickname: ((_comment$user2 = comment.user) === null || _comment$user2 === void 0 ? void 0 : _comment$user2.nickname) || '游客',
                         content: comment.content,
-                        publishTime: _this4.formatPublishTime(comment.created_at),
+                        publishTime: _this5.formatPublishTime(comment.created_at),
                         likeCount: 0,
                         // 暂不支持评论点赞
                         isLiked: false
                       };
                     }); // 如果是第一页，替换评论列表；否则追加
-                    if (_this4.page === 1) {
-                      _this4.replies = formattedComments;
+                    if (_this5.page === 1) {
+                      _this5.replies = formattedComments;
                     } else {
-                      _this4.replies = [].concat((0, _toConsumableArray2.default)(_this4.replies), (0, _toConsumableArray2.default)(formattedComments));
+                      _this5.replies = [].concat((0, _toConsumableArray2.default)(_this5.replies), (0, _toConsumableArray2.default)(formattedComments));
                     }
 
                     // 更新页码和状态
-                    _this4.page++;
-                    _this4.hasMore = comments.length >= _this4.pageSize;
+                    _this5.page++;
+                    _this5.hasMore = comments.length >= _this5.pageSize;
                   } else {
                     // 没有更多评论了
-                    if (_this4.page > 1) {
-                      _this4.hasMore = false;
-                    } else if (_this4.page === 1) {
+                    if (_this5.page > 1) {
+                      _this5.hasMore = false;
+                    } else if (_this5.page === 1) {
                       // 第一页就没有数据
-                      _this4.replies = [];
-                      _this4.hasMore = false;
+                      _this5.replies = [];
+                      _this5.hasMore = false;
                     }
                   }
-                  _context3.next = 18;
+                  _context4.next = 18;
                   break;
                 case 13:
-                  _context3.prev = 13;
-                  _context3.t0 = _context3["catch"](0);
-                  console.error('获取评论列表失败:', _context3.t0);
+                  _context4.prev = 13;
+                  _context4.t0 = _context4["catch"](0);
+                  console.error('获取评论列表失败:', _context4.t0);
                   // 如果API请求失败，回退到模拟数据
-                  _context3.next = 18;
-                  return _this4.loadReplies();
+                  _context4.next = 18;
+                  return _this5.loadReplies();
                 case 18:
-                  _context3.prev = 18;
-                  _this4.loading = false;
+                  _context4.prev = 18;
+                  _this5.loading = false;
                   resolve();
-                  return _context3.finish(18);
+                  return _context4.finish(18);
                 case 22:
                 case "end":
-                  return _context3.stop();
+                  return _context4.stop();
               }
             }
-          }, _callee3, null, [[0, 13, 18, 22]]);
+          }, _callee4, null, [[0, 13, 18, 22]]);
         }));
         return function (_x) {
           return _ref.apply(this, arguments);
@@ -1015,15 +912,15 @@ var _default = {
     },
     // 备用方法：加载模拟评论数据
     loadReplies: function loadReplies() {
-      var _this5 = this;
+      var _this6 = this;
       return new Promise(function (resolve) {
         // 模拟API请求延迟
         setTimeout(function () {
           // 模拟分页数据
-          if (_this5.commentId == 2) {
+          if (_this6.commentId == 2) {
             // 为ID为2的评论添加特定回复
-            if (_this5.page === 1) {
-              _this5.replies = [{
+            if (_this6.page === 1) {
+              _this6.replies = [{
                 id: 2,
                 avatar: '/static/default-avatar.png',
                 nickname: '本地用户',
@@ -1034,11 +931,11 @@ var _default = {
               }];
             } else {
               // 第二页没有更多数据
-              _this5.hasMore = false;
+              _this6.hasMore = false;
             }
-          } else if (_this5.page === 1) {
+          } else if (_this6.page === 1) {
             // 第一页数据
-            _this5.replies = [{
+            _this6.replies = [{
               id: 1,
               avatar: '/static/default-avatar.png',
               nickname: '用户A',
@@ -1047,33 +944,33 @@ var _default = {
               likeCount: 5,
               isLiked: false
             }];
-          } else if (_this5.page > 1) {
+          } else if (_this6.page > 1) {
             // 为其他评论ID模拟加载更多数据
             var moreReplies = [{
-              id: _this5.replies.length + 1,
+              id: _this6.replies.length + 1,
               avatar: '/static/default-avatar.png',
-              nickname: '用户' + (_this5.page + 1),
-              content: '这是加载的第' + _this5.page + '页回复',
+              nickname: '用户' + (_this6.page + 1),
+              content: '这是加载的第' + _this6.page + '页回复',
               publishTime: Math.floor(Math.random() * 24) + '小时前',
               likeCount: Math.floor(Math.random() * 10),
               isLiked: false
             }];
-            _this5.replies = [].concat((0, _toConsumableArray2.default)(_this5.replies), moreReplies);
+            _this6.replies = [].concat((0, _toConsumableArray2.default)(_this6.replies), moreReplies);
 
             // 模拟数据到第3页结束
-            if (_this5.page >= 3) {
-              _this5.hasMore = false;
+            if (_this6.page >= 3) {
+              _this6.hasMore = false;
             }
           }
-          _this5.page++;
-          _this5.loading = false;
+          _this6.page++;
+          _this6.loading = false;
           resolve();
         }, 500);
       });
     },
     // 刷新评论
     refreshComments: function refreshComments(e) {
-      var _this6 = this;
+      var _this7 = this;
       this.isRefreshing = true;
       this.page = 1;
       this.hasMore = true;
@@ -1083,7 +980,7 @@ var _default = {
       if (this.sourceType === 'note') {
         // 刷新笔记评论
         this.loadNoteData().then(function () {
-          _this6.isRefreshing = false;
+          _this7.isRefreshing = false;
           uni.stopPullDownRefresh();
           if (e && typeof e.stopPullDownRefresh === 'function') {
             e.stopPullDownRefresh();
@@ -1091,12 +988,8 @@ var _default = {
         });
       } else {
         // 刷新评论回复
-<<<<<<< HEAD
         this.loadCommentReplies().then(function () {
-=======
-        this.loadReplies().then(function () {
->>>>>>> 8586f270516785f262322293fab3e10846b71926
-          _this6.isRefreshing = false;
+          _this7.isRefreshing = false;
           uni.stopPullDownRefresh();
           if (e && typeof e.stopPullDownRefresh === 'function') {
             e.stopPullDownRefresh();
@@ -1148,7 +1041,6 @@ var _default = {
     },
     // 处理登录事件
     handleLogin: function handleLogin() {
-<<<<<<< HEAD
       // 检查是否支持getUserProfile
       if (!this.canIUseGetUserProfile) {
         this.canIUseGetUserProfile = wx.getUserProfile ? true : false;
@@ -1165,20 +1057,12 @@ var _default = {
     },
     // 获取用户个人信息
     getUserProfile: function getUserProfile() {
-      var _this7 = this;
+      var _this8 = this;
       console.log('调用getUserProfile获取用户信息');
-=======
-      var _this7 = this;
-      // 隐藏登录弹窗
-      this.showLoginPopup = false;
-
-      // 显示加载提示
->>>>>>> 8586f270516785f262322293fab3e10846b71926
       uni.showLoading({
         title: '登录中...'
       });
 
-<<<<<<< HEAD
       // 调用wx.getUserProfile获取用户信息
       wx.getUserProfile({
         desc: '用于完善会员资料',
@@ -1190,184 +1074,18 @@ var _default = {
           uni.setStorageSync('wx_user_info', res.userInfo);
 
           // 预填充临时头像和昵称
-          _this7.tempAvatarUrl = res.userInfo.avatarUrl;
-          _this7.tempNickName = res.userInfo.nickName;
+          _this8.tempAvatarUrl = res.userInfo.avatarUrl;
+          _this8.tempNickName = res.userInfo.nickName;
 
           // 如果获取到的是"微信用户"或默认头像，则进入完善信息步骤
           if (res.userInfo.nickName === '微信用户' || !res.userInfo.avatarUrl) {
             console.log('获取到默认昵称或头像，进入完善信息步骤');
-            _this7.loginStep = 2;
+            _this8.loginStep = 2;
             uni.hideLoading();
           } else {
             // 否则直接使用获取到的信息登录
             // 获取到用户信息后，继续获取微信code并调用后端API
-            _this7.loginWithWechat(res.userInfo);
-=======
-      // 获取用户信息
-      uni.getUserProfile({
-        desc: '用于完善会员信息',
-        lang: 'zh_CN',
-        success: function () {
-          var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5(res) {
-            return _regenerator.default.wrap(function _callee5$(_context5) {
-              while (1) {
-                switch (_context5.prev = _context5.next) {
-                  case 0:
-                    console.log('获取到用户个人信息:', {
-                      nickName: res.userInfo.nickName,
-                      avatarUrl: res.userInfo.avatarUrl
-                    });
-
-                    // 获取微信code
-                    uni.login({
-                      provider: 'weixin',
-                      success: function () {
-                        var _success2 = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(loginRes) {
-                          var result, data, userInfo, statsData, action, _result$data;
-                          return _regenerator.default.wrap(function _callee4$(_context4) {
-                            while (1) {
-                              switch (_context4.prev = _context4.next) {
-                                case 0:
-                                  _context4.prev = 0;
-                                  console.log('获取到微信登录code:', loginRes.code);
-
-                                  // 调用后端API进行登录验证
-                                  console.log('准备向后端发送登录请求...');
-                                  _context4.next = 5;
-                                  return uni.request({
-                                    url: 'http://localhost:8000/api/wechat-login',
-                                    // 替换为实际的后端API地址
-                                    method: 'POST',
-                                    data: {
-                                      code: loginRes.code,
-                                      user_info: {
-                                        nickname: res.userInfo.nickName,
-                                        avatar_url: res.userInfo.avatarUrl,
-                                        gender: res.userInfo.gender,
-                                        country: res.userInfo.country,
-                                        province: res.userInfo.province,
-                                        city: res.userInfo.city,
-                                        language: res.userInfo.language
-                                      }
-                                    },
-                                    header: {
-                                      'content-type': 'application/json'
-                                    }
-                                  });
-                                case 5:
-                                  result = _context4.sent;
-                                  console.log('收到后端响应:', result);
-
-                                  // 检查请求是否成功
-                                  if (result.statusCode === 200) {
-                                    data = result.data;
-                                    console.log('登录成功, 获取到token和openid:', {
-                                      token: data.access_token,
-                                      openid: data.openid,
-                                      user_id: data.user_id
-                                    });
-
-                                    // 保存登录状态
-                                    uni.setStorageSync('token', data.access_token);
-                                    uni.setStorageSync('openid', data.openid);
-                                    uni.setStorageSync('user_id', data.user_id);
-
-                                    // 获取用户信息 - 使用一致的属性名称
-                                    userInfo = {
-                                      nickname: res.userInfo.nickName,
-                                      avatar: res.userInfo.avatarUrl,
-                                      // 同时保存原始字段，保持兼容性
-                                      nickName: res.userInfo.nickName,
-                                      avatarUrl: res.userInfo.avatarUrl,
-                                      gender: res.userInfo.gender,
-                                      country: res.userInfo.country,
-                                      province: res.userInfo.province,
-                                      city: res.userInfo.city,
-                                      language: res.userInfo.language
-                                    };
-                                    console.log('保存用户信息:', userInfo);
-                                    uni.setStorageSync('userInfo', userInfo);
-
-                                    // 初始化用户统计数据(如果不存在)
-                                    statsData = uni.getStorageSync('userStatsData');
-                                    if (!statsData) {
-                                      statsData = [{
-                                        label: '粉丝',
-                                        value: 0
-                                      }, {
-                                        label: '获赞',
-                                        value: 0
-                                      }, {
-                                        label: '关注',
-                                        value: 0
-                                      }, {
-                                        label: '收藏',
-                                        value: 0
-                                      }];
-                                      uni.setStorageSync('userStatsData', statsData);
-                                    }
-                                    uni.showToast({
-                                      title: '登录成功'
-                                    });
-
-                                    // 如果有登录后要执行的动作，执行它
-                                    if (_this7.actionAfterLogin) {
-                                      action = _this7.actionAfterLogin;
-                                      _this7.actionAfterLogin = null; // 清除动作
-                                      setTimeout(function () {
-                                        action(); // 执行之前保存的动作
-                                      }, 500); // 延迟一下执行，避免连续操作
-                                    }
-                                  } else {
-                                    console.error('登录失败:', result.data);
-                                    uni.showToast({
-                                      title: ((_result$data = result.data) === null || _result$data === void 0 ? void 0 : _result$data.detail) || '登录失败',
-                                      icon: 'none'
-                                    });
-                                  }
-                                  _context4.next = 14;
-                                  break;
-                                case 10:
-                                  _context4.prev = 10;
-                                  _context4.t0 = _context4["catch"](0);
-                                  console.error('登录请求异常:', _context4.t0);
-                                  uni.showToast({
-                                    title: '登录请求失败',
-                                    icon: 'none'
-                                  });
-                                case 14:
-                                  uni.hideLoading();
-                                case 15:
-                                case "end":
-                                  return _context4.stop();
-                              }
-                            }
-                          }, _callee4, null, [[0, 10]]);
-                        }));
-                        function success(_x2) {
-                          return _success2.apply(this, arguments);
-                        }
-                        return success;
-                      }(),
-                      fail: function fail(err) {
-                        console.error('获取微信code失败:', err);
-                        uni.hideLoading();
-                        uni.showToast({
-                          title: '微信登录失败',
-                          icon: 'none'
-                        });
-                      }
-                    });
-                  case 2:
-                  case "end":
-                    return _context5.stop();
-                }
-              }
-            }, _callee5);
-          }));
-          function success(_x) {
-            return _success.apply(this, arguments);
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+            _this8.loginWithWechat(res.userInfo);
           }
         },
         fail: function fail(err) {
@@ -1382,18 +1100,18 @@ var _default = {
     },
     // 使用微信登录
     loginWithWechat: function loginWithWechat(userInfo) {
-      var _this8 = this;
+      var _this9 = this;
       // 获取微信code
       uni.login({
         provider: 'weixin',
         success: function () {
-          var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee4(loginRes) {
+          var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5(loginRes) {
             var localUserInfo, backendUrl, result, data, savedToken, action, _result$data, _action;
-            return _regenerator.default.wrap(function _callee4$(_context4) {
+            return _regenerator.default.wrap(function _callee5$(_context5) {
               while (1) {
-                switch (_context4.prev = _context4.next) {
+                switch (_context5.prev = _context5.next) {
                   case 0:
-                    _context4.prev = 0;
+                    _context5.prev = 0;
                     console.log('获取到微信登录code:', loginRes.code);
 
                     // 保存微信登录信息到本地，即使后端不可用也能显示头像和昵称
@@ -1409,7 +1127,7 @@ var _default = {
                     uni.setStorageSync('userInfo', localUserInfo);
 
                     // 更新登录状态
-                    _this8.isLoggedIn = true;
+                    _this9.isLoggedIn = true;
 
                     // 调用后端API进行登录验证
                     console.log('准备向后端发送登录请求...');
@@ -1417,8 +1135,8 @@ var _default = {
                     // 使用实际IP地址替换localhost
                     // const backendUrl = 'http://localhost:8000/api/wechat-login';
                     backendUrl = 'http://192.168.1.10:8000/api/wechat-login'; // 替换为您的实际IP
-                    _context4.prev = 7;
-                    _context4.next = 10;
+                    _context5.prev = 7;
+                    _context5.next = 10;
                     return uni.request({
                       url: backendUrl,
                       method: 'POST',
@@ -1440,7 +1158,7 @@ var _default = {
                       timeout: 10000 // 增加超时时间
                     });
                   case 10:
-                    result = _context4.sent;
+                    result = _context5.sent;
                     console.log('收到后端响应:', result);
 
                     // 检查请求是否成功
@@ -1474,9 +1192,9 @@ var _default = {
                       });
 
                       // 如果有登录后要执行的动作，执行它
-                      if (_this8.actionAfterLogin) {
-                        action = _this8.actionAfterLogin;
-                        _this8.actionAfterLogin = null; // 清除动作
+                      if (_this9.actionAfterLogin) {
+                        action = _this9.actionAfterLogin;
+                        _this9.actionAfterLogin = null; // 清除动作
                         setTimeout(function () {
                           action(); // 执行之前保存的动作
                         }, 500); // 延迟一下执行，避免连续操作
@@ -1488,12 +1206,12 @@ var _default = {
                         icon: 'none'
                       });
                     }
-                    _context4.next = 20;
+                    _context5.next = 20;
                     break;
                   case 15:
-                    _context4.prev = 15;
-                    _context4.t0 = _context4["catch"](7);
-                    console.error('登录请求异常:', _context4.t0);
+                    _context5.prev = 15;
+                    _context5.t0 = _context5["catch"](7);
+                    console.error('登录请求异常:', _context5.t0);
                     uni.showToast({
                       title: '登录请求失败，但本地已记录',
                       icon: 'none',
@@ -1501,36 +1219,36 @@ var _default = {
                     });
 
                     // 如果有登录后要执行的动作，执行它
-                    if (_this8.actionAfterLogin) {
-                      _action = _this8.actionAfterLogin;
-                      _this8.actionAfterLogin = null; // 清除动作
+                    if (_this9.actionAfterLogin) {
+                      _action = _this9.actionAfterLogin;
+                      _this9.actionAfterLogin = null; // 清除动作
                       setTimeout(function () {
                         _action(); // 执行之前保存的动作
                       }, 500); // 延迟一下执行，避免连续操作
                     }
                   case 20:
-                    _context4.next = 26;
+                    _context5.next = 26;
                     break;
                   case 22:
-                    _context4.prev = 22;
-                    _context4.t1 = _context4["catch"](0);
-                    console.error('登录过程出现异常:', _context4.t1);
+                    _context5.prev = 22;
+                    _context5.t1 = _context5["catch"](0);
+                    console.error('登录过程出现异常:', _context5.t1);
                     uni.showToast({
                       title: '登录处理失败',
                       icon: 'none'
                     });
                   case 26:
-                    _context4.prev = 26;
+                    _context5.prev = 26;
                     // 关闭登录弹窗
-                    _this8.showLoginPopup = false;
+                    _this9.showLoginPopup = false;
                     uni.hideLoading();
-                    return _context4.finish(26);
+                    return _context5.finish(26);
                   case 30:
                   case "end":
-                    return _context4.stop();
+                    return _context5.stop();
                 }
               }
-            }, _callee4, null, [[0, 22, 26, 30], [7, 15]]);
+            }, _callee5, null, [[0, 22, 26, 30], [7, 15]]);
           }));
           function success(_x2) {
             return _success.apply(this, arguments);
@@ -1549,49 +1267,26 @@ var _default = {
     },
     // 点赞主评论
     toggleLike: function toggleLike() {
-<<<<<<< HEAD
-      var _this9 = this;
+      var _this10 = this;
       var execute = function execute() {
         // 更新点赞状态
-        _this9.detail.isLiked = !_this9.detail.isLiked;
+        _this10.detail.isLiked = !_this10.detail.isLiked;
 
         // 更新点赞数量
-        if (_this9.detail.isLiked) {
-          _this9.detail.likeCount++;
-          _this9.updateUserStats('获赞', 1);
+        if (_this10.detail.isLiked) {
+          _this10.detail.likeCount++;
+          _this10.updateUserStats('获赞', 1);
         } else {
-          _this9.detail.likeCount--;
-          _this9.updateUserStats('获赞', -1);
+          _this10.detail.likeCount--;
+          _this10.updateUserStats('获赞', -1);
         }
 
         // 保存点赞状态到本地
-        _this9.saveInteractionStatus('likedPosts', _this9.detail.id, _this9.detail.isLiked);
+        _this10.saveInteractionStatus('likedPosts', _this10.detail.id, _this10.detail.isLiked);
 
         // 提示用户
         uni.showToast({
-          title: _this9.detail.isLiked ? '已点赞' : '已取消点赞',
-=======
-      var _this8 = this;
-      var execute = function execute() {
-        // 更新点赞状态
-        _this8.detail.isLiked = !_this8.detail.isLiked;
-
-        // 更新点赞数量
-        if (_this8.detail.isLiked) {
-          _this8.detail.likeCount++;
-          _this8.updateUserStats('获赞', 1);
-        } else {
-          _this8.detail.likeCount--;
-          _this8.updateUserStats('获赞', -1);
-        }
-
-        // 保存点赞状态到本地
-        _this8.saveInteractionStatus('likedPosts', _this8.detail.id, _this8.detail.isLiked);
-
-        // 提示用户
-        uni.showToast({
-          title: _this8.detail.isLiked ? '已点赞' : '已取消点赞',
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+          title: _this10.detail.isLiked ? '已点赞' : '已取消点赞',
           icon: 'none'
         });
       };
@@ -1606,15 +1301,9 @@ var _default = {
     },
     // 点赞回复
     toggleReplyLike: function toggleReplyLike(index) {
-<<<<<<< HEAD
-      var _this10 = this;
+      var _this11 = this;
       var execute = function execute() {
-        var reply = _this10.replies[index];
-=======
-      var _this9 = this;
-      var execute = function execute() {
-        var reply = _this9.replies[index];
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+        var reply = _this11.replies[index];
         if (!reply) return;
 
         // 更新点赞状态
@@ -1630,11 +1319,7 @@ var _default = {
         }
 
         // 保存点赞状态到本地
-<<<<<<< HEAD
-        _this10.saveInteractionStatus('likedReplies', reply.id, reply.isLiked);
-=======
-        _this9.saveInteractionStatus('likedReplies', reply.id, reply.isLiked);
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+        _this11.saveInteractionStatus('likedReplies', reply.id, reply.isLiked);
       };
 
       // 检查登录状态
@@ -1647,49 +1332,26 @@ var _default = {
     },
     // 收藏功能
     toggleCollect: function toggleCollect() {
-<<<<<<< HEAD
-      var _this11 = this;
+      var _this12 = this;
       var execute = function execute() {
         // 更新收藏状态
-        _this11.detail.isCollected = !_this11.detail.isCollected;
+        _this12.detail.isCollected = !_this12.detail.isCollected;
 
         // 更新收藏数量
-        if (_this11.detail.isCollected) {
-          _this11.detail.collectCount++;
-          _this11.updateUserStats('收藏', 1);
+        if (_this12.detail.isCollected) {
+          _this12.detail.collectCount++;
+          _this12.updateUserStats('收藏', 1);
         } else {
-          _this11.detail.collectCount--;
-          _this11.updateUserStats('收藏', -1);
+          _this12.detail.collectCount--;
+          _this12.updateUserStats('收藏', -1);
         }
 
         // 保存收藏状态到本地
-        _this11.saveInteractionStatus('collectedPosts', _this11.detail.id, _this11.detail.isCollected);
+        _this12.saveInteractionStatus('collectedPosts', _this12.detail.id, _this12.detail.isCollected);
 
         // 提示用户
         uni.showToast({
-          title: _this11.detail.isCollected ? '已收藏' : '已取消收藏',
-=======
-      var _this10 = this;
-      var execute = function execute() {
-        // 更新收藏状态
-        _this10.detail.isCollected = !_this10.detail.isCollected;
-
-        // 更新收藏数量
-        if (_this10.detail.isCollected) {
-          _this10.detail.collectCount++;
-          _this10.updateUserStats('收藏', 1);
-        } else {
-          _this10.detail.collectCount--;
-          _this10.updateUserStats('收藏', -1);
-        }
-
-        // 保存收藏状态到本地
-        _this10.saveInteractionStatus('collectedPosts', _this10.detail.id, _this10.detail.isCollected);
-
-        // 提示用户
-        uni.showToast({
-          title: _this10.detail.isCollected ? '已收藏' : '已取消收藏',
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+          title: _this12.detail.isCollected ? '已收藏' : '已取消收藏',
           icon: 'none'
         });
       };
@@ -1704,49 +1366,26 @@ var _default = {
     },
     // 关注功能
     toggleFollow: function toggleFollow() {
-<<<<<<< HEAD
-      var _this12 = this;
+      var _this13 = this;
       var execute = function execute() {
         // 更新关注状态
-        _this12.detail.isFollowed = !_this12.detail.isFollowed;
+        _this13.detail.isFollowed = !_this13.detail.isFollowed;
 
         // 更新用户统计数据
-        if (_this12.detail.isFollowed) {
-          _this12.updateUserStats('关注', 1);
-          _this12.updateAuthorStats('粉丝', 1);
+        if (_this13.detail.isFollowed) {
+          _this13.updateUserStats('关注', 1);
+          _this13.updateAuthorStats('粉丝', 1);
         } else {
-          _this12.updateUserStats('关注', -1);
-          _this12.updateAuthorStats('粉丝', -1);
+          _this13.updateUserStats('关注', -1);
+          _this13.updateAuthorStats('粉丝', -1);
         }
 
         // 保存关注状态到本地
-        _this12.saveInteractionStatus('followedUsers', _this12.detail.nickname, _this12.detail.isFollowed);
+        _this13.saveInteractionStatus('followedUsers', _this13.detail.nickname, _this13.detail.isFollowed);
 
         // 提示用户
         uni.showToast({
-          title: _this12.detail.isFollowed ? '已关注' : '已取消关注',
-=======
-      var _this11 = this;
-      var execute = function execute() {
-        // 更新关注状态
-        _this11.detail.isFollowed = !_this11.detail.isFollowed;
-
-        // 更新用户统计数据
-        if (_this11.detail.isFollowed) {
-          _this11.updateUserStats('关注', 1);
-          _this11.updateAuthorStats('粉丝', 1);
-        } else {
-          _this11.updateUserStats('关注', -1);
-          _this11.updateAuthorStats('粉丝', -1);
-        }
-
-        // 保存关注状态到本地
-        _this11.saveInteractionStatus('followedUsers', _this11.detail.nickname, _this11.detail.isFollowed);
-
-        // 提示用户
-        uni.showToast({
-          title: _this11.detail.isFollowed ? '已关注' : '已取消关注',
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+          title: _this13.detail.isFollowed ? '已关注' : '已取消关注',
           icon: 'none'
         });
       };
@@ -1761,24 +1400,14 @@ var _default = {
     },
     // 显示评论输入框
     showCommentInput: function showCommentInput() {
-<<<<<<< HEAD
-      var _this13 = this;
-=======
-      var _this12 = this;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+      var _this14 = this;
       // 检查登录状态
       if (!this.checkLoginStatus()) {
         // 保存要执行的操作，登录成功后执行
         this.actionAfterLogin = function () {
-<<<<<<< HEAD
-          _this13.replyToUser = null;
-          _this13.replyPlaceholder = '写下你的评论...';
-          _this13.showCommentBox = true;
-=======
-          _this12.replyToUser = null;
-          _this12.replyPlaceholder = '写下你的评论...';
-          _this12.showCommentBox = true;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+          _this14.replyToUser = null;
+          _this14.replyPlaceholder = '写下你的评论...';
+          _this14.showCommentBox = true;
         };
         return;
       }
@@ -1788,24 +1417,14 @@ var _default = {
     },
     // 回复特定评论
     replyToComment: function replyToComment(reply) {
-<<<<<<< HEAD
-      var _this14 = this;
-=======
-      var _this13 = this;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+      var _this15 = this;
       // 检查登录状态
       if (!this.checkLoginStatus()) {
         // 保存要执行的操作，登录成功后执行
         this.actionAfterLogin = function () {
-<<<<<<< HEAD
-          _this14.replyToUser = reply;
-          _this14.replyPlaceholder = "\u56DE\u590D ".concat(reply.nickname, "\uFF1A");
-          _this14.showCommentBox = true;
-=======
-          _this13.replyToUser = reply;
-          _this13.replyPlaceholder = "\u56DE\u590D ".concat(reply.nickname, "\uFF1A");
-          _this13.showCommentBox = true;
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+          _this15.replyToUser = reply;
+          _this15.replyPlaceholder = "\u56DE\u590D ".concat(reply.nickname, "\uFF1A");
+          _this15.showCommentBox = true;
         };
         return;
       }
@@ -1815,24 +1434,24 @@ var _default = {
     },
     // 提交评论
     submitComment: function submitComment() {
-      var _this15 = this;
-      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+      var _this16 = this;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
         var userInfo, commentData, result, noteId, newReply;
-        return _regenerator.default.wrap(function _callee5$(_context5) {
+        return _regenerator.default.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                if (_this15.replyContent.trim()) {
-                  _context5.next = 3;
+                if (_this16.replyContent.trim()) {
+                  _context6.next = 3;
                   break;
                 }
                 uni.showToast({
                   title: '评论内容不能为空',
                   icon: 'none'
                 });
-                return _context5.abrupt("return");
+                return _context6.abrupt("return");
               case 3:
-                _context5.prev = 3;
+                _context6.prev = 3;
                 // 显示加载提示
                 uni.showLoading({
                   title: '发送中...',
@@ -1845,15 +1464,15 @@ var _default = {
                   avatar: '/static/default-avatar.png'
                 }; // 构建评论数据
                 commentData = {
-                  content: _this15.replyContent,
-                  parent_id: _this15.replyToUser ? _this15.replyToUser.id : null
+                  content: _this16.replyContent,
+                  parent_id: _this16.replyToUser ? _this16.replyToUser.id : null
                 }; // 发送评论到后端
-                if (!(_this15.contentType === 'note')) {
-                  _context5.next = 12;
+                if (!(_this16.contentType === 'note')) {
+                  _context6.next = 12;
                   break;
                 }
                 // 本地笔记评论，只保存在本地
-                noteId = _this15.commentId;
+                noteId = _this16.commentId;
                 result = {
                   success: true,
                   id: Date.now(),
@@ -1864,13 +1483,13 @@ var _default = {
                     avatar: userInfo.avatar
                   }
                 };
-                _context5.next = 15;
+                _context6.next = 15;
                 break;
               case 12:
-                _context5.next = 14;
-                return (0, _api.submitComment)(_this15.commentId, commentData);
+                _context6.next = 14;
+                return (0, _api.submitComment)(_this16.commentId, commentData);
               case 14:
-                result = _context5.sent;
+                result = _context6.sent;
               case 15:
                 if (result && (result.success || result.id)) {
                   // 评论成功
@@ -1879,19 +1498,19 @@ var _default = {
                     id: result.id,
                     avatar: userInfo.avatar,
                     nickname: userInfo.nickname,
-                    content: _this15.replyContent,
+                    content: _this16.replyContent,
                     publishTime: '刚刚',
                     likeCount: 0,
                     isLiked: false
                   }; // 添加到评论列表
-                  _this15.replies.unshift(newReply);
+                  _this16.replies.unshift(newReply);
 
                   // 更新评论数
-                  _this15.detail.commentCount++;
+                  _this16.detail.commentCount++;
 
                   // 清空输入框并隐藏
-                  _this15.replyContent = '';
-                  _this15.showCommentBox = false;
+                  _this16.replyContent = '';
+                  _this16.showCommentBox = false;
 
                   // 提示用户
                   uni.showToast({
@@ -1905,26 +1524,26 @@ var _default = {
                     icon: 'none'
                   });
                 }
-                _context5.next = 22;
+                _context6.next = 22;
                 break;
               case 18:
-                _context5.prev = 18;
-                _context5.t0 = _context5["catch"](3);
-                console.error('提交评论失败:', _context5.t0);
+                _context6.prev = 18;
+                _context6.t0 = _context6["catch"](3);
+                console.error('提交评论失败:', _context6.t0);
                 uni.showToast({
                   title: '评论失败，请重试',
                   icon: 'none'
                 });
               case 22:
-                _context5.prev = 22;
+                _context6.prev = 22;
                 uni.hideLoading();
-                return _context5.finish(22);
+                return _context6.finish(22);
               case 25:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, null, [[3, 18, 22, 25]]);
+        }, _callee6, null, [[3, 18, 22, 25]]);
       }))();
     },
     // 分享评论

@@ -58,3 +58,6 @@ uvicorn main:app --reload
 当您需要添加新的 Python 包时，确保在虚拟环境激活的状态下安装，并更新 requirements.txt：
 pip install 新包名
 pip freeze > requirements.txt
+
+启动千问模型
+python qwen_api.py

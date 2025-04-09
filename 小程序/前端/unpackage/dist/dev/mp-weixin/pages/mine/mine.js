@@ -102,11 +102,7 @@ var components
 try {
   components = {
     uniIcons: function () {
-<<<<<<< HEAD
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 136))
-=======
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 141))
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 144))
     },
   }
 } catch (e) {
@@ -342,10 +338,6 @@ var _default = {
         label: '我的笔记',
         type: 'notes',
         icon: 'bars'
-      }, {
-        label: '我的足迹',
-        type: 'footprint',
-        icon: 'location'
       }, {
         label: '用户反馈',
         type: 'feedback',
@@ -732,7 +724,7 @@ var _default = {
         provider: 'weixin',
         success: function () {
           var _success = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(loginRes) {
-            var localUserInfo, backendUrl, result, data, savedToken, _result$data;
+            var localUserInfo, backendUrl, result, data, savedToken, _userInfo2, _result$data;
             return _regenerator.default.wrap(function _callee3$(_context3) {
               while (1) {
                 switch (_context3.prev = _context3.next) {
@@ -815,9 +807,24 @@ var _default = {
 
                       // 标记为已登录
                       _this5.isLogged = true;
-                      uni.showToast({
-                        title: '登录成功'
-                      });
+
+                      // 获取用户详情并检查是否设置兴趣标签
+                      _userInfo2 = uni.getStorageSync('userInfo') || {}; // 检查是否设置了兴趣标签
+                      if (!_userInfo2.interest_tags) {
+                        // 如果没有设置兴趣标签，引导用户进入兴趣选择页面
+                        uni.showToast({
+                          title: '请选择您感兴趣的内容'
+                        });
+                        setTimeout(function () {
+                          uni.navigateTo({
+                            url: '/pages/mine/interests'
+                          });
+                        }, 1000);
+                      } else {
+                        uni.showToast({
+                          title: '登录成功'
+                        });
+                      }
                     } else {
                       console.error('登录失败:', result.data);
                       uni.showToast({

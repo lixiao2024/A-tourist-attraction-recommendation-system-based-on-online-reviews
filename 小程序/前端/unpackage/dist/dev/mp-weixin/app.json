@@ -10,7 +10,8 @@
     "pages/mine/wallet",
     "pages/mine/settings",
     "pages/mine/feedback",
-    "pages/footprint/footprint"
+    "pages/footprint/footprint",
+    "pages/mine/interests"
   ],
   "subPackages": [],
   "window": {

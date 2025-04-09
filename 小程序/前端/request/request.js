@@ -94,91 +94,90 @@ const responseInterceptor = (response, requestConfig) => {
  * @param {Object} options - 请求配置
  * @returns {Promise} - 返回请求结果
  */
-export default function request(options) {
-  // 合并请求配置
-  const config = {
-    url: BASE_URL + (options.url || ''),
-    method: options.method || 'GET',
-    data: options.data || {},
-    header: options.header || {
-      'Content-Type': 'application/json'
-    },
-    timeout: options.timeout || TIMEOUT
-  };
-  
-  console.log('【DEBUG】request - 开始请求:', config.url);
-  console.log('【DEBUG】request - 请求方法:', config.method);
-  console.log('【DEBUG】request - 请求头:', config.header);
-  console.log('【DEBUG】request - 请求数据:', config.data);
-  
-  // 处理请求拦截
-  const finalConfig = requestInterceptor(config);
-  
-  // 网络检查
-  return new Promise((resolve, reject) => {
-    // 检查网络状态
-    uni.getNetworkType({
-      success: (networkRes) => {
-        if (networkRes.networkType === 'none') {
-          uni.showToast({
-            title: '网络连接不可用，请检查网络设置',
-            icon: 'none'
-          });
-          reject(new Error('网络连接不可用'));
-          return;
-        }
-        
-        // 发起请求
-        uni.request({
-          ...finalConfig,
-          success: (res) => {
-            console.log('【DEBUG】request - 请求成功, 状态码:', res.statusCode);
-            console.log('【DEBUG】request - 响应数据:', res.data);
-            try {
-              const result = responseInterceptor(res, config);
-              resolve(result);
-            } catch (error) {
-              console.error('【DEBUG】request - 响应拦截器错误:', error);
-              reject(error);
-            }
-          },
-          fail: (error) => {
-            console.error('【DEBUG】request - 请求失败:', error);
-            
-            let errorMsg = '网络请求失败';
-            // 处理常见错误
-            if (error.errMsg) {
-              if (error.errMsg.includes('timeout')) {
-                errorMsg = '请求超时，请稍后再试';
-              } else if (error.errMsg.includes('abort')) {
-                errorMsg = '请求已取消';
-              } else if (error.errMsg.includes('fail')) {
-                // 检查是否是因为服务器不可达
-                if (error.errMsg.includes('fail:')) {
-                  errorMsg = '无法连接到服务器，请检查网络';
-                }
-              }
-            }
-            
-            uni.showToast({
-              title: errorMsg,
-              icon: 'none'
-            });
-            
+const request = (options) => {
+  // 显示加载提示
+  if (!options.hideLoading) {
+    try {
+      uni.showLoading({
+        title: '加载中...',
+        mask: true
+      });
+    } catch (err) {
+      console.warn('showLoading failed:', err);
+    }
+  }
+
+  // 设置默认超时时间
+  if (!options.timeout) {
+    options.timeout = 10000;
+  }
+
+  // 添加重试机制
+  const maxRetries = 3;
+  let retryCount = 0;
+
+  const executeRequest = () => {
+    return new Promise((resolve, reject) => {
+      uni.request({
+        url: options.url.startsWith('http') ? options.url : (BASE_URL + options.url),
+        method: options.method || 'GET',
+        data: options.data,
+        header: {
+          'content-type': 'application/json',
+          'Authorization': uni.getStorageSync('token') ? `Bearer ${uni.getStorageSync('token')}` : '',
+          ...options.header
+        },
+        timeout: options.timeout,
+        success: (res) => {
+          console.log('【DEBUG】request - 请求成功, 状态码:', res.statusCode);
+          console.log('【DEBUG】request - 响应数据:', res.data);
+          
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(res.data);
+          } else {
+            const error = {
+              statusCode: res.statusCode,
+              message: res.data.detail || '请求失败',
+              data: res.data
+            };
+            reject(error);
+          }
+        },
+        fail: (err) => {
+          console.error('【DEBUG】request - 请求失败:', err);
+          if (retryCount < maxRetries && (err.errMsg.includes('timeout') || err.errMsg.includes('fail'))) {
+            retryCount++;
+            console.log(`【DEBUG】request - 第${retryCount}次重试`);
+            setTimeout(() => {
+              executeRequest().then(resolve).catch(reject);
+            }, 1000 * retryCount); // 重试延迟递增
+          } else {
             reject({
-              ...error,
-              message: errorMsg
+              statusCode: -1,
+              message: err.errMsg || '网络请求失败',
+              data: err
             });
           }
-        });
-      },
-      fail: () => {
-        uni.showToast({
-          title: '无法获取网络状态',
-          icon: 'none'
-        });
-        reject(new Error('无法获取网络状态'));
-      }
+        },
+        complete: () => {
+          if (!options.hideLoading) {
+            try {
+              uni.hideLoading();
+            } catch (err) {
+              console.warn('hideLoading failed:', err);
+            }
+          }
+        }
+      });
     });
-  });
-} 
+  };
+
+  return executeRequest();
+};
+
+// 默认配置
+request.defaults = {
+  baseURL: BASE_URL
+};
+
+export default request; 

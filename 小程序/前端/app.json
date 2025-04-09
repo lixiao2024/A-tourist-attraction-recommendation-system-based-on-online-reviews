@@ -7,12 +7,18 @@
   ],
   "permission": {
     "scope.userFuzzyLocation": {
-      "desc": "ĞèÒª»ñÈ¡ÄúµÄ´óÖÂÎ»ÖÃÓÃÓÚ¼ÇÂ¼ÂÃĞĞ×ã¼£"
+      "desc": "éœ€è¦è·å–æ‚¨çš„å¤§è‡´ä½ç½®ç”¨äºè®°å½•æ—…è¡Œè¶³è¿¹"
     },
     "scope.userLocation": {
-      "desc": "ĞèÒª»ñÈ¡ÄúµÄ¾«È·Î»ÖÃÓÃÓÚ¼ÇÂ¼ÂÃĞĞ×ã¼£"
+      "desc": "éœ€è¦è·å–æ‚¨çš„ç²¾ç¡®ä½ç½®ç”¨äºè®°å½•æ—…è¡Œè¶³è¿¹"
     }
   },
   "requiredPrivateInfos": ["getFuzzyLocation", "getLocation"],
-  "lazyCodeLoading": "requiredComponents" 
+  "lazyCodeLoading": "requiredComponents",
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  }
 }

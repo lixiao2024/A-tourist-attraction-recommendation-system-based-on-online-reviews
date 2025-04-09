@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import requests
 from datetime import datetime, timedelta
-from jose import jwt
+from jose import jwt, JWTError
 from typing import Optional, Dict, Any, List
 from sqlalchemy.orm import Session, joinedload
 import os
@@ -12,6 +12,9 @@ import uuid
 import logging
 import shutil
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi.security import OAuth2PasswordBearer
+import httpx  # 添加httpx库用于异步HTTP请求
+import traceback
 
 # 导入应用配置和数据库模型
 from app.config.settings import settings
@@ -21,7 +24,10 @@ from app.models.post_model import Post
 from app.models.comment import Comment  # 导入评论模型
 from app.schemas.post_schema import PostCreate, PostResponse, PostBrief
 from app.schemas.comment_schema import CommentCreate, CommentResponse  # 导入评论Schema
-from app.auth.dependencies import get_current_user, get_optional_current_user
+from app.auth.dependencies import get_optional_current_user, get_current_user
+
+# 自定义OAuth2方案，使用正确的token URL
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/wechat-login", auto_error=False)
 
 # 设置日志
 logger = logging.getLogger(__name__)
@@ -43,6 +49,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOADS_DIR, exist_ok=True)
+
+# 从环境变量中读取Ollama API地址，如果未设置则使用默认值
+OLLAMA_API_BASE = os.environ.get("OLLAMA_API_BASE", "http://localhost:11434")
+MODEL_NAME = "shiroi/qwen7b-q4:latest"
+
+print(f"使用Ollama API地址: {OLLAMA_API_BASE}")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -70,6 +82,49 @@ def get_db():
         yield db
     finally:
         db.close()
+
+# 自定义获取当前用户函数
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    """
+    根据 JWT 令牌获取当前用户
+    
+    Args:
+        token: JWT 令牌
+        db: 数据库会话
+        
+    Returns:
+        当前用户
+        
+    Raises:
+        HTTPException: 如果令牌无效或用户不存在
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="无效的身份凭证",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    # 检查令牌是否为空
+    if token is None:
+        raise credentials_exception
+    
+    try:
+        # 解码 JWT 令牌
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        openid: str = payload.get("sub")
+        
+        if openid is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+        
+    # 从数据库中获取用户
+    user = db.query(User).filter(User.openid == openid).first()
+    
+    if user is None:
+        raise credentials_exception
+        
+    return user
 
 # Models
 class WechatLogin(BaseModel):
@@ -667,6 +722,124 @@ async def get_post_comments(
     except Exception as e:
         logger.error(f"获取评论列表失败: {str(e)}")
         raise HTTPException(status_code=500, detail=f"获取评论列表失败: {str(e)}")
+
+# 用户兴趣标签请求体
+class InterestTagsRequest(BaseModel):
+    tags: str
+
+@app.post("/api/update-interests", status_code=status.HTTP_200_OK)
+async def update_user_interests(
+    interest_data: InterestTagsRequest, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    更新用户兴趣标签
+    
+    Args:
+        interest_data: 包含用户选择的兴趣标签
+        db: 数据库会话
+        current_user: 当前活跃用户
+        
+    Returns:
+        成功信息
+    """
+    try:
+        # 更新用户兴趣标签
+        current_user.interest_tags = interest_data.tags
+        db.commit()
+        db.refresh(current_user)
+        
+        logger.info(f"用户 {current_user.id} 的兴趣标签已更新为: {interest_data.tags}")
+        
+        return {"message": "兴趣标签更新成功"}
+    except Exception as e:
+        db.rollback()
+        logger.error(f"更新兴趣标签失败: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"更新兴趣标签失败: {str(e)}")
+
+# 添加Qwen API请求模型
+class QwenRequest(BaseModel):
+    question: str
+    history: Optional[List[Dict[str, str]]] = None
+
+# 添加Qwen API响应模型
+class QwenResponse(BaseModel):
+    response: str
+    history: List[Dict[str, str]]
+
+# 添加Qwen API端点
+@app.post("/api/qwen-chat")
+async def chat_with_qwen(request: QwenRequest):
+    """
+    与Qwen模型对话的接口
+    """
+    try:
+        print(f"收到问题: {request.question}")
+        print(f"历史记录: {request.history if request.history else '[]'}")
+        
+        # 准备发送给Ollama的消息
+        history = request.history if request.history else []
+        user_message = {"role": "user", "content": request.question}
+        
+        # 直接使用generate API，避免使用chat API
+        # 构建完整提示词
+        full_prompt = ""
+        for msg in history:
+            role = msg.get("role", "")
+            content = msg.get("content", "")
+            if role == "user":
+                full_prompt += f"用户: {content}\n"
+            elif role == "assistant":
+                full_prompt += f"助手: {content}\n"
+        
+        # 添加当前用户问题
+        full_prompt += f"用户: {request.question}\n助手: "
+        
+        print(f"准备发送请求到 {OLLAMA_API_BASE}/api/generate")
+        print(f"提示词: {full_prompt}")
+        
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(
+                f"{OLLAMA_API_BASE}/api/generate",
+                json={
+                    "model": MODEL_NAME,
+                    "prompt": full_prompt,
+                    "stream": False
+                },
+                timeout=30.0
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                print(f"收到Ollama响应: {result}")
+                
+                # 直接从generate接口获取response字段
+                bot_response = result.get("response", "")
+                if not bot_response:
+                    bot_response = "抱歉，我暂时无法回答您的问题。"
+                
+                # 更新对话历史
+                new_history = history + [
+                    user_message,
+                    {"role": "assistant", "content": bot_response}
+                ]
+                
+                return QwenResponse(response=bot_response, history=new_history)
+            else:
+                print(f"Generate API 返回错误: {response.status_code}")
+                print(f"错误详情: {response.text}")
+                raise HTTPException(status_code=500, detail=f"与Qwen模型交互时出错: {response.text}")
+    except httpx.RequestError as e:
+        print(f"请求Ollama API时出错: {str(e)}")
+        print(f"错误类型: {type(e).__name__}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"与Qwen模型交互时出错: {str(e)}")
+    except Exception as e:
+        print(f"处理请求时出错: {str(e)}")
+        print(f"错误类型: {type(e).__name__}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"与Qwen模型交互时出错: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

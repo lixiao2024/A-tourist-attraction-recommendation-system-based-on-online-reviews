@@ -102,11 +102,7 @@ var components
 try {
   components = {
     uniIcons: function () {
-<<<<<<< HEAD
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 136))
-=======
-      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 141))
->>>>>>> 8586f270516785f262322293fab3e10846b71926
+      return Promise.all(/*! import() | uni_modules/uni-icons/components/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uni-icons/components/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uni-icons/components/uni-icons/uni-icons.vue */ 144))
     },
   }
 } catch (e) {
@@ -192,10 +188,15 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {
 
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 28));
+var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 31));
+var _api = __webpack_require__(/*! @/request/api.js */ 52);
+var _request = _interopRequireDefault(__webpack_require__(/*! @/request/request.js */ 53));
 //
 //
 //
@@ -307,6 +308,9 @@ exports.default = void 0;
 //
 //
 //
+
+// 修改请求配置
+_request.default.defaults.baseURL = 'http://192.168.1.10:8001';
 var _default = {
   data: function data() {
     return {
@@ -322,7 +326,8 @@ var _default = {
       isRefreshing: false,
       showQuickQuestions: true,
       quickQuestions: ['推荐热门景点', '附近有什么好玩的地方', '预算3000元三日游攻略', '适合拍照的景点'],
-      currentDate: this.formatDate(new Date())
+      currentDate: this.formatDate(new Date()),
+      chatHistory: [] // 添加对话历史记录
     };
   },
   mounted: function mounted() {
@@ -331,39 +336,88 @@ var _default = {
   methods: {
     sendMessage: function sendMessage() {
       var _this = this;
-      if (!this.inputMessage.trim()) return;
+      return (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+        var userMessage, userQuestion, response;
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (_this.inputMessage.trim()) {
+                  _context.next = 2;
+                  break;
+                }
+                return _context.abrupt("return");
+              case 2:
+                // 添加用户消息
+                userMessage = {
+                  type: 'user',
+                  content: _this.inputMessage,
+                  time: _this.formatTime(new Date())
+                };
+                _this.messages.push(userMessage);
 
-      // 添加用户消息
-      var userMessage = {
-        type: 'user',
-        content: this.inputMessage,
-        time: this.formatTime(new Date())
-      };
-      this.messages.push(userMessage);
+                // 保存用户问题
+                userQuestion = _this.inputMessage;
+                _this.inputMessage = '';
+                _this.scrollToBottom();
 
-      // 保存用户问题
-      var userQuestion = this.inputMessage;
-      this.inputMessage = '';
-      this.scrollToBottom();
+                // 显示输入动画
+                _this.isTyping = true;
+                _context.prev = 8;
+                _context.next = 11;
+                return (0, _request.default)({
+                  url: 'http://192.168.1.10:8001/api/qwen-chat',
+                  method: 'POST',
+                  data: {
+                    question: userQuestion,
+                    history: _this.chatHistory
+                  },
+                  timeout: 60000,
+                  // 增加超时时间为60秒
+                  hideLoading: false // 显示加载中提示
+                });
+              case 11:
+                response = _context.sent;
+                // 更新对话历史
+                _this.chatHistory = response.history;
 
-      // 显示输入动画
-      this.isTyping = true;
+                // 添加机器人回复
+                _this.messages.push({
+                  type: 'bot',
+                  content: response.response,
+                  time: _this.formatTime(new Date())
+                });
+                _this.scrollToBottom();
+                _context.next = 22;
+                break;
+              case 17:
+                _context.prev = 17;
+                _context.t0 = _context["catch"](8);
+                console.error('与AI助手交互时出错:', _context.t0);
+                // 添加错误提示消息
+                _this.messages.push({
+                  type: 'bot',
+                  content: '抱歉，我暂时无法回答您的问题。' + (_context.t0.message ? "\n\u9519\u8BEF\u4FE1\u606F\uFF1A".concat(_context.t0.message) : '请稍后再试。'),
+                  time: _this.formatTime(new Date())
+                });
 
-      // 模拟机器人思考时间
-      setTimeout(function () {
-        _this.isTyping = false;
-
-        // 根据问题生成回复
-        var botResponse = _this.generateResponse(userQuestion);
-
-        // 添加机器人回复
-        _this.messages.push({
-          type: 'bot',
-          content: botResponse,
-          time: _this.formatTime(new Date())
-        });
-        _this.scrollToBottom();
-      }, 1500);
+                // 显示错误提示
+                uni.showToast({
+                  title: '请求失败，请检查网络连接',
+                  icon: 'none',
+                  duration: 2000
+                });
+              case 22:
+                _context.prev = 22;
+                _this.isTyping = false;
+                return _context.finish(22);
+              case 25:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[8, 17, 22, 25]]);
+      }))();
     },
     quickSend: function quickSend(question) {
       this.inputMessage = question;

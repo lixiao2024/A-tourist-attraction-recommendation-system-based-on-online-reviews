@@ -9,6 +9,19 @@ import request from './request.js';
 const baseURL = 'http://192.168.1.10:8000'; // 使用你的真实局域网IP
 
 /**
+ * 更新用户兴趣标签
+ * @param {Object} data - 包含tags字段的对象
+ * @returns {Promise} - 返回更新结果
+ */
+export function updateUserInterests(data) {
+  return request({
+    url: '/api/update-interests',
+    method: 'POST',
+    data: data
+  });
+}
+
+/**
  * 上传单张图片
  * @param {Object} file - 图片文件对象
  * @returns {Promise} - 返回上传结果

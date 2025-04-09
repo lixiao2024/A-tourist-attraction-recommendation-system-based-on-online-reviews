@@ -20,6 +20,9 @@ class User(Base):
     city = Column(String(50), nullable=True)
     language = Column(String(20), nullable=True)
     
+    # 用户兴趣标签
+    interest_tags = Column(Text, nullable=True)
+    
     # 记录创建时间
     created_at = Column(DateTime, server_default=func.now())
     

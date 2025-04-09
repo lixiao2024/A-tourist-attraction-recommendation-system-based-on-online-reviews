@@ -11,6 +11,7 @@ class UserBase(BaseModel):
     province: Optional[str] = None
     city: Optional[str] = None
     language: Optional[str] = None
+    interest_tags: Optional[str] = None
 
 # 微信登录请求
 class WechatLoginRequest(BaseModel):
