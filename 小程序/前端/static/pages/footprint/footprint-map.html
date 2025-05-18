@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的旅行足迹</title>
+    <style>
+      html, body, #map {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        background-color: #353535;
+      }
+    </style>
+    <script src="/static/pages/footprint/jVectorMap-Footprint/js/jquery-1.9.1.min.js"></script>
+    <script src="/static/pages/footprint/jVectorMap-Footprint/js/jquery-jvectormap-1.2.2.min.js"></script>
+    <link href="/static/pages/footprint/jVectorMap-Footprint/js/jquery-jvectormap-1.2.2.css" rel="stylesheet" media="screen">
+    <script src="/static/pages/footprint/jVectorMap-Footprint/js/jquery-jvectormap-cn-merc-en.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      // 从URL参数获取标记数据
+      function getMarkers() {
+        try {
+          const markersParam = new URLSearchParams(window.location.search).get('markers');
+          return markersParam ? JSON.parse(decodeURIComponent(markersParam)) : [];
+        } catch (e) {
+          console.error('解析标记数据失败:', e);
+          return [];
+        }
+      }
+      
+      // 初始化地图
+      $(function(){
+        const markers = getMarkers();
+        
+        $('#map').vectorMap({
+          map: 'cn_merc_en',
+          backgroundColor: 'transparent',
+          zoomMin: 0.9,
+          zoomMax: 2.4,
+          focusOn: {
+            x: 0.55,
+            y: 2,
+            scale: 0.9
+          },
+          regionStyle: {
+            initial: {
+              fill: '#e5e5e5',
+              "fill-opacity": 1,
+              stroke: 'none',
+              "stroke-width": 0,
+              "stroke-opacity": 1
+            },
+            hover: {
+              fill: '#ccc',
+              "fill-opacity": 0.8
+            },
+            selected: {
+              fill: 'yellow'
+            },
+            selectedHover: {}
+          },
+          markerStyle: {
+            initial: {
+              fill: '#fd8888',
+              stroke: '#fff'
+            },
+            hover: {
+              fill: '#fd2020',
+              stroke: '#fff',
+              "fill-opacity": 0.8
+            },
+          },
+          markers: markers,
+          // 地图点击事件
+          onRegionClick: function(event, code) {
+            window.parent.postMessage({
+              type: 'region_click',
+              code: code
+            }, '*');
+          },
+          // 标记点击事件
+          onMarkerClick: function(event, index) {
+            window.parent.postMessage({
+              type: 'marker_click',
+              index: index,
+              name: this.markers[index].name
+            }, '*');
+          }
+        });
+      });
+    </script>
+  </body>
+</html> 

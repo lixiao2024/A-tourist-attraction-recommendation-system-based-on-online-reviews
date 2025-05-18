@@ -1,0 +1,12 @@
+{
+  "name": "login",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  },
+  "cloudfunction-config": {
+    "memorySize": 256,
+    "timeout": 5,
+    "triggers": []
+  }
+}
